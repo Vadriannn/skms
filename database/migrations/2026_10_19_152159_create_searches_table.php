@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('searches', function (Blueprint $table) {
             $table->id();
+            $table->string('nrp', 15)->nullable();
+            $table->string('kata_kunci', 255);
+            $table->foreignId('faq_id')->nullable()->constrained('faqs')->nullOnDelete();
             $table->timestamps();
         });
     }

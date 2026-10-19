@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('duplicate_logs', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('faq_id')->constrained('faqs')->onDelete('cascade');
+            $table->foreignId('similar_faq_id')->constrained('faqs')->onDelete('cascade');
+            $table->decimal('score', 5, 2);
+            $table->timestamp('checked_at')->useCurrent();
         });
     }
 

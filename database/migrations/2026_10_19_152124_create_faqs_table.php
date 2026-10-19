@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('faqs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('pertanyaan', 500);
+            $table->longText('jawaban');
+            $table->enum('status', ['draft', 'pending', 'published', 'rejected'])->default('draft');
+            $table->unsignedInteger('views')->default(0);
             $table->timestamps();
         });
     }

@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('faq_id')->constrained('faqs')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->enum('keputusan', ['approved', 'rejected']);
+            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }
