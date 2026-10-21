@@ -13,7 +13,7 @@ class AuthController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect()->route('categories.index');
+            return redirect()->route('dashboard');
         }
 
         return view('auth.login');
@@ -24,26 +24,39 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required',
+        $input = $request->validate([
+            'login'    => 'required|string',
+            'password' => 'required|string',
         ], [
-            'email.required'    => 'Email wajib diisi.',
-            'email.email'       => 'Format email tidak valid.',
+            'login.required'    => 'Username atau Email wajib diisi.',
             'password.required' => 'Password wajib diisi.',
         ]);
 
-        // Cek login dan pastikan akun is_active = true
-        if (Auth::attempt(array_merge($credentials, ['is_active' => true]))) {
+        $loginInput = $input['login'];
+        $fieldType = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+
+        $credentials = [
+            $fieldType  => $loginInput,
+            'password'  => $input['password'],
+            'is_active' => true,
+        ];
+
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('categories.index'))
-                ->with('success', 'Selamat datang, ' . Auth::user()->name . '! (Role: ' . Auth::user()->role . ')');
+            \App\Models\ActivityLog::log(
+                Auth::user()->name . ' login ke sistem',
+                'auth',
+                Auth::id()
+            );
+
+            return redirect()->intended(route('dashboard'))
+                ->with('success', 'Selamat datang, ' . Auth::user()->name . '!');
         }
 
         return back()->withErrors([
-            'email' => 'Email atau password salah, atau akun Anda dinonaktifkan.',
-        ])->onlyInput('email');
+            'login' => 'Username/email atau password salah, atau akun Anda dinonaktifkan.',
+        ])->onlyInput('login');
     }
 
     /**
