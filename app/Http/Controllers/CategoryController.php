@@ -45,13 +45,47 @@ class CategoryController extends Controller
         }
 
         // 3. Simpan ke Database
-        Category::create([
+        $cat = Category::create([
             'nama' => $request->nama,
             'slug' => $slug,
         ]);
 
+        \App\Models\ActivityLog::log(
+            "Admin menambahkan kategori baru: \"{$cat->nama}\"",
+            'kategori'
+        );
+
         return redirect()->route('categories.index')
             ->with('success', "Kategori \"{$request->nama}\" berhasil ditambahkan!");
+    }
+
+    /**
+     * Memperbarui kategori yang sudah ada.
+     */
+    public function update(Request $request, Category $category)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:100|unique:categories,nama,' . $category->id,
+        ], [
+            'nama.required' => 'Nama kategori wajib diisi.',
+            'nama.unique'   => 'Kategori dengan nama ini sudah ada.',
+        ]);
+
+        $namaLama = $category->nama;
+        $slug = Str::slug($request->nama);
+
+        $category->update([
+            'nama' => $request->nama,
+            'slug' => $slug,
+        ]);
+
+        \App\Models\ActivityLog::log(
+            "Admin memperbarui kategori: \"{$namaLama}\" menjadi \"{$category->nama}\"",
+            'kategori'
+        );
+
+        return redirect()->route('categories.index')
+            ->with('success', "Kategori berhasil diperbarui!");
     }
 
     /**
@@ -61,6 +95,11 @@ class CategoryController extends Controller
     {
         $nama = $category->nama;
         $category->delete();
+
+        \App\Models\ActivityLog::log(
+            "Admin menghapus kategori: \"{$nama}\"",
+            'kategori'
+        );
 
         return redirect()->route('categories.index')
             ->with('success', "Kategori \"{$nama}\" berhasil dihapus.");
