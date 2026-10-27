@@ -10,8 +10,15 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $user = Auth::user();
+
+        // Jika role data_entry atau request parameter view=data_entry
+        if (($user && $user->role === 'data_entry') || $request->query('view') === 'data_entry') {
+            return $this->dataEntry();
+        }
+
         $totalPengguna = User::count();
         $totalPertanyaan = Faq::count();
         $menungguValidasi = Faq::where('status', 'pending')->count();
@@ -35,6 +42,22 @@ class DashboardController extends Controller
             'menungguValidasi',
             'dipublikasikan',
             'aktivitasTerbaru'
+        ));
+    }
+
+    /**
+     * Dashboard khusus peran Data Entry
+     */
+    public function dataEntry()
+    {
+        $totalDraft = Faq::where('status', 'draft')->count();
+        $menungguValidasi = Faq::where('status', 'pending')->count();
+        $categories = \App\Models\Category::orderBy('nama', 'asc')->get();
+
+        return view('dashboard.data_entry', compact(
+            'totalDraft',
+            'menungguValidasi',
+            'categories'
         ));
     }
 }

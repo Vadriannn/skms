@@ -29,7 +29,7 @@ class UsersSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'name' => 'Data Entry',
+                'name' => 'Bayu',
                 'email' => 'dataentry@gmail.com',
                 'password' => 'dataentry',
                 'role' => 'data_entry',
