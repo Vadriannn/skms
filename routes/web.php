@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/faqs', [FaqController::class, 'index'])->name('faqs.index');
     Route::post('/faqs', [FaqController::class, 'store'])->name('faqs.store');
+    Route::post('/faqs/check-similarity', [FaqController::class, 'checkSimilarity'])->name('faqs.check_similarity');
     Route::put('/faqs/{faq}', [FaqController::class, 'update'])->name('faqs.update');
     Route::delete('/faqs/{faq}', [FaqController::class, 'destroy'])->name('faqs.destroy');
     Route::get('/faqs/history', [FaqController::class, 'history'])->name('faqs.history');

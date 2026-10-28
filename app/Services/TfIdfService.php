@@ -28,8 +28,8 @@ class TfIdfService
         'siapa', 'kapan', 'dimana', 'mengapa', 'kenapa', 'bisa', 'ada', 'tidak', 'hal',
         'para', 'bagi', 'oleh', 'saja', 'terkait', 'tentang', 'adalah', 'sebagai',
         'agar', 'supaya', 'akan', 'telah', 'bila', 'jika', 'kalau', 'mau', 'ingin',
-        'halo', 'admin', 'kak', 'pak', 'bu', 'mohon', 'tolong', 'info', 'tanya',
-        'tersebut', 'setiap', 'secara', 'harus'
+        'halo', 'admin', 'min', 'kak', 'pak', 'bu', 'mohon', 'tolong', 'info', 'tanya',
+        'dong', 'sih', 'nih', 'gan', 'tersebut', 'setiap', 'secara', 'harus'
     ];
 
     public function __construct()
@@ -188,7 +188,7 @@ class TfIdfService
         // ---------------------------------------------------------------------
         // [Langkah 4.1] Ambil Seluruh Data FAQ Lama dari Database
         // ---------------------------------------------------------------------
-        $query = Faq::query();
+        $query = Faq::with('categories');
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }

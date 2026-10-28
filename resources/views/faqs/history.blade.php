@@ -85,8 +85,8 @@
     </div>
 
     @if($historyFaqs->hasPages())
-        <div style="padding: 16px 24px; border-top: 1px solid var(--border-color);">
-            {{ $historyFaqs->links() }}
+        <div class="table-pagination-footer">
+            {{ $historyFaqs->links('vendor.pagination.custom') }}
         </div>
     @endif
 </div>

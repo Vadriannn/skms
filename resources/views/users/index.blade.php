@@ -144,8 +144,8 @@
             </div>
 
             @if($users->hasPages())
-                <div style="padding: 16px;">
-                    {{ $users->links() }}
+                <div class="table-pagination-footer">
+                    {{ $users->links('vendor.pagination.custom') }}
                 </div>
             @endif
         </div>

@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
 use App\Models\Category;
+use App\Models\DuplicateLog;
 use App\Models\Faq;
+use App\Services\TfIdfService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class FaqController extends Controller
 {
@@ -46,9 +49,9 @@ class FaqController extends Controller
     }
 
     /**
-     * Simpan informasi FAQ baru (Mendukung Multi-Kategori)
+     * Simpan informasi FAQ baru (Mendukung Multi-Kategori & Deteksi TF-IDF)
      */
-    public function store(Request $request)
+    public function store(Request $request, TfIdfService $tfidfService)
     {
         $request->validate([
             'pertanyaan'     => 'required|string|max:500',
@@ -79,6 +82,9 @@ class FaqController extends Controller
             $status = 'draft';
         }
 
+        // Jalankan perbandingan teks pertanyaan dengan repositori FAQ via TF-IDF
+        $similarity = $tfidfService->checkSimilarity($request->pertanyaan, 0.60);
+
         $faq = Faq::create([
             'user_id'    => Auth::id(),
             'pertanyaan' => $request->pertanyaan,
@@ -90,17 +96,102 @@ class FaqController extends Controller
         // Hubungkan banyak kategori ke FAQ (Pivot table category_faq)
         $faq->categories()->sync($categoryIds);
 
+        // Catat ke tabel duplicate_logs hanya jika terdeteksi duplikasi (skor >= threshold 60%)
+        if ($similarity['is_duplicate'] && !empty($similarity['similar_faq'])) {
+            DuplicateLog::create([
+                'faq_id'         => $faq->id,
+                'similar_faq_id' => $similarity['similar_faq']->id,
+                'score'          => $similarity['highest_score'],
+                'checked_at'     => now(),
+            ]);
+        }
+
         $statusLabel = $status === 'pending' ? 'dikirim untuk validasi' : 'disimpan sebagai draft';
-        ActivityLog::log(
-            Auth::user()->name . " menambahkan informasi baru: \"{$faq->pertanyaan}\" ({$statusLabel})",
-            'faq'
-        );
+        $logMessage = Auth::user()->name . " menambahkan informasi baru: \"{$faq->pertanyaan}\" ({$statusLabel})";
+        if ($similarity['is_duplicate'] && !empty($similarity['similar_faq'])) {
+            $logMessage .= " [Peringatan TF-IDF: Kemiripan {$similarity['percentage']} dengan FAQ #{$similarity['similar_faq']->id}]";
+        }
+
+        ActivityLog::log($logMessage, 'faq');
 
         $message = $status === 'pending'
             ? 'Informasi baru berhasil diajukan dan sedang menunggu validasi!'
             : 'Draft informasi baru berhasil disimpan!';
 
         return redirect()->back()->with('success', $message);
+    }
+
+    /**
+     * Memeriksa kemiripan teks pertanyaan dengan repositori FAQ via TF-IDF & Cosine Similarity
+     */
+    public function checkSimilarity(Request $request, TfIdfService $tfidfService)
+    {
+        $pertanyaan = trim((string) $request->input('pertanyaan', ''));
+
+        if ($pertanyaan === '' || mb_strlen($pertanyaan) < 3) {
+            return response()->json([
+                'success'       => true,
+                'has_checked'   => false,
+                'highest_score' => 0,
+                'percentage'    => '0%',
+                'is_duplicate'  => false,
+                'similar_faq'   => null,
+                'candidates'    => [],
+            ]);
+        }
+
+        $threshold = (float) $request->input('threshold', 0.60);
+        $excludeId = $request->input('exclude_id') ? (int) $request->input('exclude_id') : null;
+
+        $result = $tfidfService->checkSimilarity($pertanyaan, $threshold, $excludeId);
+
+        $formattedCandidates = [];
+        foreach ($result['candidates'] as $candidate) {
+            $faq = $candidate['faq'];
+            $formattedCandidates[] = [
+                'id'          => $faq->id,
+                'pertanyaan'  => $faq->pertanyaan,
+                'jawaban'     => Str::limit(strip_tags($faq->jawaban), 120),
+                'status'      => $faq->status,
+                'status_label'=> [
+                    'draft'     => 'Draft',
+                    'pending'   => 'Menunggu Validasi',
+                    'published' => 'Dipublikasikan',
+                    'rejected'  => 'Ditolak',
+                ][$faq->status] ?? ucfirst($faq->status),
+                'score'       => $candidate['score'],
+                'percentage'  => $candidate['percentage'],
+                'categories'  => $faq->categories->pluck('nama')->toArray(),
+            ];
+        }
+
+        $similarFaqData = null;
+        if (!empty($result['similar_faq'])) {
+            $sim = $result['similar_faq'];
+            $similarFaqData = [
+                'id'          => $sim->id,
+                'pertanyaan'  => $sim->pertanyaan,
+                'jawaban'     => Str::limit(strip_tags($sim->jawaban), 120),
+                'status'      => $sim->status,
+                'status_label'=> [
+                    'draft'     => 'Draft',
+                    'pending'   => 'Menunggu Validasi',
+                    'published' => 'Dipublikasikan',
+                    'rejected'  => 'Ditolak',
+                ][$sim->status] ?? ucfirst($sim->status),
+                'categories'  => $sim->categories->pluck('nama')->toArray(),
+            ];
+        }
+
+        return response()->json([
+            'success'       => true,
+            'has_checked'   => true,
+            'highest_score' => $result['highest_score'],
+            'percentage'    => $result['percentage'],
+            'is_duplicate'  => $result['is_duplicate'],
+            'similar_faq'   => $similarFaqData,
+            'candidates'    => $formattedCandidates,
+        ]);
     }
 
     /**

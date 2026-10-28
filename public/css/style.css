@@ -751,6 +751,39 @@ body {
 }
 
 /* PAGINATION */
+.table-pagination-footer {
+    padding: 14px 24px;
+    border-top: 1px solid var(--border-color);
+    background-color: #FFFFFF;
+}
+
+.custom-pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+}
+
+.pagination-summary {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.pagination-summary strong {
+    color: var(--text-heading);
+    font-weight: 600;
+}
+
+.pagination-nav-list {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    user-select: none;
+}
+
 .pagination-wrapper {
     display: flex;
     align-items: center;
@@ -760,8 +793,9 @@ body {
 }
 
 .pagination-btn {
-    min-width: 36px;
-    height: 36px;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -773,11 +807,23 @@ body {
     font-weight: 500;
     text-decoration: none;
     transition: all 0.15s ease;
+    cursor: pointer;
+    box-sizing: border-box;
 }
 
-.pagination-btn:hover {
+.pagination-btn svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2.5;
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.pagination-btn:not(.active):not(.disabled):hover {
     background-color: var(--bg-page);
-    border-color: var(--text-subtle);
+    border-color: #CBD5E1;
+    color: var(--text-heading);
 }
 
 .pagination-btn.active {
@@ -785,11 +831,33 @@ body {
     border-color: var(--primary);
     color: #FFFFFF;
     font-weight: 600;
+    box-shadow: 0 1px 3px rgba(99, 102, 241, 0.25);
 }
 
 .pagination-btn.disabled {
-    opacity: 0.5;
+    opacity: 0.4;
+    cursor: not-allowed;
     pointer-events: none;
+    background-color: #F8FAFC;
+    border-color: var(--border-color);
+    color: var(--text-subtle);
+}
+
+.pagination-btn.ellipsis {
+    border-color: transparent;
+    background: transparent;
+    min-width: 22px;
+    padding: 0;
+    color: var(--text-subtle);
+    pointer-events: none;
+}
+
+/* Guard rule to prevent any SVG in navigation from expanding */
+nav[role="navigation"] svg {
+    width: 14px !important;
+    height: 14px !important;
+    max-width: 14px !important;
+    max-height: 14px !important;
 }
 
 /* ===============================
@@ -1493,6 +1561,221 @@ body {
 
 .chip-checkbox:checked + .chip-content .chip-check-icon {
     display: inline-block;
+}
+
+/* ==========================================================================
+   TF-IDF REAL-TIME SIMILARITY DETECTION COMPONENT
+   ========================================================================== */
+.similarity-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.similarity-spinner-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+    font-size: 11px;
+    color: var(--primary);
+    background: #FFFFFF;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.spinner-sm {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #E2E8F0;
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: tfidf-rotate 0.6s linear infinite;
+    display: inline-block;
+}
+
+@keyframes tfidf-rotate {
+    to { transform: rotate(360deg); }
+}
+
+.tfidf-feedback-container {
+    margin-top: 10px;
+    animation: tfidf-slide-down 0.25s ease-out;
+}
+
+@keyframes tfidf-slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tfidf-alert-card {
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.45;
+    position: relative;
+    border: 1px solid transparent;
+}
+
+/* Status Duplikat / Peringatan Tinggi */
+.tfidf-alert-card.duplicate {
+    background-color: #FFFBEB;
+    border-color: #FDE68A;
+    border-left: 4px solid #D97706;
+    color: #92400E;
+}
+
+/* Status Aman / Rendah */
+.tfidf-alert-card.safe {
+    background-color: #F0FDF4;
+    border-color: #BBF7D0;
+    border-left: 4px solid #10B981;
+    color: #166534;
+}
+
+.tfidf-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.tfidf-title-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.tfidf-title-area svg {
+    flex-shrink: 0;
+}
+
+.tfidf-score-badge {
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.tfidf-alert-card.duplicate .tfidf-score-badge {
+    background-color: #FEF3C7;
+    color: #B45309;
+    border: 1px solid #FCD34D;
+}
+
+.tfidf-alert-card.safe .tfidf-score-badge {
+    background-color: #DCFCE7;
+    color: #15803D;
+    border: 1px solid #86EFAC;
+}
+
+.tfidf-message {
+    font-size: 12.5px;
+    margin-bottom: 8px;
+    color: inherit;
+    opacity: 0.95;
+}
+
+.tfidf-matched-card {
+    background: #FFFFFF;
+    border: 1px solid #F1F5F9;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.tfidf-matched-q {
+    font-weight: 600;
+    color: var(--text-heading);
+    font-size: 13px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.tfidf-matched-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.tfidf-matched-excerpt {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    border-left: 2px solid #E2E8F0;
+    padding-left: 8px;
+    margin-top: 4px;
+}
+
+.tfidf-candidates-toggle {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #4F46E5;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tfidf-candidates-toggle:hover {
+    text-decoration: underline;
+}
+
+.tfidf-candidates-list {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed #FDE68A;
+}
+
+.tfidf-candidate-item {
+    font-size: 12px;
+    color: var(--text-body);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.tfidf-candidate-item .candidate-q {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tfidf-candidate-item .candidate-score {
+    font-weight: 600;
+    color: #B45309;
+    font-size: 11px;
+    flex-shrink: 0;
 }
 
 
