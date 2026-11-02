@@ -1147,7 +1147,7 @@ nav[role="navigation"] svg {
     align-items: center;
     gap: 16px;
     margin-bottom: 20px;
-    max-width: 900px;
+    width: 100%;
 }
 
 .faq-search-wrapper {
@@ -1229,7 +1229,7 @@ nav[role="navigation"] svg {
     overflow: visible;
     margin-bottom: 24px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
-    max-width: 900px;
+    width: 100%;
 }
 
 .faq-custom-table {
@@ -1292,6 +1292,10 @@ nav[role="navigation"] svg {
 .col-pertanyaan {
     color: #1E293B;
     font-weight: 500;
+}
+
+.col-status {
+    text-align: center;
 }
 
 .faq-title-text {
@@ -1438,7 +1442,7 @@ nav[role="navigation"] svg {
     justify-content: center;
     gap: 12px;
     margin-top: 24px;
-    max-width: 900px;
+    width: 100%;
 }
 
 .page-nav {
@@ -1618,27 +1622,27 @@ nav[role="navigation"] svg {
 }
 
 .tfidf-alert-card {
-    border-radius: 10px;
-    padding: 12px 14px;
+    border-radius: 12px;
+    padding: 16px 18px;
     font-size: 13px;
-    line-height: 1.45;
+    line-height: 1.5;
     position: relative;
     border: 1px solid transparent;
 }
 
 /* Status Duplikat / Peringatan Tinggi */
 .tfidf-alert-card.duplicate {
-    background-color: #FFFBEB;
-    border-color: #FDE68A;
-    border-left: 4px solid #D97706;
-    color: #92400E;
+    background-color: #FEF2F2;
+    border-color: #FECACA;
+    border-left: 5px solid #EF4444;
+    color: #991B1B;
 }
 
 /* Status Aman / Rendah */
 .tfidf-alert-card.safe {
     background-color: #F0FDF4;
     border-color: #BBF7D0;
-    border-left: 4px solid #10B981;
+    border-left: 5px solid #10B981;
     color: #166534;
 }
 
@@ -1646,16 +1650,16 @@ nav[role="navigation"] svg {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 6px;
+    gap: 12px;
+    margin-bottom: 8px;
 }
 
 .tfidf-title-area {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-weight: 600;
-    font-size: 13px;
+    font-weight: 700;
+    font-size: 14px;
 }
 
 .tfidf-title-area svg {
@@ -1663,17 +1667,17 @@ nav[role="navigation"] svg {
 }
 
 .tfidf-score-badge {
-    padding: 2px 8px;
+    padding: 4px 10px;
     border-radius: 9999px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.2px;
 }
 
 .tfidf-alert-card.duplicate .tfidf-score-badge {
-    background-color: #FEF3C7;
-    color: #B45309;
-    border: 1px solid #FCD34D;
+    background-color: #FEE2E2;
+    color: #B91C1C;
+    border: 1px solid #FCA5A5;
 }
 
 .tfidf-alert-card.safe .tfidf-score-badge {
@@ -1683,51 +1687,87 @@ nav[role="navigation"] svg {
 }
 
 .tfidf-message {
-    font-size: 12.5px;
-    margin-bottom: 8px;
-    color: inherit;
-    opacity: 0.95;
+    font-size: 13px;
+    margin-bottom: 12px;
+    color: #7F1D1D;
+    font-weight: 500;
 }
 
+/* KARTU PREVIEW FAQ PEMBANDING (TERSTRUKTUR & TIDAK NABRAK) */
 .tfidf-matched-card {
     background: #FFFFFF;
-    border: 1px solid #F1F5F9;
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-top: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.tfidf-matched-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.tfidf-matched-badge-tag {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748B;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tfidf-matched-row {
+    margin-bottom: 10px;
+}
+
+.tfidf-matched-row:last-child {
+    margin-bottom: 0;
+}
+
+.tfidf-field-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #94A3B8;
+    letter-spacing: 0.4px;
+    margin-bottom: 4px;
 }
 
 .tfidf-matched-q {
-    font-weight: 600;
-    color: var(--text-heading);
+    font-weight: 700;
+    color: #0F172A;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.tfidf-matched-excerpt {
     font-size: 13px;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
+    color: #334155;
+    line-height: 1.5;
+    background: #F8FAFC;
+    border-left: 3px solid #94A3B8;
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
 }
 
 .tfidf-matched-meta {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     flex-wrap: wrap;
-    margin-bottom: 6px;
-}
-
-.tfidf-matched-excerpt {
-    font-size: 12px;
-    color: var(--text-muted);
-    line-height: 1.4;
-    border-left: 2px solid #E2E8F0;
-    padding-left: 8px;
-    margin-top: 4px;
 }
 
 .tfidf-candidates-toggle {
-    margin-top: 8px;
-    font-size: 12px;
+    margin-top: 10px;
+    font-size: 12.5px;
     color: #4F46E5;
     background: none;
     border: none;
@@ -1736,7 +1776,7 @@ nav[role="navigation"] svg {
     font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
 }
 
 .tfidf-candidates-toggle:hover {
@@ -1777,5 +1817,121 @@ nav[role="navigation"] svg {
     font-size: 11px;
     flex-shrink: 0;
 }
+
+/* TOMBOL TAMBAH INFORMASI PADA HALAMAN DAFTAR FAQ */
+.btn-tambah-faq {
+    background-color: #6C75D3;
+    color: #FFFFFF !important;
+    border: none;
+    border-radius: 9px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(108, 117, 211, 0.25);
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    font-family: inherit;
+}
+
+.btn-tambah-faq:hover {
+    background-color: #5C65C7;
+    box-shadow: 0 4px 14px rgba(108, 117, 211, 0.35);
+}
+
+.btn-tambah-faq:active {
+    transform: translateY(1px);
+}
+
+/* HALAMAN CREATE FAQ */
+.faq-create-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding-bottom: 40px;
+}
+
+/* PER-PAGE SELECTOR */
+.faq-table-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    width: 100%;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.faq-per-page-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.faq-per-page-select {
+    padding: 6px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: #FFFFFF;
+    color: var(--text-heading);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.faq-per-page-select:focus {
+    border-color: #6C75D3;
+    box-shadow: 0 0 0 2px rgba(108, 117, 211, 0.2);
+}
+
+.faq-total-info {
+    font-size: 12.5px;
+    color: var(--text-muted);
+}
+
+.faq-create-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 28px 32px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.faq-create-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.faq-create-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 4px;
+}
+
+.faq-create-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.faq-create-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 24px;
+    margin-top: 24px;
+    border-top: 1px solid #F1F5F9;
+}
+
 
 
