@@ -21,6 +21,10 @@ class FaqController extends Controller
         $status = $request->query('status');
         $categoryId = $request->query('category_id');
         $search = $request->query('search');
+        $perPage = (int) $request->query('per_page', 10);
+        if (!in_array($perPage, [10, 25, 50, 100])) {
+            $perPage = 10;
+        }
 
         $query = Faq::with(['categories', 'user'])->latest();
 
@@ -41,11 +45,20 @@ class FaqController extends Controller
             $query->where('status', $status);
         }
 
-        // 3 per halaman persis seperti di mockup gambar (< 1 2 3 >)
-        $faqs = $query->paginate(3)->withQueryString();
+        // Paginate berdasarkan preferensi pengguna (default: 10)
+        $faqs = $query->paginate($perPage)->withQueryString();
         $categories = Category::orderBy('nama', 'asc')->get();
 
-        return view('faqs.index', compact('faqs', 'categories', 'status', 'categoryId', 'search'));
+        return view('faqs.index', compact('faqs', 'categories', 'status', 'categoryId', 'search', 'perPage'));
+    }
+
+    /**
+     * Tampilkan halaman formulir input FAQ baru
+     */
+    public function create()
+    {
+        $categories = Category::orderBy('nama', 'asc')->get();
+        return view('faqs.create', compact('categories'));
     }
 
     /**
@@ -118,7 +131,7 @@ class FaqController extends Controller
             ? 'Informasi baru berhasil diajukan dan sedang menunggu validasi!'
             : 'Draft informasi baru berhasil disimpan!';
 
-        return redirect()->back()->with('success', $message);
+        return redirect()->route('faqs.index')->with('success', $message);
     }
 
     /**
