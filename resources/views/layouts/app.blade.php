@@ -57,14 +57,14 @@
                     </li>
                     @endif
                     <li>
-                        <a href="{{ route('faqs.index') }}" class="sidebar-link {{ request()->routeIs('faqs.index') ? 'active' : '' }}">
+                        <a href="{{ route('faqs.index') }}" class="sidebar-link {{ request()->routeIs('faqs.*') && !request()->routeIs('faqs.history') ? 'active' : '' }}">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="3" width="7" height="7"></rect>
                                 <rect x="14" y="3" width="7" height="7"></rect>
                                 <rect x="14" y="14" width="7" height="7"></rect>
                                 <rect x="3" y="14" width="7" height="7"></rect>
                             </svg>
-                            <span>Daftar Informasi</span>
+                            <span>Daftar Informasi (FAQs)</span>
                         </a>
                     </li>
                     @if(Auth::check() && in_array(Auth::user()->role, ['data_entry', 'validator', 'super_admin']))
