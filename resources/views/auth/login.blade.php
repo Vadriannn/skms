@@ -82,6 +82,10 @@
         <div style="margin-top: 32px; padding-top: 18px; border-top: 1px dashed #E2E8F0; text-align: left; font-size: 12px; color: #94A3B8;">
             <p style="font-weight: 600; margin-bottom: 4px; color: #64748B;">Akun Demo:</p>
             <p>• Admin: <code>admin@gmail.com</code> / <code>admin</code></p>
+            <p>• Data Entry: <code>dataentry@gmail.com</code> / <code>dataentry</code></p>
+            <p>• Validator: <code>validator@gmail.com</code> / <code>validator</code></p>
+
+
         </div>
     </div>
 

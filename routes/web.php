@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/data-entry', [DashboardController::class, 'dataEntry'])->name('dashboard.data_entry');
 
     Route::get('/faqs', [FaqController::class, 'index'])->name('faqs.index');
+    Route::get('/faqs/create', [FaqController::class, 'create'])->name('faqs.create');
     Route::post('/faqs', [FaqController::class, 'store'])->name('faqs.store');
     Route::post('/faqs/check-similarity', [FaqController::class, 'checkSimilarity'])->name('faqs.check_similarity');
     Route::put('/faqs/{faq}', [FaqController::class, 'update'])->name('faqs.update');

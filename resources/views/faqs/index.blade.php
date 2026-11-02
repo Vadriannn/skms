@@ -1,50 +1,85 @@
 @extends('layouts.app', [
-    'title' => 'Daftar Informasi - SKMS',
+    'title' => 'Daftar Informasi (FAQs) - SKMS',
     'topbar_class' => 'seamless-topbar'
 ])
 
 @section('topbar_left')
-    <h1 class="topbar-page-title">Daftar Informasi</h1>
+    <h1 class="topbar-page-title">Daftar Informasi (FAQs)</h1>
 @endsection
 
 @section('content')
 <div class="faq-page-container">
-    <!-- Filter Bar: Search + Category Dropdown (Sesuai Mockup) -->
-    <form method="GET" action="{{ route('faqs.index') }}" id="filterForm" class="faq-filter-bar">
-        @if(request('status'))
-            <input type="hidden" name="status" value="{{ request('status') }}">
+    <!-- Header Controls: Filter Search + Category + Tombol Tambah Informasi Baru -->
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; width: 100%; flex-wrap: wrap;">
+        <!-- Filter Bar: Search + Category Dropdown (Sesuai Mockup) -->
+        <form method="GET" action="{{ route('faqs.index') }}" id="filterForm" class="faq-filter-bar" style="margin-bottom: 0; max-width: 600px; flex: 1; min-width: 280px;">
+            @if(request('status'))
+                <input type="hidden" name="status" value="{{ request('status') }}">
+            @endif
+            <input type="hidden" name="per_page" id="perPageInput" value="{{ $perPage ?? 10 }}">
+
+            <!-- 1. Search Box -->
+            <div class="faq-search-wrapper">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" 
+                       name="search" 
+                       id="searchInput"
+                       value="{{ request('search') }}" 
+                       placeholder="Cari pertanyaan..." 
+                       class="faq-search-field"
+                       autocomplete="off">
+            </div>
+
+            <!-- 2. Dropdown Kategori -->
+            <div class="faq-select-wrapper">
+                <select name="category_id" id="categorySelect" onchange="document.getElementById('filterForm').submit()" class="faq-category-dropdown">
+                    <option value="">Semua Kategori</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ (string)request('category_id') === (string)$category->id ? 'selected' : '' }}>
+                            {{ $category->nama }}
+                        </option>
+                    @endforeach
+                </select>
+                <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+        </form>
+
+        @if(Auth::check() && in_array(Auth::user()->role, ['data_entry', 'super_admin']))
+        <a href="{{ route('faqs.create') }}" class="btn-tambah-faq" title="Tambah Informasi FAQ Baru">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Tambah Informasi Baru</span>
+        </a>
         @endif
+    </div>
 
-        <!-- 1. Search Box -->
-        <div class="faq-search-wrapper">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" 
-                   name="search" 
-                   id="searchInput"
-                   value="{{ request('search') }}" 
-                   placeholder="Cari pertanyaan..." 
-                   class="faq-search-field"
-                   autocomplete="off">
-        </div>
-
-        <!-- 2. Dropdown Kategori -->
-        <div class="faq-select-wrapper">
-            <select name="category_id" id="categorySelect" onchange="document.getElementById('filterForm').submit()" class="faq-category-dropdown">
-                <option value="">Semua Kategori</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ (string)request('category_id') === (string)$category->id ? 'selected' : '' }}>
-                        {{ $category->nama }}
-                    </option>
-                @endforeach
+    <!-- Table Controls: Tampilkan [10, 25, 50, 100] data & Info Total -->
+    <div class="faq-table-controls">
+        <div class="faq-per-page-wrapper">
+            <span>Tampilkan</span>
+            <select name="per_page_select" id="perPageSelect" class="faq-per-page-select" onchange="document.getElementById('perPageInput').value = this.value; document.getElementById('filterForm').submit();">
+                <option value="10" {{ ($perPage ?? 10) == 10 ? 'selected' : '' }}>10</option>
+                <option value="25" {{ ($perPage ?? 10) == 25 ? 'selected' : '' }}>25</option>
+                <option value="50" {{ ($perPage ?? 10) == 50 ? 'selected' : '' }}>50</option>
+                <option value="100" {{ ($perPage ?? 10) == 100 ? 'selected' : '' }}>100</option>
             </select>
-            <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
+            <span>data</span>
         </div>
-    </form>
+        <div class="faq-total-info">
+            @if($faqs->total() > 0)
+                Menampilkan <strong>{{ $faqs->firstItem() }}</strong> - <strong>{{ $faqs->lastItem() }}</strong> dari <strong>{{ $faqs->total() }}</strong> informasi
+            @else
+                Menampilkan <strong>0</strong> informasi
+            @endif
+        </div>
+    </div>
 
     <!-- Table Container (Sesuai Mockup) -->
     <div class="faq-table-container">
@@ -53,8 +88,8 @@
                 <tr>
                     <th style="width: 50px;">No</th>
                     <th>Pertanyaan</th>
-                    <th>Kategori</th>
-                    <th>Status</th>
+                    <th style="width: 280px;">Kategori</th>
+                    <th style="width: 140px; text-align: center;">Status</th>
                     <th style="text-align: right; width: 60px;">Aksi</th>
                 </tr>
             </thead>
@@ -66,7 +101,7 @@
 
                         <!-- Pertanyaan -->
                         <td class="col-pertanyaan">
-                            <span class="faq-title-text">{{ Str::limit($item->pertanyaan, 80) }}</span>
+                            <span class="faq-title-text">{{ Str::limit($item->pertanyaan, 120) }}</span>
                         </td>
 
                         <!-- Kategori (Multi-Category Badges) -->
@@ -81,7 +116,7 @@
                         </td>
 
                         <!-- Status Badge (Draft / Menunggu / Disetujui / Ditolak) -->
-                        <td class="col-status">
+                        <td class="col-status" style="text-align: center;">
                             @if($item->status === 'draft')
                                 <span class="status-pill status-draft">Draft</span>
                             @elseif($item->status === 'pending')
