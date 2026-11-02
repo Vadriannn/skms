@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ValidatorController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -37,4 +38,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/settings/profile', [SettingsController::class, 'profile'])->name('settings.profile');
     Route::put('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.update');
+
+    // ─── VALIDATOR ROUTES ───────────────────────────────────────────────────────
+    Route::middleware('validator.only')->group(function () {
+        Route::get('/validator/dashboard', [ValidatorController::class, 'dashboard'])->name('validator.dashboard');
+        Route::get('/validator/antrian', [ValidatorController::class, 'antrian'])->name('validator.antrian');
+        Route::get('/validator/disetujui', [ValidatorController::class, 'disetujui'])->name('validator.disetujui');
+        Route::get('/validator/semua-faq', [ValidatorController::class, 'semuaFaq'])->name('validator.semua_faq');
+        Route::get('/validator/faq/{faq}', [ValidatorController::class, 'show'])->name('validator.faq.show');
+        Route::post('/validator/faq/{faq}/approve', [ValidatorController::class, 'approve'])->name('validator.faq.approve');
+        Route::post('/validator/faq/{faq}/reject', [ValidatorController::class, 'reject'])->name('validator.faq.reject');
+    });
 });
+
