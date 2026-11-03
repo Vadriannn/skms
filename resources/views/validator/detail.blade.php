@@ -22,6 +22,41 @@
     {{-- ── Panel Kiri: Konten FAQ ──────────────────────────────── --}}
     <div class="validator-detail-main">
 
+        {{-- Banner Pemberitahuan Status Pengajuan: Editan vs Revisian --}}
+        @if($faq->submission_type === 'edit')
+            <div style="background-color: #EFF6FF; border: 1px solid #93C5FD; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 12px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <div>
+                    <div style="font-weight: 700; color: #1E40AF; font-size: 14px;">
+                        Pemberitahuan: Validasi Pembaruan Data (Editan FAQ Terbit)
+                    </div>
+                    <p style="margin: 4px 0 0 0; color: #1E3A8A; font-size: 13px; line-height: 1.5;">
+                        Informasi ini <strong>bukan revisian dari penolakan</strong>, melainkan FAQ yang <strong>sebelumnya sudah disetujui & terbit</strong>. Data Entry telah menyunting/memperbarui isi pertanyaan atau jawabannya, dan mengajukannya kembali untuk diverifikasi ulang sebelum tayang kembali ke publik.
+                    </p>
+                </div>
+            </div>
+        @elseif($faq->submission_type === 'revision')
+            <div style="background-color: #FFFBEB; border: 1px solid #FCD34D; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 12px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <div>
+                    <div style="font-weight: 700; color: #92400E; font-size: 14px;">
+                        Pemberitahuan: Validasi Hasil Perbaikan (Revisian Ditolak)
+                    </div>
+                    <p style="margin: 4px 0 0 0; color: #78350F; font-size: 13px; line-height: 1.5;">
+                        FAQ ini sebelumnya <strong>ditolak oleh Validator</strong>. Data Entry telah melakukan perbaikan sesuai catatan validator dan mengajukannya kembali untuk diperiksa.
+                    </p>
+                </div>
+            </div>
+        @endif
+
         {{-- Header FAQ --}}
         <div class="vd-detail-card">
             <div class="vd-detail-card-header">
@@ -44,6 +79,14 @@
                                 <span class="status-pill status-rejected">Ditolak</span>
                             @else
                                 <span class="status-pill status-draft">Draft</span>
+                            @endif
+
+                            @if($faq->status === 'pending')
+                                @if($faq->submission_type === 'edit')
+                                    <span class="status-pill" style="background-color: #DBEAFE; color: #1E40AF; border: 1px solid #BFDBFE;">Editan FAQ Terbit</span>
+                                @elseif($faq->submission_type === 'revision')
+                                    <span class="status-pill" style="background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;">Revisian Ditolak</span>
+                                @endif
                             @endif
                         </span>
                     </div>

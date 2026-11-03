@@ -63,9 +63,26 @@
                     <tr>
                         <td class="col-no">{{ $faqs->firstItem() + $index }}</td>
                         <td class="col-pertanyaan">
-                            <a href="{{ route('validator.faq.show', $faq->id) }}" class="validator-faq-link">
-                                {{ Str::limit($faq->pertanyaan, 80) }}
-                            </a>
+                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                <a href="{{ route('validator.faq.show', $faq->id) }}" class="validator-faq-link">
+                                    {{ Str::limit($faq->pertanyaan, 75) }}
+                                </a>
+                                @if($faq->submission_type === 'edit')
+                                    <span style="background-color: #DBEAFE; color: #1E40AF; border: 1px solid #BFDBFE; font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;" title="FAQ ini sebelumnya sudah terbit, lalu diperbarui oleh Data Entry">
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                        Editan (Pembaruan)
+                                    </span>
+                                @elseif($faq->submission_type === 'revision')
+                                    <span style="background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;" title="FAQ ini diajukan kembali setelah perbaikan catatan validator">
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                                        Revisi Ditolak
+                                    </span>
+                                @else
+                                    <span style="background-color: #F1F5F9; color: #475569; border: 1px solid #E2E8F0; font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 600;">
+                                        Baru
+                                    </span>
+                                @endif
+                            </div>
                         </td>
                         <td class="col-kategori">
                             <div class="category-pills-container">
