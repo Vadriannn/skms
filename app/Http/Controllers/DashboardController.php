@@ -19,6 +19,11 @@ class DashboardController extends Controller
             return $this->dataEntry();
         }
 
+        // Jika role validator, arahkan ke dashboard validator
+        if ($user && $user->role === 'validator') {
+            return redirect()->route('validator.dashboard');
+        }
+
         $totalPengguna = User::count();
         $totalPertanyaan = Faq::count();
         $menungguValidasi = Faq::where('status', 'pending')->count();

@@ -24,7 +24,7 @@
 
                 <ul class="sidebar-menu">
                     <li>
-                        <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard*') ? 'active' : '' }}">
+                        <a href="{{ Auth::check() && Auth::user()->role === 'validator' ? route('validator.dashboard') : route('dashboard') }}" class="sidebar-link {{ (request()->routeIs('dashboard*') || request()->routeIs('validator.dashboard')) ? 'active' : '' }}">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -56,6 +56,45 @@
                         </a>
                     </li>
                     @endif
+                    @if(Auth::check() && Auth::user()->role === 'validator')
+                    {{-- Menu khusus Validator --}}
+                    <li>
+                        @php $pendingCount = \App\Models\Faq::where('status','pending')->count(); @endphp
+                        <a href="{{ route('validator.antrian') }}" class="sidebar-link {{ request()->routeIs('validator.antrian') || request()->routeIs('validator.faq.*') ? 'active' : '' }}">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-2"></path>
+                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                <line x1="9" y1="12" x2="15" y2="12"></line>
+                                <line x1="9" y1="16" x2="13" y2="16"></line>
+                            </svg>
+                            <span>Daftar Menunggu Validasi</span>
+                            @if($pendingCount > 0)
+                                <span class="sidebar-badge">{{ $pendingCount }}</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('validator.disetujui') }}" class="sidebar-link {{ request()->routeIs('validator.disetujui') ? 'active' : '' }}">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <polyline points="9 15 11 17 15 13"></polyline>
+                            </svg>
+                            <span>Informasi Disetujui</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('validator.semua_faq') }}" class="sidebar-link {{ request()->routeIs('validator.semua_faq') ? 'active' : '' }}">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                            <span>Daftar Informasi (FAQS)</span>
+                        </a>
+                    </li>
+                    @else
                     <li>
                         <a href="{{ route('faqs.index') }}" class="sidebar-link {{ request()->routeIs('faqs.*') && !request()->routeIs('faqs.history') ? 'active' : '' }}">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -67,7 +106,7 @@
                             <span>Daftar Informasi (FAQs)</span>
                         </a>
                     </li>
-                    @if(Auth::check() && in_array(Auth::user()->role, ['data_entry', 'validator', 'super_admin']))
+                    @if(Auth::check() && in_array(Auth::user()->role, ['data_entry', 'super_admin']))
                     <li>
                         <a href="{{ route('faqs.history') }}" class="sidebar-link {{ request()->routeIs('faqs.history') ? 'active' : '' }}">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -77,6 +116,7 @@
                             <span>Riwayat</span>
                         </a>
                     </li>
+                    @endif
                     @endif
                     <li>
                         <a href="{{ route('settings.profile') }}" class="sidebar-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
@@ -88,6 +128,7 @@
                         </a>
                     </li>
                 </ul>
+
             </div>
 
             <!-- Footer: Logout -->
