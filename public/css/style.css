@@ -869,9 +869,15 @@ nav[role="navigation"] svg {
 
 .data-entry-stats-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    max-width: 760px;
+    max-width: 900px;
+}
+
+@media (max-width: 768px) {
+    .data-entry-stats-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .de-stat-card {
@@ -897,6 +903,84 @@ nav[role="navigation"] svg {
 
 .de-stat-card.amber {
     background-color: #FEF9EB; /* Sesuai screenshot: soft pastel amber/warm cream */
+}
+
+.de-stat-card.red {
+    background-color: #FEF2F2; /* Soft pastel red/rose */
+    border: 1px solid rgba(254, 202, 202, 0.6);
+}
+
+.submission-tabs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.sub-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #64748B;
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.sub-tab-btn:hover {
+    background-color: #F1F5F9;
+    color: #1E293B;
+}
+
+.sub-tab-btn.active {
+    background-color: #4F46E5;
+    color: #FFFFFF;
+    border-color: #4F46E5;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+}
+
+.sub-tab-badge {
+    padding: 2px 7px;
+    border-radius: 9999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    background-color: #E2E8F0;
+    color: #475569;
+}
+
+.sub-tab-btn.active .sub-tab-badge {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #FFFFFF;
+}
+
+.review-reason-box {
+    background-color: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+}
+
+.review-reason-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #991B1B;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.review-reason-text {
+    font-size: 13.5px;
+    color: #B91C1C;
+    line-height: 1.5;
 }
 
 .de-stat-content {

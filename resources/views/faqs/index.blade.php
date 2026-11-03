@@ -145,10 +145,17 @@
                                     <button type="button" class="action-menu-item" onclick="showDetailModal({{ json_encode($item) }})">
                                         Lihat Detail
                                     </button>
-                                    <button type="button" class="action-menu-item" onclick="openEditFaqModal({{ json_encode($item) }})">
+                                    <a href="{{ route('faqs.edit', $item->id) }}" class="action-menu-item" style="text-decoration: none;">
                                         Edit
-                                    </button>
-                                    <form action="{{ route('faqs.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus informasi FAQ ini?')">
+                                    </a>
+                                    <form action="{{ route('faqs.unpublish', $item->id) }}" method="POST" onsubmit="return confirm('Tarik informasi FAQ ini ke Draf? Informasi tidak akan lagi tampil di halaman publik sampai diajukan dan divalidasi kembali.')">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="action-menu-item" style="color: #D97706;">
+                                            Tarik ke Draf
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('faqs.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus permanen informasi FAQ ini? Tindakan ini tidak dapat dibatalkan.')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="action-menu-item danger">
@@ -212,74 +219,14 @@
         <div class="modal-body">
             <div style="font-weight: 600; color: #1E293B; margin-bottom: 6px;">Jawaban / Penjelasan:</div>
             <div id="detailJawaban" style="color: #475569; line-height: 1.6; font-size: 14px;"></div>
-            <div style="margin-top: 20px; font-size: 12px; color: #94A3B8; border-top: 1px solid #F1F5F9; padding-top: 12px;">
-                Status: <span id="detailStatus" style="font-weight: 600; text-transform: uppercase;"></span>
+            <div style="margin-top: 20px; font-size: 12px; color: #94A3B8; border-top: 1px solid #F1F5F9; padding-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <div>Status: <span id="detailStatus" style="font-weight: 600; text-transform: uppercase;"></span></div>
+                <div id="detailEditBtnContainer"></div>
             </div>
         </div>
         <div class="modal-footer" style="justify-content: flex-end;">
             <button type="button" class="btn-modal-cancel" onclick="closeModal('detailModal')">Tutup</button>
         </div>
-    </div>
-</div>
-
-<!-- Modal Edit FAQ (Dengan Dukungan Multi-Kategori) -->
-<div id="editModal" class="modal-backdrop" style="display: none;" onclick="handleModalBackdrop(event, 'editModal')">
-    <div class="modal-dialog">
-        <div class="modal-header">
-            <div>
-                <h2 class="modal-title">Edit Informasi FAQ</h2>
-                <p class="modal-subtitle">Perbarui pertanyaan, jawaban, dan pilih satu atau lebih kategori yang sesuai.</p>
-            </div>
-            <button type="button" class="modal-close-btn" onclick="closeModal('editModal')">&times;</button>
-        </div>
-        <form id="editForm" method="POST" action="">
-            @csrf
-            @method('PUT')
-            <div class="modal-body">
-                <div class="form-group" style="margin-bottom: 16px;">
-                    <label class="form-label" for="editPertanyaan">Pertanyaan / Judul Informasi <span class="required">*</span></label>
-                    <input type="text" id="editPertanyaan" name="pertanyaan" required class="form-control">
-                </div>
-
-                <!-- Multi-Category Selector -->
-                <div class="form-group" style="margin-bottom: 16px;">
-                    <label class="form-label">
-                        Kategori Informasi (Bisa pilih lebih dari satu) <span class="required">*</span>
-                    </label>
-                    <div class="multi-category-selector" id="editCategoriesContainer">
-                        @foreach($categories as $cat)
-                            <label class="category-toggle-chip">
-                                <input type="checkbox" name="category_ids[]" value="{{ $cat->id }}" class="chip-checkbox edit-cat-checkbox" id="edit_cat_{{ $cat->id }}">
-                                <span class="chip-content">
-                                    <svg class="chip-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                    </svg>
-                                    {{ $cat->nama }}
-                                </span>
-                            </label>
-                        @endforeach
-                    </div>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 16px;">
-                    <label class="form-label" for="editStatus">Status Informasi</label>
-                    <select name="status" id="editStatus" class="form-control">
-                        <option value="draft">Draft</option>
-                        <option value="pending">Menunggu Validasi</option>
-                        <option value="published">Disetujui / Publik</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="editJawaban">Jawaban Lengkap <span class="required">*</span></label>
-                    <textarea id="editJawaban" name="jawaban" rows="5" required class="form-control"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-modal-cancel" onclick="closeModal('editModal')">Batal</button>
-                <button type="submit" class="btn-modal-submit">Simpan Perubahan</button>
-            </div>
-        </form>
     </div>
 </div>
 @endsection
@@ -307,7 +254,7 @@
     function showDetailModal(faq) {
         document.getElementById('detailPertanyaan').textContent = faq.pertanyaan;
         document.getElementById('detailJawaban').innerHTML = faq.jawaban;
-        document.getElementById('detailStatus').textContent = faq.status;
+        document.getElementById('detailStatus').textContent = faq.status === 'published' ? 'Disetujui / Publik' : faq.status;
 
         const catContainer = document.getElementById('detailCategories');
         catContainer.innerHTML = '';
@@ -320,30 +267,14 @@
             });
         }
 
+        const editContainer = document.getElementById('detailEditBtnContainer');
+        editContainer.innerHTML = `
+            <a href="/faqs/${faq.id}/edit" class="btn-modal-submit" style="font-size: 12px; padding: 6px 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                <span>Edit Informasi</span>
+            </a>
+        `;
+
         document.getElementById('detailModal').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function openEditFaqModal(faq) {
-        const form = document.getElementById('editForm');
-        form.action = `/faqs/${faq.id}`;
-        document.getElementById('editPertanyaan').value = faq.pertanyaan;
-        document.getElementById('editJawaban').value = faq.jawaban.replace(/<[^>]*>/g, '');
-        document.getElementById('editStatus').value = faq.status;
-
-        // Reset dan centang multi-kategori yang sesuai
-        document.querySelectorAll('.edit-cat-checkbox').forEach(cb => {
-            cb.checked = false;
-        });
-
-        if (faq.categories && faq.categories.length > 0) {
-            faq.categories.forEach(c => {
-                const cb = document.getElementById(`edit_cat_${c.id}`);
-                if (cb) cb.checked = true;
-            });
-        }
-
-        document.getElementById('editModal').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
 
@@ -361,7 +292,6 @@
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
             closeModal('detailModal');
-            closeModal('editModal');
         }
     });
 </script>

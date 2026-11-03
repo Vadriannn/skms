@@ -96,7 +96,7 @@
                     </li>
                     @else
                     <li>
-                        <a href="{{ route('faqs.index') }}" class="sidebar-link {{ request()->routeIs('faqs.*') && !request()->routeIs('faqs.history') ? 'active' : '' }}">
+                        <a href="{{ route('faqs.index') }}" class="sidebar-link {{ request()->routeIs('faqs.index') ? 'active' : '' }}">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="3" width="7" height="7"></rect>
                                 <rect x="14" y="3" width="7" height="7"></rect>
@@ -107,6 +107,24 @@
                         </a>
                     </li>
                     @if(Auth::check() && in_array(Auth::user()->role, ['data_entry', 'super_admin']))
+                    <li>
+                        @php 
+                            $revisiCount = \App\Models\Faq::where('status', 'rejected')->count(); 
+                        @endphp
+                        <a href="{{ route('faqs.submissions') }}" class="sidebar-link {{ request()->routeIs('faqs.submissions') ? 'active' : '' }}">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <span>Pengajuan & Draf</span>
+                            @if($revisiCount > 0)
+                                <span class="sidebar-badge" style="background-color: #EF4444; color: #FFFFFF;" title="{{ $revisiCount }} FAQ perlu revisi">{{ $revisiCount }}</span>
+                            @endif
+                        </a>
+                    </li>
                     <li>
                         <a href="{{ route('faqs.history') }}" class="sidebar-link {{ request()->routeIs('faqs.history') ? 'active' : '' }}">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

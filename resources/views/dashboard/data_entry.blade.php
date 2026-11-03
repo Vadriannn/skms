@@ -9,10 +9,10 @@
 
 @section('content')
 <div class="data-entry-container">
-    <!-- Grid 2 Kartu Statistik -->
+    <!-- Grid 3 Kartu Statistik -->
     <div class="data-entry-stats-grid">
         <!-- Kartu 1: Total Draft -->
-        <a href="{{ route('faqs.index', ['status' => 'draft']) }}" class="de-stat-card blue" title="Klik untuk melihat seluruh draft">
+        <a href="{{ route('faqs.submissions', ['status' => 'draft']) }}" class="de-stat-card blue" title="Klik untuk melihat seluruh draft">
             <div class="de-stat-content">
                 <div class="de-stat-label">Total Draft</div>
                 <div class="de-stat-value">{{ $totalDraft ?? 0 }}</div>
@@ -27,7 +27,7 @@
         </a>
 
         <!-- Kartu 2: Menunggu Validasi -->
-        <a href="{{ route('faqs.index', ['status' => 'pending']) }}" class="de-stat-card amber" title="Klik untuk melihat informasi menunggu validasi">
+        <a href="{{ route('faqs.submissions', ['status' => 'pending']) }}" class="de-stat-card amber" title="Klik untuk melihat informasi menunggu validasi">
             <div class="de-stat-content">
                 <div class="de-stat-label">Menunggu Validasi</div>
                 <div class="de-stat-value">{{ $menungguValidasi ?? 0 }}</div>
@@ -39,6 +39,22 @@
                     <path d="M5 2h14"></path>
                     <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path>
                     <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path>
+                </svg>
+            </div>
+        </a>
+
+        <!-- Kartu 3: Perlu Revisi / Ditolak -->
+        <a href="{{ route('faqs.submissions', ['status' => 'rejected']) }}" class="de-stat-card red" title="Klik untuk melihat informasi yang perlu direvisi">
+            <div class="de-stat-content">
+                <div class="de-stat-label">Perlu Revisi</div>
+                <div class="de-stat-value" style="color: #DC2626;">{{ $perluRevisi ?? 0 }}</div>
+            </div>
+            <div class="de-stat-icon" style="color: #EF4444;">
+                <!-- Icon Alert / Refresh -->
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
             </div>
         </a>
