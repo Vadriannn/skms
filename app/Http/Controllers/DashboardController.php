@@ -57,11 +57,13 @@ class DashboardController extends Controller
     {
         $totalDraft = Faq::where('status', 'draft')->count();
         $menungguValidasi = Faq::where('status', 'pending')->count();
+        $perluRevisi = Faq::where('status', 'rejected')->count();
         $categories = \App\Models\Category::orderBy('nama', 'asc')->get();
 
         return view('dashboard.data_entry', compact(
             'totalDraft',
             'menungguValidasi',
+            'perluRevisi',
             'categories'
         ));
     }

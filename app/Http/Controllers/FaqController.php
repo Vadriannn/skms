@@ -14,11 +14,10 @@ use Illuminate\Support\Str;
 class FaqController extends Controller
 {
     /**
-     * Tampilkan daftar informasi FAQs
+     * Tampilkan daftar informasi FAQs (khusus informasi yang sudah dipublikasikan)
      */
     public function index(Request $request)
     {
-        $status = $request->query('status');
         $categoryId = $request->query('category_id');
         $search = $request->query('search');
         $perPage = (int) $request->query('per_page', 10);
@@ -26,7 +25,9 @@ class FaqController extends Controller
             $perPage = 10;
         }
 
-        $query = Faq::with(['categories', 'user'])->latest();
+        $query = Faq::with(['categories', 'user'])
+            ->where('status', 'published')
+            ->latest();
 
         // Filter berdasarkan pencarian pertanyaan
         if ($search) {
@@ -40,16 +41,66 @@ class FaqController extends Controller
             });
         }
 
-        // Filter berdasarkan status
-        if ($status && in_array($status, ['draft', 'pending', 'published', 'rejected'])) {
-            $query->where('status', $status);
-        }
-
         // Paginate berdasarkan preferensi pengguna (default: 10)
         $faqs = $query->paginate($perPage)->withQueryString();
         $categories = Category::orderBy('nama', 'asc')->get();
 
-        return view('faqs.index', compact('faqs', 'categories', 'status', 'categoryId', 'search', 'perPage'));
+        return view('faqs.index', compact('faqs', 'categories', 'categoryId', 'search', 'perPage'));
+    }
+
+    /**
+     * Tampilkan halaman kelola pengajuan & draf FAQ (Semua Status: Draft, Pending, Rejected, Published)
+     */
+    public function submissions(Request $request)
+    {
+        $status = $request->query('status'); // draft, pending, rejected, published, atau all
+        $categoryId = $request->query('category_id');
+        $search = $request->query('search');
+        $perPage = (int) $request->query('per_page', 10);
+        if (!in_array($perPage, [10, 25, 50, 100])) {
+            $perPage = 10;
+        }
+
+        // Hitung total untuk badge tab filter
+        $countDraft = Faq::where('status', 'draft')->count();
+        $countPending = Faq::where('status', 'pending')->count();
+        $countRejected = Faq::where('status', 'rejected')->count();
+        $countPublished = Faq::where('status', 'published')->count();
+        $countAll = $countDraft + $countPending + $countRejected + $countPublished;
+
+        $query = Faq::with(['categories', 'user', 'latestReview.user', 'reviews.user'])
+            ->latest();
+
+        if ($search) {
+            $query->where('pertanyaan', 'like', "%{$search}%");
+        }
+
+        if ($categoryId) {
+            $query->whereHas('categories', function ($q) use ($categoryId) {
+                $q->where('categories.id', $categoryId);
+            });
+        }
+
+        if ($status && in_array($status, ['draft', 'pending', 'rejected', 'published'])) {
+            $query->where('status', $status);
+        }
+
+        $faqs = $query->paginate($perPage)->withQueryString();
+        $categories = Category::orderBy('nama', 'asc')->get();
+
+        return view('faqs.submissions', compact(
+            'faqs',
+            'categories',
+            'status',
+            'categoryId',
+            'search',
+            'perPage',
+            'countAll',
+            'countDraft',
+            'countPending',
+            'countRejected',
+            'countPublished'
+        ));
     }
 
     /**
@@ -59,6 +110,16 @@ class FaqController extends Controller
     {
         $categories = Category::orderBy('nama', 'asc')->get();
         return view('faqs.create', compact('categories'));
+    }
+
+    /**
+     * Tampilkan halaman formulir edit / revisi FAQ
+     */
+    public function edit(Faq $faq)
+    {
+        $faq->load(['categories', 'latestReview.user']);
+        $categories = Category::orderBy('nama', 'asc')->get();
+        return view('faqs.edit', compact('faq', 'categories'));
     }
 
     /**
@@ -131,7 +192,7 @@ class FaqController extends Controller
             ? 'Informasi baru berhasil diajukan dan sedang menunggu validasi!'
             : 'Draft informasi baru berhasil disimpan!';
 
-        return redirect()->route('faqs.index')->with('success', $message);
+        return redirect()->route('faqs.submissions', ['status' => $status])->with('success', $message);
     }
 
     /**
@@ -208,7 +269,7 @@ class FaqController extends Controller
     }
 
     /**
-     * Perbarui informasi FAQ dan sinkronisasi multi-kategori
+     * Perbarui informasi FAQ dan sinkronisasi multi-kategori (dukungan revisi langsung)
      */
     public function update(Request $request, Faq $faq)
     {
@@ -219,6 +280,7 @@ class FaqController extends Controller
             'category_ids.*' => 'exists:categories,id',
             'category_id'    => 'nullable|exists:categories,id',
             'status'         => 'nullable|in:draft,pending,published,rejected',
+            'action_type'    => 'nullable|in:draft,pending,resubmit,published',
         ]);
 
         $categoryIds = $request->input('category_ids', []);
@@ -226,22 +288,83 @@ class FaqController extends Controller
             $categoryIds = [$request->input('category_id')];
         }
 
+        $oldStatus = $faq->status;
+        $actionType = $request->input('action_type');
+        $user = Auth::user();
+
+        // Alur penentuan status baru:
+        if ($actionType === 'draft') {
+            $newStatus = 'draft';
+        } elseif ($actionType === 'published' && $user->role === 'super_admin') {
+            // Super Admin berhak update langsung published
+            $newStatus = 'published';
+        } elseif ($oldStatus === 'published' && $user->role === 'data_entry') {
+            // Pendekatan A: Data Entry mengedit FAQ published -> Re-Validation (masuk antrean validasi lagi)
+            $newStatus = 'pending';
+        } elseif ($actionType === 'resubmit' || $actionType === 'pending') {
+            $newStatus = 'pending';
+        } else {
+            $newStatus = $request->input('status', $oldStatus);
+            if ($oldStatus === 'published' && $user->role === 'data_entry') {
+                $newStatus = 'pending';
+            }
+        }
+
         $faq->update([
             'pertanyaan' => $request->pertanyaan,
             'jawaban'    => $request->jawaban,
-            'status'     => $request->input('status', $faq->status),
+            'status'     => $newStatus,
         ]);
 
         if (!empty($categoryIds)) {
             $faq->categories()->sync($categoryIds);
         }
 
+        if ($oldStatus === 'published' && $newStatus === 'pending') {
+            $logMsg = $user->name . " merevisi FAQ terbit: \"{$faq->pertanyaan}\" (diajukan ulang untuk validasi)";
+            $successMsg = 'Perubahan FAQ berhasil disimpan! Karena sebelumnya sudah terbit, FAQ kini ditarik dari publik dan masuk ke antrean Validator untuk diverifikasi ulang.';
+        } elseif ($oldStatus === 'rejected' && $newStatus === 'pending') {
+            $logMsg = $user->name . " merevisi dan mengajukan kembali FAQ ke Validator: \"{$faq->pertanyaan}\"";
+            $successMsg = 'Informasi FAQ berhasil direvisi dan telah diajukan kembali ke antrean Validator!';
+        } elseif ($newStatus === 'pending') {
+            $logMsg = $user->name . " mengajukan FAQ untuk divalidasi: \"{$faq->pertanyaan}\"";
+            $successMsg = 'Informasi FAQ berhasil diajukan dan sedang menunggu validasi!';
+        } elseif ($newStatus === 'draft') {
+            $logMsg = $user->name . " menyimpan draf informasi FAQ: \"{$faq->pertanyaan}\"";
+            $successMsg = 'Draf informasi FAQ berhasil disimpan!';
+        } else {
+            $logMsg = $user->name . " memperbarui informasi FAQ: \"{$faq->pertanyaan}\"";
+            $successMsg = 'Informasi FAQ berhasil diperbarui!';
+        }
+
+        ActivityLog::log($logMsg, 'faq');
+
+        if ($newStatus === 'published') {
+            return redirect()->route('faqs.index')->with('success', $successMsg);
+        } else {
+            return redirect()->route('faqs.submissions', ['status' => $newStatus])->with('success', $successMsg);
+        }
+    }
+
+    /**
+     * Nonaktifkan FAQ: tarik dari publik dan jadikan status draft
+     */
+    public function unpublish(Faq $faq)
+    {
+        $user = Auth::user();
+        if (!in_array($user->role, ['data_entry', 'super_admin'])) {
+            abort(403, 'Anda tidak memiliki hak akses untuk menonaktifkan FAQ ini.');
+        }
+
+        $faq->update(['status' => 'draft']);
+
         ActivityLog::log(
-            Auth::user()->name . " memperbarui informasi FAQ: \"{$faq->pertanyaan}\"",
+            $user->name . " menonaktifkan FAQ: \"{$faq->pertanyaan}\" (ditarik ke draf)",
             'faq'
         );
 
-        return redirect()->back()->with('success', 'Informasi FAQ berhasil diperbarui!');
+        return redirect()->route('faqs.submissions', ['status' => 'draft'])
+            ->with('success', "Informasi FAQ \"{$faq->pertanyaan}\" berhasil dinonaktifkan dari publik dan dipindahkan ke Draf.");
     }
 
     /**
@@ -249,16 +372,25 @@ class FaqController extends Controller
      */
     public function destroy(Faq $faq)
     {
+        $user = Auth::user();
+
+        // Keamanan: Hanya Super Admin atau pembuat FAQ yang berhak menghapus
+        if ($user->role !== 'super_admin' && $faq->user_id !== $user->id) {
+            return redirect()->back()->withErrors([
+                'error' => 'Anda tidak memiliki hak akses untuk menghapus FAQ ini.'
+            ]);
+        }
+
         $title = $faq->pertanyaan;
         $faq->categories()->detach();
         $faq->delete();
 
         ActivityLog::log(
-            Auth::user()->name . " menghapus informasi FAQ: \"{$title}\"",
+            $user->name . " menghapus informasi FAQ: \"{$title}\"",
             'faq'
         );
 
-        return redirect()->back()->with('success', 'Informasi FAQ berhasil dihapus!');
+        return redirect()->back()->with('success', 'Informasi FAQ berhasil dihapus secara permanen!');
     }
 
     /**
