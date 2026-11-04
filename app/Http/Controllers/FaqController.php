@@ -395,16 +395,22 @@ class FaqController extends Controller
 
     /**
      * Tampilkan riwayat pengajuan FAQ
+     * Super Admin dapat melihat seluruh riwayat; Data Entry hanya melihat miliknya sendiri
      */
     public function history()
     {
         $user = Auth::user();
 
-        $historyFaqs = Faq::with('categories')
-            ->where('user_id', $user->id)
-            ->latest()
-            ->paginate(15);
+        $query = Faq::with(['categories', 'user'])->latest();
 
-        return view('faqs.history', compact('historyFaqs'));
+        // Super Admin melihat semua; Data Entry hanya melihat miliknya sendiri
+        if ($user->role !== 'super_admin') {
+            $query->where('user_id', $user->id);
+        }
+
+        $historyFaqs = $query->paginate(15);
+        $isSuperAdmin = $user->role === 'super_admin';
+
+        return view('faqs.history', compact('historyFaqs', 'isSuperAdmin'));
     }
 }

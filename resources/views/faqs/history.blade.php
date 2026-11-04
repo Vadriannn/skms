@@ -3,16 +3,25 @@
 @section('content')
 <div class="page-header">
     <div>
-        <h1 class="page-title">Riwayat Pengajuan FAQ</h1>
+        <h1 class="page-title">
+            @if($isSuperAdmin) Semua Riwayat Pengajuan FAQ @else Riwayat Pengajuan FAQ @endif
+        </h1>
         <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">
-            Daftar seluruh draft dan pengajuan informasi FAQ yang telah Anda masukkan ke dalam sistem.
+            @if($isSuperAdmin)
+                Daftar seluruh draft dan pengajuan informasi FAQ dari semua pengguna.
+            @else
+                Daftar seluruh draft dan pengajuan informasi FAQ yang telah Anda masukkan ke dalam sistem.
+            @endif
         </p>
     </div>
 </div>
 
 <div class="section-card">
     <div class="section-card-header">
-        <h2>Riwayat Informasi Saya ({{ $historyFaqs->total() }})</h2>
+        <h2>
+            @if($isSuperAdmin) Semua Riwayat @else Riwayat Informasi Saya @endif
+            ({{ $historyFaqs->total() }})
+        </h2>
     </div>
 
     <div class="table-responsive">
@@ -21,6 +30,9 @@
                 <tr>
                     <th style="width: 50px;">No</th>
                     <th>Pertanyaan</th>
+                    @if($isSuperAdmin)
+                        <th>Pengaju</th>
+                    @endif
                     <th>Kategori</th>
                     <th style="text-align: center;">Status</th>
                     <th style="text-align: center;">Tanggal Dibuat</th>
@@ -54,6 +66,11 @@
                                 {{ Str::limit(strip_tags($item->jawaban), 90) }}
                             </div>
                         </td>
+                        @if($isSuperAdmin)
+                            <td style="font-size: 13px; color: var(--text-muted);">
+                                {{ $item->user?->name ?? '-' }}
+                            </td>
+                        @endif
                         <td>
                             @foreach($item->categories as $cat)
                                 <span style="background-color: #F1F5F9; color: #475569; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 500; display: inline-block;">
@@ -75,7 +92,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                        <td colspan="{{ $isSuperAdmin ? 7 : 6 }}" style="text-align: center; padding: 40px; color: var(--text-muted);">
                             Belum ada riwayat aktivitas pengajuan FAQ.
                         </td>
                     </tr>
