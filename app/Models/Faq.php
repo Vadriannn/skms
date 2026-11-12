@@ -15,10 +15,12 @@ class Faq extends Model
         'jawaban',
         'status',
         'views',
+        'helpful',
     ];
 
     protected $casts = [
-        'views' => 'integer',
+        'views'   => 'integer',
+        'helpful' => 'integer',
     ];
 
     public function user()

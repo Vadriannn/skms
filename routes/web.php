@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\SkmsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ValidatorController;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return auth()->check() ? redirect()->route('dashboard') : redirect()->route('login');
 });
+
+// ─── HALAMAN PUBLIK SKMS (Portal Mahasiswa & Beranda FAQ) ───────────────────
+Route::get('/skms/masuk', [SkmsController::class, 'showLoginForm'])->name('skms.login');
+Route::post('/skms/masuk', [SkmsController::class, 'processLogin'])->name('skms.login.post');
+Route::post('/skms/keluar', [SkmsController::class, 'logoutStudent'])->name('skms.logout');
+
+Route::get('/skms', [SkmsController::class, 'index'])->name('skms.beranda');
+Route::post('/skms/faq/{faq}/helpful', [SkmsController::class, 'toggleHelpful'])->name('skms.faq.helpful');
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
