@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Faq;
 use App\Models\Category;
 use App\Models\Search;
+use App\Models\FaqHelpfulVote;
 use App\Services\TfIdfService;
 use Illuminate\Http\Request;
 
@@ -160,6 +161,15 @@ class SkmsController extends Controller
             }
         }
 
+        // Ambil daftar FAQ yang sudah ditandai membantu oleh pengguna ini
+        $voterHash = $studentNrp 
+            ? 'nrp_' . $studentNrp 
+            : 'guest_' . hash('sha256', $request->ip() . '|' . ($request->userAgent() ?? ''));
+
+        $helpfulVotes = FaqHelpfulVote::where('voter_hash', $voterHash)->pluck('faq_id')->toArray();
+        $sessionHelpful = session('helpful_faqs', []);
+        $helpfulFaqs = array_values(array_unique(array_merge($helpfulVotes, $sessionHelpful)));
+
         return view('skms.beranda', compact(
             'results',
             'topFaqs',
@@ -167,7 +177,8 @@ class SkmsController extends Controller
             'keyword',
             'selectedCategories',
             'searched',
-            'studentNrp'
+            'studentNrp',
+            'helpfulFaqs'
         ));
     }
 
@@ -181,6 +192,65 @@ class SkmsController extends Controller
         return response()->json([
             'success' => true,
             'views'   => (int) $faq->views,
+        ]);
+    }
+
+    /**
+     * Endpoint interaktif untuk menandai / membatalkan tanda FAQ "Membantu 👍".
+     * Mencegah manipulasi/spam angka dengan mencatat voter_hash unik di tabel faq_helpful_votes.
+     * Satu identitas (NRP mahasiswa atau Guest Device) hanya bisa memberi 1 vote per FAQ.
+     */
+    public function toggleHelpful(Request $request, Faq $faq)
+    {
+        $nrp = session('student_nrp', null);
+        $ip  = $request->ip();
+        $ua  = $request->userAgent() ?? '';
+        $voterHash = $nrp ? 'nrp_' . $nrp : 'guest_' . hash('sha256', $ip . '|' . $ua);
+
+        // Periksa apakah pemilih ini sudah pernah memberi tanda membantu pada FAQ ini
+        $existingVote = FaqHelpfulVote::where('faq_id', $faq->id)
+            ->where('voter_hash', $voterHash)
+            ->first();
+
+        if ($existingVote) {
+            // Jika sudah ada, klik berikutnya berfungsi membatalkan (toggle off)
+            $existingVote->delete();
+            if ($faq->helpful > 0) {
+                $faq->decrement('helpful');
+            }
+            $isHelpful = false;
+
+            $sessionHelpful = session('helpful_faqs', []);
+            $sessionHelpful = array_values(array_diff($sessionHelpful, [$faq->id]));
+            session(['helpful_faqs' => $sessionHelpful]);
+        } else {
+            // Jika belum ada, simpan vote baru dengan proteksi unique constraint
+            try {
+                FaqHelpfulVote::create([
+                    'faq_id'      => $faq->id,
+                    'student_nrp' => $nrp ?: null,
+                    'ip_address'  => $ip,
+                    'voter_hash'  => $voterHash,
+                ]);
+                $faq->increment('helpful');
+                $isHelpful = true;
+
+                $sessionHelpful = session('helpful_faqs', []);
+                if (!in_array($faq->id, $sessionHelpful)) {
+                    $sessionHelpful[] = $faq->id;
+                    session(['helpful_faqs' => $sessionHelpful]);
+                }
+            } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+                $isHelpful = true;
+            }
+        }
+
+        $faq->refresh();
+
+        return response()->json([
+            'success'    => true,
+            'helpful'    => (int) $faq->helpful,
+            'is_helpful' => $isHelpful,
         ]);
     }
 }

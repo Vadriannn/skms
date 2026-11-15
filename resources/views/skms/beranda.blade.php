@@ -866,6 +866,87 @@
             border-radius: 9999px;
         }
 
+        /* ── Tombol Membantu 👍 & Counter ─────────────────────────── */
+        .skms-helpful-action-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .skms-btn-helpful {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: #FFFFFF;
+            border: 1.5px solid #CBD5E1;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            user-select: none;
+        }
+
+        .skms-btn-helpful:hover {
+            border-color: #6366F1;
+            background: #EEF2FF;
+            color: #4F46E5;
+            transform: translateY(-1px);
+        }
+
+        .skms-btn-helpful.active {
+            background: #EEF2FF;
+            border-color: #6366F1;
+            color: #4338CA;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+        }
+
+        .skms-helpful-count-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            border-radius: 9999px;
+            background: #F1F5F9;
+            color: #64748B;
+            font-size: 11px;
+            font-weight: 700;
+            transition: all 0.15s ease;
+        }
+
+        .skms-btn-helpful.active .skms-helpful-count-badge {
+            background: #6366F1;
+            color: #FFFFFF;
+        }
+
+        .skms-helpful-caption {
+            font-size: 12.5px;
+            color: #64748B;
+        }
+
+        .skms-helpful-caption strong {
+            color: #1E293B;
+            font-weight: 700;
+        }
+
+        .skms-helpful-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            background: #FEF3C7;
+            border: 1px solid #FDE68A;
+            color: #B45309;
+            font-size: 11.5px;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+
         /* ── Right Column: Top FAQ Widget Card ─────────────────────────── */
         .skms-top-faq-card {
             background: #FFFFFF;
@@ -1286,12 +1367,12 @@
                     @endif
                 </div>
 
-                <a href="{{ route('skms.beranda') }}" class="skms-btn-clear-search">
+                <a href="{{ route('skms.beranda', ['search' => $keyword]) }}" class="skms-btn-clear-search" onclick="clearFilterKeepSearch(event)">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
-                    <span>Bersihkan Pencarian &amp; Filter</span>
+                    <span>Bersihkan Filter</span>
                 </a>
             </div>
 
@@ -1412,6 +1493,10 @@
                                                         </svg>
                                                         <span id="faq-views-count-{{ $faq->id }}">{{ $faq->views ?? 0 }}</span> views
                                                     </span>
+                                                    <span class="skms-helpful-pill" id="helpful-pill-{{ $faq->id }}">
+                                                        <span>👍</span>
+                                                        <span id="helpful-pill-num-{{ $faq->id }}">{{ $faq->helpful ?? 0 }}</span> terbantu
+                                                    </span>
                                                     @if(isset($faq->relevance_score) && $faq->relevance_score > 0)
                                                         <span class="skms-faq-score-badge">
                                                             Relevansi: {{ round($faq->relevance_score * 100, 1) }}%
@@ -1440,6 +1525,24 @@
                                                         <circle cx="12" cy="12" r="3"></circle>
                                                     </svg>
                                                     <span>Telah dibaca sebanyak <strong id="faq-views-total-{{ $faq->id }}">{{ $faq->views ?? 0 }}</strong> kali oleh mahasiswa</span>
+                                                </div>
+                                                {{-- Tombol Membantu 👍 & Jumlah Orang Terbantu --}}
+                                                <div class="skms-helpful-action-group">
+                                                    @php
+                                                        $isVoted = in_array($faq->id, $helpfulFaqs ?? []);
+                                                    @endphp
+                                                    <button type="button" 
+                                                            class="skms-btn-helpful {{ $isVoted ? 'active' : '' }}" 
+                                                            id="btn-helpful-{{ $faq->id }}"
+                                                            onclick="toggleHelpfulVote({{ $faq->id }}, this)"
+                                                            title="{{ $isVoted ? 'Batalkan tanda terbantu' : 'Tandai informasi ini membantu' }}">
+                                                        <span>👍</span>
+                                                        <span class="skms-helpful-btn-label">{{ $isVoted ? 'Terbantu' : 'Membantu' }}</span>
+                                                        <span class="skms-helpful-count-badge" id="helpful-badge-{{ $faq->id }}">{{ $faq->helpful ?? 0 }}</span>
+                                                    </button>
+                                                    <span class="skms-helpful-caption">
+                                                        <strong id="helpful-caption-num-{{ $faq->id }}">{{ $faq->helpful ?? 0 }}</strong> orang terbantu
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -1725,6 +1828,70 @@
                 input.value = query;
                 input.focus();
             }
+        }
+
+        function clearFilterKeepSearch(e) {
+            if (e) e.preventDefault();
+            const searchInput = document.getElementById('mainSearchInput');
+            const keyword = searchInput ? searchInput.value.trim() : '{{ addslashes($keyword) }}';
+            window.location.href = '{{ route('skms.beranda') }}?search=' + encodeURIComponent(keyword);
+        }
+
+        /* ── Toggle Vote Membantu 👍 dengan Proteksi Anti-Spam ────── */
+        let isVotingInProgress = false;
+
+        function toggleHelpfulVote(faqId, button) {
+            if (isVotingInProgress) return;
+            isVotingInProgress = true;
+            button.style.pointerEvents = 'none';
+
+            fetch(`/skms/faq/${faqId}/helpful`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const count = data.helpful;
+                    const isHelpful = data.is_helpful;
+
+                    // Update badge di dalam tombol
+                    const badge = document.getElementById(`helpful-badge-${faqId}`);
+                    if (badge) badge.textContent = count;
+
+                    // Update teks jumlah terbantu
+                    const caption = document.getElementById(`helpful-caption-num-${faqId}`);
+                    if (caption) caption.textContent = count;
+
+                    // Update pill kecil di header pertanyaan
+                    const pill = document.getElementById(`helpful-pill-num-${faqId}`);
+                    if (pill) pill.textContent = count;
+
+                    const label = button.querySelector('.skms-helpful-btn-label');
+
+                    if (isHelpful) {
+                        button.classList.add('active');
+                        if (label) label.textContent = 'Terbantu';
+                        button.title = 'Batalkan tanda terbantu';
+                    } else {
+                        button.classList.remove('active');
+                        if (label) label.textContent = 'Membantu';
+                        button.title = 'Tandai informasi ini membantu';
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('Gagal mencatat respon membantu:', err);
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    isVotingInProgress = false;
+                    button.style.pointerEvents = 'auto';
+                }, 250);
+            });
         }
     </script>
 </body>

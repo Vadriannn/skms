@@ -53,6 +53,11 @@ class Faq extends Model
         return $this->hasMany(Search::class);
     }
 
+    public function helpfulVotes()
+    {
+        return $this->hasMany(FaqHelpfulVote::class, 'faq_id');
+    }
+
     /**
      * Mengetahui jenis/tipe pengajuan:
      * - 'edit': Editan dari FAQ yang sudah pernah terbit/disetujui
