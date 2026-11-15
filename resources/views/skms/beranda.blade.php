@@ -171,6 +171,28 @@
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
         }
 
+        .skms-btn-nav-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: #FFFFFF;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .skms-btn-nav-home:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-1px);
+            color: #FFFFFF;
+        }
+
         /* ── Hero Center Content ───────────────────────────────────────── */
         .skms-hero {
             position: relative;
@@ -407,6 +429,35 @@
         .skms-btn-clear-search:hover {
             color: var(--primary-hover);
             text-decoration: underline;
+        }
+
+        .skms-results-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .skms-btn-home-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 16px;
+            background: #FFFFFF;
+            border: 1.5px solid #CBD5E1;
+            border-radius: 10px;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .skms-btn-home-action:hover {
+            border-color: #6366F1;
+            background: #EEF2FF;
+            color: #4F46E5;
+            transform: translateY(-1px);
         }
 
         /* ── 2-Column Layout (Left: Filter + FAQs, Right: Top FAQs) ────── */
@@ -870,14 +921,14 @@
         .skms-helpful-action-group {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .skms-btn-helpful {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
+            gap: 8px;
+            padding: 7px 16px;
             background: #FFFFFF;
             border: 1.5px solid #CBD5E1;
             border-radius: 10px;
@@ -885,7 +936,7 @@
             font-weight: 600;
             color: #475569;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: inherit;
             user-select: none;
         }
@@ -898,34 +949,35 @@
         }
 
         .skms-btn-helpful.active {
-            background: #EEF2FF;
-            border-color: #6366F1;
-            color: #4338CA;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+            background: linear-gradient(135deg, #4F46E5, #6366F1);
+            border-color: #4338CA;
+            color: #FFFFFF;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+            transform: translateY(-1px);
         }
 
         .skms-helpful-count-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 18px;
-            height: 18px;
-            padding: 0 5px;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
             border-radius: 9999px;
             background: #F1F5F9;
-            color: #64748B;
-            font-size: 11px;
+            color: #475569;
+            font-size: 11.5px;
             font-weight: 700;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
         }
 
         .skms-btn-helpful.active .skms-helpful-count-badge {
-            background: #6366F1;
-            color: #FFFFFF;
+            background: #FFFFFF;
+            color: #4F46E5;
         }
 
         .skms-helpful-caption {
-            font-size: 12.5px;
+            font-size: 13px;
             color: #64748B;
         }
 
@@ -937,14 +989,48 @@
         .skms-helpful-pill {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            padding: 2px 8px;
-            background: #FEF3C7;
-            border: 1px solid #FDE68A;
-            color: #B45309;
-            font-size: 11.5px;
+            gap: 6px;
+            padding: 4px 12px;
+            background: #F8FAFC;
+            border: 1.5px solid #CBD5E1;
+            color: #475569;
+            font-size: 12px;
             font-weight: 600;
-            border-radius: 6px;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .skms-helpful-pill:hover {
+            background: #EEF2FF;
+            border-color: #A5B4FC;
+            color: #4F46E5;
+            transform: scale(1.03);
+        }
+
+        .skms-helpful-pill.active {
+            background: linear-gradient(135deg, #4F46E5, #6366F1);
+            border-color: #4338CA;
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+
+        .skms-helpful-pill.active span {
+            color: #FFFFFF;
+        }
+
+        @keyframes skmsBounceThumb {
+            0% { transform: scale(1) rotate(0deg); }
+            30% { transform: scale(1.3) rotate(-15deg); }
+            60% { transform: scale(1.15) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .skms-helpful-pill.active .skms-helpful-icon,
+        .skms-btn-helpful.active .skms-helpful-icon {
+            display: inline-block;
+            animation: skmsBounceThumb 0.4s ease-out;
         }
 
         /* ── Right Column: Top FAQ Widget Card ─────────────────────────── */
@@ -1248,6 +1334,15 @@
                 </a>
 
                 <div class="skms-nav-actions">
+                    @if($searched)
+                        <a href="{{ route('skms.beranda') }}" class="skms-btn-nav-home" title="Kembali ke Beranda Awal">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            <span>Beranda (Home)</span>
+                        </a>
+                    @endif
                     @if(!empty($studentNrp))
                         <div class="skms-student-badge">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -1367,13 +1462,25 @@
                     @endif
                 </div>
 
-                <a href="{{ route('skms.beranda', ['search' => $keyword]) }}" class="skms-btn-clear-search" onclick="clearFilterKeepSearch(event)">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                    <span>Bersihkan Filter</span>
-                </a>
+                <div class="skms-results-header-actions">
+                    @if(count($selectedCategories) > 0)
+                        <a href="{{ route('skms.beranda', ['search' => $keyword]) }}" class="skms-btn-clear-search" onclick="clearFilterKeepSearch(event)">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                            <span>Bersihkan Filter</span>
+                        </a>
+                    @endif
+
+                    <a href="{{ route('skms.beranda') }}" class="skms-btn-home-action" title="Kembali ke Beranda Awal">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span>Beranda (Home)</span>
+                    </a>
+                </div>
             </div>
 
             <div class="skms-search-grid">
@@ -1477,7 +1584,7 @@
                             @foreach($results as $faq)
                                 <div class="skms-faq-item" id="faq-item-{{ $faq->id }}">
                                     {{-- Tombol Toggle Pertanyaan --}}
-                                    <button type="button" class="skms-faq-question-btn" onclick="toggleFaqAccordion({{ $faq->id }}, this)">
+                                    <div class="skms-faq-question-btn" onclick="toggleFaqAccordion({{ $faq->id }}, this)" onkeydown="handleAccordionKeydown(event, {{ $faq->id }}, this)" role="button" tabindex="0">
                                         <div class="skms-faq-q-left">
                                             <div class="skms-faq-q-badge">Q</div>
                                             <div class="skms-faq-q-title-group">
@@ -1493,9 +1600,16 @@
                                                         </svg>
                                                         <span id="faq-views-count-{{ $faq->id }}">{{ $faq->views ?? 0 }}</span> views
                                                     </span>
-                                                    <span class="skms-helpful-pill" id="helpful-pill-{{ $faq->id }}">
-                                                        <span>👍</span>
-                                                        <span id="helpful-pill-num-{{ $faq->id }}">{{ $faq->helpful ?? 0 }}</span> terbantu
+                                                    @php
+                                                        $isVoted = in_array($faq->id, $helpfulFaqs ?? []);
+                                                    @endphp
+                                                    <span class="skms-helpful-pill {{ $isVoted ? 'active' : '' }}" 
+                                                          id="helpful-pill-{{ $faq->id }}"
+                                                          onclick="toggleHelpfulVote({{ $faq->id }}, event)"
+                                                          title="{{ $isVoted ? 'Batalkan tanda terbantu' : 'Klik jika informasi ini membantu' }}">
+                                                        <span class="skms-helpful-icon">👍</span>
+                                                        <span id="helpful-pill-num-{{ $faq->id }}">{{ $faq->helpful ?? 0 }}</span>
+                                                        <span class="skms-helpful-pill-label">{{ $isVoted ? 'Terbantu ✓' : 'Membantu' }}</span>
                                                     </span>
                                                     @if(isset($faq->relevance_score) && $faq->relevance_score > 0)
                                                         <span class="skms-faq-score-badge">
@@ -1510,7 +1624,7 @@
                                                 <polyline points="6 9 12 15 18 9"></polyline>
                                             </svg>
                                         </div>
-                                    </button>
+                                    </div>
 
                                     {{-- Panel Jawaban --}}
                                     <div class="skms-faq-answer">
@@ -1528,20 +1642,17 @@
                                                 </div>
                                                 {{-- Tombol Membantu 👍 & Jumlah Orang Terbantu --}}
                                                 <div class="skms-helpful-action-group">
-                                                    @php
-                                                        $isVoted = in_array($faq->id, $helpfulFaqs ?? []);
-                                                    @endphp
                                                     <button type="button" 
                                                             class="skms-btn-helpful {{ $isVoted ? 'active' : '' }}" 
                                                             id="btn-helpful-{{ $faq->id }}"
-                                                            onclick="toggleHelpfulVote({{ $faq->id }}, this)"
+                                                            onclick="toggleHelpfulVote({{ $faq->id }}, event)"
                                                             title="{{ $isVoted ? 'Batalkan tanda terbantu' : 'Tandai informasi ini membantu' }}">
-                                                        <span>👍</span>
-                                                        <span class="skms-helpful-btn-label">{{ $isVoted ? 'Terbantu' : 'Membantu' }}</span>
+                                                        <span class="skms-helpful-icon">👍</span>
+                                                        <span class="skms-helpful-btn-label">{{ $isVoted ? 'Terbantu ✓' : 'Membantu' }}</span>
                                                         <span class="skms-helpful-count-badge" id="helpful-badge-{{ $faq->id }}">{{ $faq->helpful ?? 0 }}</span>
                                                     </button>
                                                     <span class="skms-helpful-caption">
-                                                        <strong id="helpful-caption-num-{{ $faq->id }}">{{ $faq->helpful ?? 0 }}</strong> orang terbantu
+                                                        <strong id="helpful-caption-num-{{ $faq->id }}">{{ $faq->helpful ?? 0 }}</strong> orang merasa terbantu
                                                     </span>
                                                 </div>
                                             </div>
@@ -1662,24 +1773,30 @@
          JAVASCRIPT LOGIC: COMBOBOX, ACCORDION & REAL-TIME VIEW INCREMENT
     ══════════════════════════════════════════════════════════════ --}}
     <script>
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const viewedFaqsInSession = new Set();
+        const helpfulRouteTemplate = "{{ route('skms.faq.helpful', ['faq' => '__FAQ_ID__']) }}";
+        const viewRouteTemplate    = "{{ route('skms.faq.view', ['faq' => '__FAQ_ID__']) }}";
+        const csrfToken            = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const viewedFaqsInSession  = new Set();
+        const votingInProgressFaqs = new Set();
 
         /* ── Real-Time Increment View Saat FAQ Dibuka ─────────────── */
         function recordFaqView(faqId) {
             if (viewedFaqsInSession.has(faqId)) return;
             viewedFaqsInSession.add(faqId);
 
-            fetch(`/skms/faq/${faqId}/view`, {
+            const viewUrl = viewRouteTemplate.replace('__FAQ_ID__', faqId);
+            fetch(viewUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                     'X-CSRF-TOKEN': csrfToken
-                }
+                },
+                body: JSON.stringify({ _token: csrfToken })
             })
             .then(res => res.json())
             .then(data => {
-                if (data.success) {
+                if (data && data.success) {
                     const views = data.views;
                     // Update tampilan badge view di accordion item
                     const countEl = document.getElementById(`faq-views-count-${faqId}`);
@@ -1698,16 +1815,24 @@
             });
         }
 
+        /* ── Keyboard Handling untuk Accordion Header ─────────────── */
+        function handleAccordionKeydown(event, faqId, el) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggleFaqAccordion(faqId, el);
+            }
+        }
+
         /* ── Accordion Toggle ─────────────────────────────────────── */
-        function toggleFaqAccordion(faqId, button) {
+        function toggleFaqAccordion(faqId, el) {
             const item = document.getElementById(`faq-item-${faqId}`);
             if (!item) return;
 
             const isOpen = item.classList.contains('open');
 
             // Tutup FAQ lain jika terbuka
-            document.querySelectorAll('.skms-faq-item.open').forEach(el => {
-                if (el !== item) el.classList.remove('open');
+            document.querySelectorAll('.skms-faq-item.open').forEach(other => {
+                if (other !== item) other.classList.remove('open');
             });
 
             if (!isOpen) {
@@ -1837,60 +1962,102 @@
             window.location.href = '{{ route('skms.beranda') }}?search=' + encodeURIComponent(keyword);
         }
 
-        /* ── Toggle Vote Membantu 👍 dengan Proteksi Anti-Spam ────── */
-        let isVotingInProgress = false;
+        /* ── Toggle Vote Membantu 👍 dengan Proteksi Anti-Spam & Optimistic Feedback ────── */
+        function toggleHelpfulVote(faqId, event) {
+            if (event) {
+                if (typeof event.stopPropagation === 'function') event.stopPropagation();
+                if (typeof event.preventDefault === 'function') event.preventDefault();
+            }
 
-        function toggleHelpfulVote(faqId, button) {
-            if (isVotingInProgress) return;
-            isVotingInProgress = true;
-            button.style.pointerEvents = 'none';
+            if (votingInProgressFaqs.has(faqId)) return;
+            votingInProgressFaqs.add(faqId);
 
-            fetch(`/skms/faq/${faqId}/helpful`, {
+            // Elemen UI terkait
+            const footerBtn   = document.getElementById(`btn-helpful-${faqId}`);
+            const headerPill  = document.getElementById(`helpful-pill-${faqId}`);
+            const badgeEl     = document.getElementById(`helpful-badge-${faqId}`);
+            const pillNumEl   = document.getElementById(`helpful-pill-num-${faqId}`);
+            const captionEl   = document.getElementById(`helpful-caption-num-${faqId}`);
+            const footerLabel = footerBtn ? footerBtn.querySelector('.skms-helpful-btn-label') : null;
+            const pillLabel   = headerPill ? headerPill.querySelector('.skms-helpful-pill-label') : null;
+
+            // Baca status sebelumnya
+            const wasActive = (footerBtn && footerBtn.classList.contains('active')) ||
+                              (headerPill && headerPill.classList.contains('active'));
+            const prevCount = parseInt((badgeEl ? badgeEl.textContent : (pillNumEl ? pillNumEl.textContent : '0')) || '0', 10);
+
+            // Prediksi state baru (Optimistic UI)
+            const nextIsActive = !wasActive;
+            const nextCount = Math.max(0, prevCount + (nextIsActive ? 1 : -1));
+
+            function renderHelpfulState(isActive, count) {
+                // Update counter angka
+                if (badgeEl) badgeEl.textContent = count;
+                if (pillNumEl) pillNumEl.textContent = count;
+                if (captionEl) captionEl.textContent = count;
+
+                // Update tombol di dalam jawaban
+                if (footerBtn) {
+                    if (isActive) {
+                        footerBtn.classList.add('active');
+                        if (footerLabel) footerLabel.textContent = 'Terbantu ✓';
+                        footerBtn.title = 'Batalkan tanda terbantu';
+                    } else {
+                        footerBtn.classList.remove('active');
+                        if (footerLabel) footerLabel.textContent = 'Membantu';
+                        footerBtn.title = 'Tandai informasi ini membantu';
+                    }
+                }
+
+                // Update pill di baris pertanyaan
+                if (headerPill) {
+                    if (isActive) {
+                        headerPill.classList.add('active');
+                        if (pillLabel) pillLabel.textContent = 'Terbantu ✓';
+                        headerPill.title = 'Batalkan tanda terbantu';
+                    } else {
+                        headerPill.classList.remove('active');
+                        if (pillLabel) pillLabel.textContent = 'Membantu';
+                        headerPill.title = 'Klik jika informasi ini membantu';
+                    }
+                }
+            }
+
+            // Terapkan perubahan instan ke UI
+            renderHelpfulState(nextIsActive, nextCount);
+
+            // Endpoint URL dari named route Laravel
+            const voteUrl = helpfulRouteTemplate.replace('__FAQ_ID__', faqId);
+
+            fetch(voteUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                     'X-CSRF-TOKEN': csrfToken
-                }
+                },
+                body: JSON.stringify({ _token: csrfToken })
             })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
             .then(data => {
-                if (data.success) {
-                    const count = data.helpful;
-                    const isHelpful = data.is_helpful;
-
-                    // Update badge di dalam tombol
-                    const badge = document.getElementById(`helpful-badge-${faqId}`);
-                    if (badge) badge.textContent = count;
-
-                    // Update teks jumlah terbantu
-                    const caption = document.getElementById(`helpful-caption-num-${faqId}`);
-                    if (caption) caption.textContent = count;
-
-                    // Update pill kecil di header pertanyaan
-                    const pill = document.getElementById(`helpful-pill-num-${faqId}`);
-                    if (pill) pill.textContent = count;
-
-                    const label = button.querySelector('.skms-helpful-btn-label');
-
-                    if (isHelpful) {
-                        button.classList.add('active');
-                        if (label) label.textContent = 'Terbantu';
-                        button.title = 'Batalkan tanda terbantu';
-                    } else {
-                        button.classList.remove('active');
-                        if (label) label.textContent = 'Membantu';
-                        button.title = 'Tandai informasi ini membantu';
-                    }
+                if (data && data.success) {
+                    // Pastikan akurat sesuai data database
+                    renderHelpfulState(Boolean(data.is_helpful), parseInt(data.helpful, 10));
+                } else {
+                    // Rollback jika server menolak
+                    renderHelpfulState(wasActive, prevCount);
                 }
             })
             .catch(err => {
                 console.error('Gagal mencatat respon membantu:', err);
+                // Kembalikan ke state semula
+                renderHelpfulState(wasActive, prevCount);
             })
             .finally(() => {
-                setTimeout(() => {
-                    isVotingInProgress = false;
-                    button.style.pointerEvents = 'auto';
-                }, 250);
+                votingInProgressFaqs.delete(faqId);
             });
         }
     </script>

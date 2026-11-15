@@ -163,8 +163,8 @@ class SkmsController extends Controller
 
         // Ambil daftar FAQ yang sudah ditandai membantu oleh pengguna ini
         $voterHash = $studentNrp 
-            ? 'nrp_' . $studentNrp 
-            : 'guest_' . hash('sha256', $request->ip() . '|' . ($request->userAgent() ?? ''));
+            ? hash('sha256', 'nrp_' . $studentNrp)
+            : hash('sha256', 'guest_' . $request->ip() . '|' . ($request->userAgent() ?? ''));
 
         $helpfulVotes = FaqHelpfulVote::where('voter_hash', $voterHash)->pluck('faq_id')->toArray();
         $sessionHelpful = session('helpful_faqs', []);
@@ -205,7 +205,9 @@ class SkmsController extends Controller
         $nrp = session('student_nrp', null);
         $ip  = $request->ip();
         $ua  = $request->userAgent() ?? '';
-        $voterHash = $nrp ? 'nrp_' . $nrp : 'guest_' . hash('sha256', $ip . '|' . $ua);
+        $voterHash = $nrp 
+            ? hash('sha256', 'nrp_' . $nrp)
+            : hash('sha256', 'guest_' . $ip . '|' . $ua);
 
         // Periksa apakah pemilih ini sudah pernah memberi tanda membantu pada FAQ ini
         $existingVote = FaqHelpfulVote::where('faq_id', $faq->id)
