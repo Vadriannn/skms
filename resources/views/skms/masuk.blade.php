@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk Portal Mahasiswa - SKMS UBAYA</title>
+    <title>Masuk Mahasiswa - SKMS UBAYA</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
         .student-portal-badge {
@@ -22,10 +22,11 @@
         .nrp-helper-text {
             font-size: 12px;
             color: #64748B;
-            margin-top: 6px;
+            margin-top: 8px;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
+            text-align: left;
         }
 
         .nrp-helper-text strong {
@@ -51,6 +52,25 @@
             flex-shrink: 0;
             color: #DC2626;
         }
+
+        .back-link-wrapper {
+            margin-top: 18px;
+            text-align: center;
+        }
+
+        .back-link-wrapper a {
+            color: #64748B;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.15s ease;
+        }
+
+        .back-link-wrapper a:hover {
+            color: #6366F1;
+        }
     </style>
 </head>
 <body class="login-wrapper">
@@ -72,12 +92,12 @@
                 <line x1="12" y1="6" x2="12" y2="18"></line>
             </svg>
             <h1>SKMS UBAYA</h1>
-            <p>Masukkan Nama &amp; NRP Anda untuk Personalisasi Informasi &amp; FAQ</p>
+            <p>Masukkan 9 Digit NRP Anda untuk Masuk ke Portal Mahasiswa</p>
         </div>
 
         <!-- Alert Notifikasi Server -->
         @if(session('info'))
-            <div class="alert" style="background-color: #EFF6FF; border: 1px solid #BFDBFE; color: #1D4ED8;">
+            <div class="alert" style="background-color: #EFF6FF; border: 1px solid #BFDBFE; color: #1D4ED8; margin-bottom: 18px;">
                 {{ session('info') }}
             </div>
         @endif
@@ -103,28 +123,9 @@
             <span id="clientErrorText">NRP tidak valid. NRP mahasiswa UBAYA harus terdiri dari 9 digit angka (contoh: 160421001).</span>
         </div>
 
-        <!-- Form Masuk Mahasiswa -->
+        <!-- Form Masuk Mahasiswa (Hanya NRP) -->
         <form id="studentLoginForm" action="{{ route('skms.login.post') }}" method="POST">
             @csrf
-
-            <!-- Nama Lengkap Field -->
-            <div class="form-group">
-                <div class="input-icon-wrapper">
-                    <!-- User Icon -->
-                    <svg class="left-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                    <input type="text" 
-                           id="namaInput" 
-                           name="nama" 
-                           value="{{ old('nama') }}" 
-                           placeholder="Nama Lengkap Mahasiswa" 
-                           required 
-                           autofocus
-                           autocomplete="name">
-                </div>
-            </div>
 
             <!-- NRP Field -->
             <div class="form-group" style="margin-bottom: 24px;">
@@ -140,10 +141,11 @@
                            id="nrpInput" 
                            name="nrp" 
                            value="{{ old('nrp') }}" 
-                           placeholder="NRP (9 Digit Angka, misal: 160421001)" 
+                           placeholder="Masukkan 9 Digit NRP (contoh: 160421001)" 
                            maxlength="9" 
                            inputmode="numeric" 
                            required
+                           autofocus
                            autocomplete="off">
                 </div>
                 <div class="nrp-helper-text">
@@ -165,12 +167,21 @@
                 </svg>
             </button>
         </form>
+
+        <div class="back-link-wrapper">
+            <a href="{{ route('skms.beranda') }}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                <span>Kembali ke Beranda</span>
+            </a>
+        </div>
     </div>
 
     <script>
         const form = document.getElementById('studentLoginForm');
         const nrpInput = document.getElementById('nrpInput');
-        const namaInput = document.getElementById('namaInput');
         const clientErrorBox = document.getElementById('clientErrorBox');
         const clientErrorText = document.getElementById('clientErrorText');
 
@@ -182,16 +193,7 @@
 
         // Validasi form saat disubmit
         form.addEventListener('submit', function(e) {
-            const namaVal = namaInput.value.trim();
             const nrpVal = nrpInput.value.trim();
-
-            if (!namaVal) {
-                e.preventDefault();
-                clientErrorText.textContent = 'Nama lengkap wajib diisi.';
-                clientErrorBox.style.display = 'flex';
-                namaInput.focus();
-                return false;
-            }
 
             // Validasi 9 digit angka
             if (!/^[0-9]{9}$/.test(nrpVal)) {
@@ -205,4 +207,3 @@
     </script>
 </body>
 </html>
-

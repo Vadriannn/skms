@@ -20,7 +20,7 @@ Route::post('/skms/masuk', [SkmsController::class, 'processLogin'])->name('skms.
 Route::post('/skms/keluar', [SkmsController::class, 'logoutStudent'])->name('skms.logout');
 
 Route::get('/skms', [SkmsController::class, 'index'])->name('skms.beranda');
-Route::post('/skms/faq/{faq}/helpful', [SkmsController::class, 'toggleHelpful'])->name('skms.faq.helpful');
+Route::post('/skms/faq/{faq}/view', [SkmsController::class, 'incrementView'])->name('skms.faq.view');
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
