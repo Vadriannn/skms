@@ -15,10 +15,12 @@ class Faq extends Model
         'jawaban',
         'status',
         'views',
+        'helpful',
     ];
 
     protected $casts = [
-        'views' => 'integer',
+        'views'   => 'integer',
+        'helpful' => 'integer',
     ];
 
     public function user()
@@ -49,6 +51,11 @@ class Faq extends Model
     public function searches()
     {
         return $this->hasMany(Search::class);
+    }
+
+    public function helpfulVotes()
+    {
+        return $this->hasMany(FaqHelpfulVote::class, 'faq_id');
     }
 
     /**
