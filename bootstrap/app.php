@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'validator.only' => \App\Http\Middleware\ValidatorOnly::class,
+            'skms.timeout'   => \App\Http\Middleware\SkmsSessionTimeout::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

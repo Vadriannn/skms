@@ -19,9 +19,11 @@ Route::get('/skms/masuk', [SkmsController::class, 'showLoginForm'])->name('skms.
 Route::post('/skms/masuk', [SkmsController::class, 'processLogin'])->name('skms.login.post');
 Route::post('/skms/keluar', [SkmsController::class, 'logoutStudent'])->name('skms.logout');
 
-Route::get('/skms', [SkmsController::class, 'index'])->name('skms.beranda');
-Route::post('/skms/faq/{faq}/view', [SkmsController::class, 'incrementView'])->name('skms.faq.view');
-Route::post('/skms/faq/{faq}/helpful', [SkmsController::class, 'toggleHelpful'])->name('skms.faq.helpful');
+Route::middleware('skms.timeout')->group(function () {
+    Route::get('/skms', [SkmsController::class, 'index'])->name('skms.beranda');
+    Route::post('/skms/faq/{faq}/view', [SkmsController::class, 'incrementView'])->name('skms.faq.view');
+    Route::post('/skms/faq/{faq}/helpful', [SkmsController::class, 'toggleHelpful'])->name('skms.faq.helpful');
+});
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -64,4 +66,3 @@ Route::middleware('auth')->group(function () {
         Route::post('/validator/faq/{faq}/reject', [ValidatorController::class, 'reject'])->name('validator.faq.reject');
     });
 });
-

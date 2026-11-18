@@ -48,7 +48,8 @@ class SkmsController extends Controller
      */
     public function logoutStudent()
     {
-        session()->forget(['student_name', 'student_nrp']);
+        session()->forget(['student_name', 'student_nrp', 'helpful_faqs', 'skms_last_activity']);
+        session()->regenerate();
         return redirect()->route('skms.beranda')->with('info', 'Anda telah keluar dari sesi identitas mahasiswa.');
     }
 
@@ -164,7 +165,7 @@ class SkmsController extends Controller
         // Ambil daftar FAQ yang sudah ditandai membantu oleh pengguna ini
         $voterHash = $studentNrp 
             ? hash('sha256', 'nrp_' . $studentNrp)
-            : hash('sha256', 'guest_' . $request->ip() . '|' . ($request->userAgent() ?? ''));
+            : hash('sha256', 'session_' . session()->getId());
 
         $helpfulVotes = FaqHelpfulVote::where('voter_hash', $voterHash)->pluck('faq_id')->toArray();
         $sessionHelpful = session('helpful_faqs', []);
@@ -204,10 +205,9 @@ class SkmsController extends Controller
     {
         $nrp = session('student_nrp', null);
         $ip  = $request->ip();
-        $ua  = $request->userAgent() ?? '';
         $voterHash = $nrp 
             ? hash('sha256', 'nrp_' . $nrp)
-            : hash('sha256', 'guest_' . $ip . '|' . $ua);
+            : hash('sha256', 'session_' . session()->getId());
 
         // Periksa apakah pemilih ini sudah pernah memberi tanda membantu pada FAQ ini
         $existingVote = FaqHelpfulVote::where('faq_id', $faq->id)

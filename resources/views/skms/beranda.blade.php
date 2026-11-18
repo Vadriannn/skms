@@ -2060,6 +2060,28 @@
                 votingInProgressFaqs.delete(faqId);
             });
         }
+
+        /* ── Auto-Reset Sesi Setelah 3 Menit Tidak Ada Aktivitas ────────── */
+        (function () {
+            const IDLE_TIMEOUT_MS = 180000; // 3 menit
+            let idleTimer = null;
+
+            function resetIdleTimer() {
+                if (idleTimer) clearTimeout(idleTimer);
+                idleTimer = setTimeout(function () {
+                    // Refresh halaman ketika diam 3 menit agar middleware meregenerasi sesi
+                    window.location.reload();
+                }, IDLE_TIMEOUT_MS);
+            }
+
+            // Event-event yang menandakan aktivitas pengguna
+            ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(function (evt) {
+                document.addEventListener(evt, resetIdleTimer, { passive: true });
+            });
+
+            // Mulai timer saat halaman dimuat
+            resetIdleTimer();
+        })();
     </script>
 </body>
 </html>
