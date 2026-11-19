@@ -83,4 +83,46 @@ Route::middleware('auth')->group(function () {
         Route::post('/validator/faq/{faq}/approve', [ValidatorController::class, 'approve'])->name('validator.faq.approve');
         Route::post('/validator/faq/{faq}/reject', [ValidatorController::class, 'reject'])->name('validator.faq.reject');
     });
+
+    // ─── TES PENGIRIMAN EMAIL SMTP GMAIL ─────────────────────────────────────────
+    Route::get('/test-email', function (\Illuminate\Http\Request $request) {
+        $recipient = $request->query('to') ?: config('mail.from.address');
+
+        if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => "Parameter email tujuan [{$recipient}] tidak valid. Contoh penggunaan: /test-email?to=alamat@gmail.com",
+            ], 422);
+        }
+
+        $username = config('mail.mailers.smtp.username');
+        $password = config('mail.mailers.smtp.password');
+
+        if (empty($username) || $username === 'your_email@gmail.com' || empty($password) || $password === 'your_google_app_password') {
+            return response()->json([
+                'status'  => 'warning',
+                'message' => 'MAIL_USERNAME atau MAIL_PASSWORD di file .env masih berupa placeholder. Silakan isi terlebih dahulu dengan email Gmail dan Google App Password Anda.',
+            ], 400);
+        }
+
+        try {
+            \Illuminate\Support\Facades\Mail::to($recipient)->send(new \App\Mail\TestSmtpMail($recipient));
+            return response()->json([
+                'status'    => 'success',
+                'message'   => "Email uji coba berhasil dikirim ke: {$recipient}",
+                'timestamp' => now()->toIso8601String(),
+                'details'   => [
+                    'host'      => config('mail.mailers.smtp.host'),
+                    'port'      => config('mail.mailers.smtp.port'),
+                    'from'      => config('mail.from.address'),
+                    'recipient' => $recipient,
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Gagal mengirim email: ' . $e->getMessage(),
+            ], 500);
+        }
+    })->name('mail.test');
 });
