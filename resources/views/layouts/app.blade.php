@@ -129,6 +129,22 @@
                         </a>
                     </li>
                     <li>
+                        @php
+                            $pendingTicketCount = \App\Models\QuestionSubmission::where('status', 'pending')->count();
+                        @endphp
+                        <a href="{{ route('questions.index') }}" class="sidebar-link {{ request()->routeIs('questions.*') ? 'active' : '' }}">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                <line x1="9" y1="9" x2="15" y2="9"></line>
+                                <line x1="9" y1="13" x2="13" y2="13"></line>
+                            </svg>
+                            <span>Tiket pertanyaan</span>
+                            @if($pendingTicketCount > 0)
+                                <span class="sidebar-badge" title="{{ $pendingTicketCount }} pertanyaan mahasiswa menunggu tanggapan">{{ $pendingTicketCount }}</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('faqs.history') }}" class="sidebar-link {{ request()->routeIs('faqs.history') ? 'active' : '' }}">
                             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="1 4 1 10 7 10"></polyline>
@@ -190,6 +206,8 @@
                             elseif (request()->routeIs('faqs.edit')) $crumbTitle = 'Edit informasi';
                             elseif (request()->routeIs('faqs.show')) $crumbTitle = 'Detail FAQ';
                             elseif (request()->routeIs('faqs.history')) $crumbTitle = 'Riwayat pengajuan';
+                            elseif (request()->routeIs('questions.index')) $crumbTitle = 'Tiket pertanyaan';
+                            elseif (request()->routeIs('questions.show')) $crumbTitle = 'Detail tiket pertanyaan';
                             elseif (request()->routeIs('validator.antrian')) $crumbTitle = 'Antrean validasi';
                             elseif (request()->routeIs('validator.faq.*')) $crumbTitle = 'Detail FAQ';
                             elseif (request()->routeIs('validator.semua_faq')) $crumbTitle = 'Riwayat validasi';

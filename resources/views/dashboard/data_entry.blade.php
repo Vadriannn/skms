@@ -57,6 +57,16 @@
                 <div class="skmk-stat-meta-sub">Lihat catatan perbaikan &rarr;</div>
             </div>
         </a>
+        @php
+            $tiketPendingCount = \App\Models\QuestionSubmission::where('status', 'pending')->count();
+        @endphp
+        <a href="{{ route('questions.index', ['status' => 'pending']) }}" class="skmk-stat-box" style="text-decoration: none;">
+            <div class="skmk-stat-num teal">{{ str_pad($tiketPendingCount, 2, '0', STR_PAD_LEFT) }}</div>
+            <div>
+                <div class="skmk-stat-meta-title">Tiket mahasiswa</div>
+                <div class="skmk-stat-meta-sub">Pertanyaan menunggu tanggapan &rarr;</div>
+            </div>
+        </a>
     </div>
 </div>
 @endsection

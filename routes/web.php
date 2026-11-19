@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FaqController;
+use App\Http\Controllers\QuestionSubmissionController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SkmsController;
 use App\Http\Controllers\UserController;
@@ -47,6 +48,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/faqs/{faq}', [FaqController::class, 'update'])->name('faqs.update');
     Route::patch('/faqs/{faq}/unpublish', [FaqController::class, 'unpublish'])->name('faqs.unpublish');
     Route::delete('/faqs/{faq}', [FaqController::class, 'destroy'])->name('faqs.destroy');
+
+    // ─── ANTREAN TIKET PENGAJUAN PERTANYAAN MAHASISWA (Data Entry & Super Admin) ─
+    Route::get('/questions', [QuestionSubmissionController::class, 'index'])->name('questions.index');
+    Route::get('/questions/{questionSubmission}', [QuestionSubmissionController::class, 'show'])->name('questions.show');
 
     Route::resource('categories', CategoryController::class)->except(['create', 'show', 'edit']);
 
