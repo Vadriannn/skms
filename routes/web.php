@@ -38,11 +38,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/faqs/create', [FaqController::class, 'create'])->name('faqs.create');
     Route::post('/faqs', [FaqController::class, 'store'])->name('faqs.store');
     Route::post('/faqs/check-similarity', [FaqController::class, 'checkSimilarity'])->name('faqs.check_similarity');
+    Route::get('/faqs/history', [FaqController::class, 'history'])->name('faqs.history');
+    Route::get('/faqs/{faq}', [FaqController::class, 'show'])->name('faqs.show');
     Route::get('/faqs/{faq}/edit', [FaqController::class, 'edit'])->name('faqs.edit');
     Route::put('/faqs/{faq}', [FaqController::class, 'update'])->name('faqs.update');
     Route::patch('/faqs/{faq}/unpublish', [FaqController::class, 'unpublish'])->name('faqs.unpublish');
     Route::delete('/faqs/{faq}', [FaqController::class, 'destroy'])->name('faqs.destroy');
-    Route::get('/faqs/history', [FaqController::class, 'history'])->name('faqs.history');
 
     Route::resource('categories', CategoryController::class)->except(['create', 'show', 'edit']);
 

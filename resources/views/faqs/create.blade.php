@@ -28,6 +28,12 @@
             @csrf
             <input type="hidden" name="action_type" id="actionTypeInput" value="draft">
 
+            @if(!empty($prefillFaq))
+                <div style="background-color: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: #1E3A8A;">
+                    <strong>Pembuatan FAQ Pengganti:</strong> Formulir di bawah ini telah diisi awal dari FAQ lama <em>&ldquo;{{ $prefillFaq->pertanyaan }}&rdquo;</em> yang telah dinonaktifkan. Silakan sesuaikan isinya dan ajukan sebagai FAQ baru.
+                </div>
+            @endif
+
             <!-- 1. Pertanyaan + TF-IDF Real-time Check -->
             <div class="form-group" style="margin-bottom: 22px;">
                 <label class="form-label" for="pertanyaan">
@@ -38,7 +44,7 @@
                            class="form-control"
                            placeholder="Misal: Bagaimana prosedur pengajuan cuti kuliah semester ganjil?"
                            autocomplete="off"
-                           value="{{ old('pertanyaan') }}">
+                           value="{{ old('pertanyaan', $prefillFaq->pertanyaan ?? '') }}">
                     <div id="similaritySpinner" class="similarity-spinner-icon">
                         <span class="spinner-sm"></span>
                         <span>Mengecek TF-IDF...</span>
@@ -54,11 +60,15 @@
                 <label class="form-label">
                     Kategori Informasi (Dapat memilih lebih dari satu) <span class="required">*</span>
                 </label>
+                @php
+                    $defaultCats = !empty($prefillFaq) ? $prefillFaq->categories->pluck('id')->toArray() : [];
+                    $checkedCatIds = old('category_ids', $defaultCats);
+                @endphp
                 <div class="multi-category-selector">
                     @foreach($categories as $category)
                         <label class="category-toggle-chip">
                             <input type="checkbox" name="category_ids[]" value="{{ $category->id }}" class="chip-checkbox"
-                                   {{ is_array(old('category_ids')) && in_array($category->id, old('category_ids')) ? 'checked' : '' }}>
+                                   {{ is_array($checkedCatIds) && in_array($category->id, $checkedCatIds) ? 'checked' : '' }}>
                             <span class="chip-content">
                                 <svg class="chip-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="20 6 9 17 4 12"></polyline>
@@ -81,7 +91,7 @@
                 <textarea id="jawaban" name="jawaban" rows="8" required
                           class="form-control"
                           style="line-height: 1.6; resize: vertical;"
-                          placeholder="Tuliskan jawaban, alur, persyaratan, atau panduan lengkap mengenai informasi ini...">{{ old('jawaban') }}</textarea>
+                          placeholder="Tuliskan jawaban, alur, persyaratan, atau panduan lengkap mengenai informasi ini...">{{ old('jawaban', $prefillFaq->jawaban ?? '') }}</textarea>
                 @error('jawaban')
                     <div style="color: #EF4444; font-size: 13px; margin-top: 6px;">{{ $message }}</div>
                 @enderror

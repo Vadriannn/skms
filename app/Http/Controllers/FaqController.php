@@ -25,7 +25,7 @@ class FaqController extends Controller
             $perPage = 10;
         }
 
-        $query = Faq::with(['categories', 'user'])
+        $query = Faq::with(['categories', 'user', 'reviews.user'])
             ->where('status', 'published')
             ->latest();
 
@@ -66,9 +66,10 @@ class FaqController extends Controller
         $countPending = Faq::where('status', 'pending')->count();
         $countRejected = Faq::where('status', 'rejected')->count();
         $countPublished = Faq::where('status', 'published')->count();
-        $countAll = $countDraft + $countPending + $countRejected + $countPublished;
+        $countInactive = Faq::where('status', 'inactive')->count();
+        $countAll = $countDraft + $countPending + $countRejected + $countPublished + $countInactive;
 
-        $query = Faq::with(['categories', 'user', 'latestReview.user', 'reviews.user', 'latestDuplicateLog.similarFaq'])
+        $query = Faq::with(['categories', 'user', 'deactivatedByUser', 'latestReview.user', 'reviews.user', 'latestDuplicateLog.similarFaq'])
             ->latest();
 
         if ($search) {
@@ -81,7 +82,7 @@ class FaqController extends Controller
             });
         }
 
-        if ($status && in_array($status, ['draft', 'pending', 'rejected', 'published'])) {
+        if ($status && in_array($status, ['draft', 'pending', 'rejected', 'published', 'inactive'])) {
             $query->where('status', $status);
         }
 
@@ -99,24 +100,51 @@ class FaqController extends Controller
             'countDraft',
             'countPending',
             'countRejected',
-            'countPublished'
+            'countPublished',
+            'countInactive'
         ));
     }
 
     /**
      * Tampilkan halaman formulir input FAQ baru
      */
-    public function create()
+    public function create(Request $request)
     {
         $categories = Category::orderBy('nama', 'asc')->get();
-        return view('faqs.create', compact('categories'));
+        $prefillFaq = null;
+        if ($request->filled('from_faq')) {
+            $prefillFaq = Faq::with('categories')->find($request->query('from_faq'));
+        }
+        return view('faqs.create', compact('categories', 'prefillFaq'));
     }
 
     /**
-     * Tampilkan halaman formulir edit / revisi FAQ
+     * Tampilkan halaman detail penuh satu FAQ beserta jejak pembuatan, validasi, duplikasi, dan penonaktifan
+     */
+    public function show(Faq $faq)
+    {
+        $faq->load([
+            'categories',
+            'user',
+            'deactivatedByUser',
+            'latestReview.user',
+            'reviews.user',
+            'latestDuplicateLog.similarFaq.categories',
+        ]);
+
+        return view('faqs.show', compact('faq'));
+    }
+
+    /**
+     * Tampilkan halaman formulir edit / revisi FAQ (Hanya untuk FAQ yang belum pernah terbit/nonaktif)
      */
     public function edit(Faq $faq)
     {
+        if (in_array($faq->status, ['published', 'inactive'])) {
+            return redirect()->route('faqs.submissions', ['status' => $faq->status])
+                ->withErrors(['error' => 'FAQ yang sudah dipublikasikan atau dinonaktifkan tidak dapat diedit. Silakan nonaktifkan FAQ lama lalu buat pengajuan FAQ baru.']);
+        }
+
         $faq->load(['categories', 'latestReview.user']);
         $categories = Category::orderBy('nama', 'asc')->get();
         return view('faqs.edit', compact('faq', 'categories'));
@@ -269,18 +297,24 @@ class FaqController extends Controller
     }
 
     /**
-     * Perbarui informasi FAQ dan sinkronisasi multi-kategori (dukungan revisi langsung)
+     * Perbarui informasi FAQ dan sinkronisasi multi-kategori (Hanya untuk draf/pending/rejected yang belum terbit)
      */
     public function update(Request $request, Faq $faq, TfIdfService $tfidfService)
     {
+        if (in_array($faq->status, ['published', 'inactive'])) {
+            return redirect()->back()->withErrors([
+                'error' => 'FAQ yang sudah dipublikasikan atau dinonaktifkan bersifat permanen dan tidak dapat diedit. Silakan nonaktifkan FAQ lama lalu buat FAQ baru.'
+            ]);
+        }
+
         $request->validate([
             'pertanyaan'     => 'required|string|max:500',
             'jawaban'        => 'required|string',
             'category_ids'   => 'nullable|array',
             'category_ids.*' => 'exists:categories,id',
             'category_id'    => 'nullable|exists:categories,id',
-            'status'         => 'nullable|in:draft,pending,published,rejected',
-            'action_type'    => 'nullable|in:draft,pending,resubmit,published',
+            'status'         => 'nullable|in:draft,pending,rejected',
+            'action_type'    => 'nullable|in:draft,pending,resubmit',
         ]);
 
         $categoryIds = $request->input('category_ids', []);
@@ -295,19 +329,10 @@ class FaqController extends Controller
         // Alur penentuan status baru:
         if ($actionType === 'draft') {
             $newStatus = 'draft';
-        } elseif ($actionType === 'published' && $user->role === 'super_admin') {
-            // Super Admin berhak update langsung published
-            $newStatus = 'published';
-        } elseif ($oldStatus === 'published' && $user->role === 'data_entry') {
-            // Pendekatan A: Data Entry mengedit FAQ published -> Re-Validation (masuk antrean validasi lagi)
-            $newStatus = 'pending';
         } elseif ($actionType === 'resubmit' || $actionType === 'pending') {
             $newStatus = 'pending';
         } else {
             $newStatus = $request->input('status', $oldStatus);
-            if ($oldStatus === 'published' && $user->role === 'data_entry') {
-                $newStatus = 'pending';
-            }
         }
 
         // Jalankan pengecekan ulang TF-IDF (kecualikan FAQ yang sedang diedit ini)
@@ -334,10 +359,7 @@ class FaqController extends Controller
             ]);
         }
 
-        if ($oldStatus === 'published' && $newStatus === 'pending') {
-            $logMsg = $user->name . " merevisi FAQ terbit: \"{$faq->pertanyaan}\" (diajukan ulang untuk validasi)";
-            $successMsg = 'Perubahan FAQ berhasil disimpan! Karena sebelumnya sudah terbit, FAQ kini ditarik dari publik dan masuk ke antrean Validator untuk diverifikasi ulang.';
-        } elseif ($oldStatus === 'rejected' && $newStatus === 'pending') {
+        if ($oldStatus === 'rejected' && $newStatus === 'pending') {
             $logMsg = $user->name . " merevisi dan mengajukan kembali FAQ ke Validator: \"{$faq->pertanyaan}\"";
             $successMsg = 'Informasi FAQ berhasil direvisi dan telah diajukan kembali ke antrean Validator!';
         } elseif ($newStatus === 'pending') {
@@ -353,45 +375,57 @@ class FaqController extends Controller
 
         ActivityLog::log($logMsg, 'faq');
 
-        if ($newStatus === 'published') {
-            return redirect()->route('faqs.index')->with('success', $successMsg);
-        } else {
-            return redirect()->route('faqs.submissions', ['status' => $newStatus])->with('success', $successMsg);
-        }
+        return redirect()->route('faqs.submissions', ['status' => $newStatus])->with('success', $successMsg);
     }
 
     /**
-     * Nonaktifkan FAQ: tarik dari publik dan jadikan status draft
+     * Nonaktifkan FAQ: matikan FAQ yang sudah terbit (status -> inactive) beserta pencatatan waktu & pelaku
      */
-    public function unpublish(Faq $faq)
+    public function unpublish(Request $request, Faq $faq)
     {
         $user = Auth::user();
         if (!in_array($user->role, ['data_entry', 'super_admin'])) {
             abort(403, 'Anda tidak memiliki hak akses untuk menonaktifkan FAQ ini.');
         }
 
-        $faq->update(['status' => 'draft']);
+        $faq->update([
+            'status'         => 'inactive',
+            'deactivated_at' => now(),
+            'deactivated_by' => $user->id,
+        ]);
 
         ActivityLog::log(
-            $user->name . " menonaktifkan FAQ: \"{$faq->pertanyaan}\" (ditarik ke draf)",
+            $user->name . " menonaktifkan FAQ: \"{$faq->pertanyaan}\" (status: nonaktif)",
             'faq'
         );
 
-        return redirect()->route('faqs.submissions', ['status' => 'draft'])
-            ->with('success', "Informasi FAQ \"{$faq->pertanyaan}\" berhasil dinonaktifkan dari publik dan dipindahkan ke Draf.");
+        // Jika pengguna memilih "Nonaktifkan & Buat FAQ Baru", arahkan langsung ke form create dengan prefill
+        if ($request->input('create_replacement') === '1') {
+            return redirect()->route('faqs.create', ['from_faq' => $faq->id])
+                ->with('success', "FAQ lama \"{$faq->pertanyaan}\" telah dinonaktifkan. Silakan sesuaikan dan ajukan sebagai FAQ baru di bawah ini.");
+        }
+
+        return redirect()->route('faqs.submissions', ['status' => 'inactive'])
+            ->with('success', "Informasi FAQ \"{$faq->pertanyaan}\" berhasil dinonaktifkan.");
     }
 
     /**
-     * Hapus informasi FAQ
+     * Hapus informasi FAQ (Tidak ada peran yang diperbolehkan menghapus FAQ yang sudah terbit/nonaktif)
      */
     public function destroy(Faq $faq)
     {
         $user = Auth::user();
 
-        // Keamanan: Hanya Super Admin atau pembuat FAQ yang berhak menghapus
+        if (in_array($faq->status, ['published', 'inactive'])) {
+            return redirect()->back()->withErrors([
+                'error' => 'FAQ yang sudah dipublikasikan atau dinonaktifkan tidak diperbolehkan untuk dihapus demi menjaga riwayat sistem.'
+            ]);
+        }
+
+        // Keamanan untuk draf/pending/rejected: Hanya Super Admin atau pembuat FAQ yang berhak menghapus
         if ($user->role !== 'super_admin' && $faq->user_id !== $user->id) {
             return redirect()->back()->withErrors([
-                'error' => 'Anda tidak memiliki hak akses untuk menghapus FAQ ini.'
+                'error' => 'Anda tidak memiliki hak akses untuk menghapus draf FAQ ini.'
             ]);
         }
 
@@ -400,11 +434,11 @@ class FaqController extends Controller
         $faq->delete();
 
         ActivityLog::log(
-            $user->name . " menghapus informasi FAQ: \"{$title}\"",
+            $user->name . " menghapus draf informasi FAQ: \"{$title}\"",
             'faq'
         );
 
-        return redirect()->back()->with('success', 'Informasi FAQ berhasil dihapus secara permanen!');
+        return redirect()->back()->with('success', 'Draf informasi FAQ berhasil dihapus.');
     }
 
     /**
@@ -415,7 +449,7 @@ class FaqController extends Controller
     {
         $user = Auth::user();
 
-        $query = Faq::with(['categories', 'user'])->latest();
+        $query = Faq::with(['categories', 'user', 'deactivatedByUser'])->latest();
 
         // Super Admin melihat semua; Data Entry hanya melihat miliknya sendiri
         if ($user->role !== 'super_admin') {

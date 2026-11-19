@@ -16,16 +16,24 @@ class Faq extends Model
         'status',
         'views',
         'helpful',
+        'deactivated_at',
+        'deactivated_by',
     ];
 
     protected $casts = [
-        'views'   => 'integer',
-        'helpful' => 'integer',
+        'views'          => 'integer',
+        'helpful'        => 'integer',
+        'deactivated_at' => 'datetime',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function deactivatedByUser()
+    {
+        return $this->belongsTo(User::class, 'deactivated_by');
     }
 
     public function categories()

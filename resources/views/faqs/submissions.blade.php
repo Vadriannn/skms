@@ -49,6 +49,12 @@
             <span>Draft</span>
             <span class="sub-tab-badge">{{ $countDraft }}</span>
         </a>
+        <a href="{{ route('faqs.submissions', array_merge(request()->except('page'), ['status' => 'inactive'])) }}" 
+           class="sub-tab-btn {{ $status === 'inactive' ? 'active' : '' }}"
+           style="{{ $status === 'inactive' ? 'background-color: #64748B; border-color: #64748B;' : '' }}">
+            <span>Nonaktif</span>
+            <span class="sub-tab-badge" style="{{ ($countInactive ?? 0) > 0 && $status !== 'inactive' ? 'background-color: #E2E8F0; color: #334155;' : '' }}">{{ $countInactive ?? 0 }}</span>
+        </a>
     </div>
 
     <!-- Header Controls: Filter Search + Category + Tombol Tambah Informasi Baru -->
@@ -144,8 +150,10 @@
                         <!-- Pertanyaan Bersih & Rapi -->
                         <td class="col-pertanyaan">
                             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                <span class="faq-title-text">{{ Str::limit($item->pertanyaan, 120) }}</span>
-                                @if($item->latestDuplicateLog && $item->status !== 'published')
+                                <a href="{{ route('faqs.show', $item->id) }}" class="faq-title-text" style="text-decoration: none; {{ $item->status === 'inactive' ? 'color: #94A3B8; text-decoration: line-through;' : '' }}">
+                                    {{ Str::limit($item->pertanyaan, 120) }}
+                                </a>
+                                @if($item->latestDuplicateLog && !in_array($item->status, ['published', 'inactive']))
                                     @php
                                         $dupScoreVal = (float) $item->latestDuplicateLog->score;
                                         $dupPct = $dupScoreVal <= 1 ? round($dupScoreVal * 100) : round($dupScoreVal);
@@ -155,6 +163,12 @@
                                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                                         Indikasi Duplikat ({{ $dupPct }}%)
                                     </span>
+                                @endif
+                            </div>
+                            <div style="font-size: 11.5px; color: #94A3B8; margin-top: 4px;">
+                                Dibuat oleh: <strong>{{ $item->user?->name ?? '-' }}</strong> ({{ $item->created_at->format('d M Y H:i') }})
+                                @if($item->status === 'inactive' && $item->deactivated_at)
+                                    &bull; <span style="color: #DC2626;">Dinonaktifkan oleh <strong>{{ $item->deactivatedByUser?->name ?? '-' }}</strong> pada {{ $item->deactivated_at->format('d M Y H:i') }}</span>
                                 @endif
                             </div>
                         </td>
@@ -170,7 +184,7 @@
                             </div>
                         </td>
 
-                        <!-- Status Badge (Draft / Menunggu / Ditolak / Disetujui) -->
+                        <!-- Status Badge (Draft / Menunggu / Ditolak / Disetujui / Nonaktif) -->
                         <td class="col-status" style="text-align: center;">
                             @if($item->status === 'draft')
                                 <span class="status-pill status-draft">Draft</span>
@@ -180,6 +194,8 @@
                                 <span class="status-pill status-approved">Disetujui</span>
                             @elseif($item->status === 'rejected')
                                 <span class="status-pill status-rejected">Perlu Revisi</span>
+                            @elseif($item->status === 'inactive')
+                                <span class="status-pill" style="background-color: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">Nonaktif</span>
                             @else
                                 <span class="status-pill status-draft">{{ ucfirst($item->status) }}</span>
                             @endif
@@ -197,28 +213,41 @@
                                 </button>
 
                                 <div id="sub-menu-{{ $item->id }}" class="action-menu" style="display: none;">
-                                    <button type="button" class="action-menu-item" onclick="showDetailSubModal({{ json_encode($item) }})">
+                                    <a href="{{ route('faqs.show', $item->id) }}" class="action-menu-item" style="text-decoration: none;">
                                         Lihat Detail
-                                    </button>
-                                    <a href="{{ route('faqs.edit', $item->id) }}" class="action-menu-item" style="text-decoration: none;">
-                                        {{ $item->status === 'rejected' ? 'Revisi / Edit' : 'Edit' }}
                                     </a>
                                     @if($item->status === 'published')
-                                    <form action="{{ route('faqs.unpublish', $item->id) }}" method="POST" onsubmit="return confirm('Tarik informasi FAQ ini ke Draf? Informasi tidak akan lagi tampil di halaman publik sampai diajukan dan divalidasi kembali.')">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="action-menu-item" style="color: #D97706;">
-                                            Tarik ke Draf
-                                        </button>
-                                    </form>
+                                        <form action="{{ route('faqs.unpublish', $item->id) }}" method="POST" onsubmit="return confirm('Nonaktifkan FAQ ini dan langsung buat pengajuan FAQ baru sebagai penggantinya?')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="create_replacement" value="1">
+                                            <button type="submit" class="action-menu-item" style="color: #4F46E5; font-weight: 600;">
+                                                Nonaktifkan &amp; Buat Baru
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('faqs.unpublish', $item->id) }}" method="POST" onsubmit="return confirm('Nonaktifkan informasi FAQ ini dari publik?')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="action-menu-item" style="color: #D97706;">
+                                                Nonaktifkan FAQ
+                                            </button>
+                                        </form>
+                                    @elseif($item->status === 'inactive')
+                                        <a href="{{ route('faqs.create', ['from_faq' => $item->id]) }}" class="action-menu-item" style="text-decoration: none; color: #4F46E5; font-weight: 600;">
+                                            Buat FAQ Baru dari Ini
+                                        </a>
+                                    @else
+                                        <a href="{{ route('faqs.edit', $item->id) }}" class="action-menu-item" style="text-decoration: none;">
+                                            {{ $item->status === 'rejected' ? 'Revisi / Edit' : 'Edit' }}
+                                        </a>
+                                        <form action="{{ route('faqs.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus draf pengajuan ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="action-menu-item danger">
+                                                Hapus Draf
+                                            </button>
+                                        </form>
                                     @endif
-                                    <form action="{{ route('faqs.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus permanen informasi ini? Tindakan ini tidak dapat dibatalkan.')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="action-menu-item danger">
-                                            Hapus
-                                        </button>
-                                    </form>
                                 </div>
                             </div>
                         </td>
@@ -317,6 +346,14 @@
             <div style="font-weight: 600; color: #1E293B; margin-bottom: 6px;">Jawaban / Penjelasan:</div>
             <div id="subDetailJawaban" style="color: #475569; line-height: 1.6; font-size: 14px;"></div>
             
+            <!-- Riwayat Pembuatan & Penonaktifan Lengkap -->
+            <div style="margin-top: 16px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; font-size: 12.5px; color: #475569; line-height: 1.6;">
+                <div><strong>Dibuat oleh:</strong> <span id="subDetailAuthor">-</span> &bull; <strong>Tanggal Dibuat:</strong> <span id="subDetailCreatedAt">-</span></div>
+                <div id="subDetailDeactivatedRow" style="display: none; color: #DC2626; margin-top: 4px;">
+                    <strong>Dinonaktifkan oleh:</strong> <span id="subDetailDeactivatedBy">-</span> &bull; <strong>Tanggal Nonaktif:</strong> <span id="subDetailDeactivatedAt">-</span>
+                </div>
+            </div>
+
             <!-- Riwayat Review / Validasi Lengkap -->
             <div id="subDetailHistoryContainer" style="display: none; margin-top: 18px; padding-top: 14px; border-top: 1px dashed #E2E8F0;">
                 <div style="font-size: 12.5px; font-weight: 700; color: #334155; margin-bottom: 8px;">Riwayat Validasi:</div>
@@ -367,6 +404,7 @@
         if (faq.status === 'pending') statusLabel = 'Menunggu Validasi';
         if (faq.status === 'rejected') statusLabel = 'Perlu Revisi (Ditolak)';
         if (faq.status === 'published') statusLabel = 'Disetujui / Publik';
+        if (faq.status === 'inactive') statusLabel = 'Nonaktif';
         document.getElementById('subDetailStatus').textContent = statusLabel;
 
         // Render Kategori
@@ -410,6 +448,18 @@
             const dt = new Date(dtString);
             return dt.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' +
                    dt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Info Pembuat & Penonaktifan
+        document.getElementById('subDetailAuthor').textContent = (faq.user && faq.user.name) ? faq.user.name : '-';
+        document.getElementById('subDetailCreatedAt').textContent = formatDatetime(faq.created_at);
+        const deactRow = document.getElementById('subDetailDeactivatedRow');
+        if (faq.status === 'inactive' && faq.deactivated_at) {
+            deactRow.style.display = 'block';
+            document.getElementById('subDetailDeactivatedBy').textContent = (faq.deactivated_by_user && faq.deactivated_by_user.name) ? faq.deactivated_by_user.name : '-';
+            document.getElementById('subDetailDeactivatedAt').textContent = formatDatetime(faq.deactivated_at);
+        } else {
+            deactRow.style.display = 'none';
         }
 
         // Tampilkan Box Approval jika Disetujui (Published)
@@ -482,21 +532,32 @@
             historyContainer.style.display = 'none';
         }
 
-        // Tombol aksi di bawah modal detail
-        const btnEdit = document.createElement('a');
-        btnEdit.href = `/faqs/${faq.id}/edit`;
-        btnEdit.className = 'btn-modal-submit';
-        btnEdit.style.fontSize = '12px';
-        btnEdit.style.padding = '6px 14px';
-        btnEdit.style.textDecoration = 'none';
-        
-        if (faq.status === 'rejected') {
-            btnEdit.style.backgroundColor = '#2563EB';
-            btnEdit.textContent = 'Buka Halaman Revisi';
+        // Tombol aksi di bawah modal detail (FAQ published/inactive tidak boleh diedit)
+        if (faq.status === 'published' || faq.status === 'inactive') {
+            const btnNew = document.createElement('a');
+            btnNew.href = `/faqs/create?from_faq=${faq.id}`;
+            btnNew.className = 'btn-modal-submit';
+            btnNew.style.fontSize = '12px';
+            btnNew.style.padding = '6px 14px';
+            btnNew.style.textDecoration = 'none';
+            btnNew.textContent = 'Buat FAQ Baru dari Ini';
+            actionBtnContainer.appendChild(btnNew);
         } else {
-            btnEdit.textContent = 'Edit Informasi';
+            const btnEdit = document.createElement('a');
+            btnEdit.href = `/faqs/${faq.id}/edit`;
+            btnEdit.className = 'btn-modal-submit';
+            btnEdit.style.fontSize = '12px';
+            btnEdit.style.padding = '6px 14px';
+            btnEdit.style.textDecoration = 'none';
+            
+            if (faq.status === 'rejected') {
+                btnEdit.style.backgroundColor = '#2563EB';
+                btnEdit.textContent = 'Buka Halaman Revisi';
+            } else {
+                btnEdit.textContent = 'Edit Informasi';
+            }
+            actionBtnContainer.appendChild(btnEdit);
         }
-        actionBtnContainer.appendChild(btnEdit);
 
         document.getElementById('subDetailModal').style.display = 'flex';
         document.body.style.overflow = 'hidden';

@@ -101,7 +101,9 @@
 
                         <!-- Pertanyaan -->
                         <td class="col-pertanyaan">
-                            <span class="faq-title-text">{{ Str::limit($item->pertanyaan, 120) }}</span>
+                            <a href="{{ route('faqs.show', ['faq' => $item->id, 'from' => 'index']) }}" class="faq-title-text" style="text-decoration: none;">
+                                {{ Str::limit($item->pertanyaan, 120) }}
+                            </a>
                         </td>
 
                         <!-- Kategori (Multi-Category Badges) -->
@@ -142,24 +144,22 @@
                                 </button>
 
                                 <div id="menu-{{ $item->id }}" class="action-menu" style="display: none;">
-                                    <button type="button" class="action-menu-item" onclick="showDetailModal({{ json_encode($item) }})">
+                                    <a href="{{ route('faqs.show', ['faq' => $item->id, 'from' => 'index']) }}" class="action-menu-item" style="text-decoration: none;">
                                         Lihat Detail
-                                    </button>
-                                    <a href="{{ route('faqs.edit', $item->id) }}" class="action-menu-item" style="text-decoration: none;">
-                                        Edit
                                     </a>
-                                    <form action="{{ route('faqs.unpublish', $item->id) }}" method="POST" onsubmit="return confirm('Tarik informasi FAQ ini ke Draf? Informasi tidak akan lagi tampil di halaman publik sampai diajukan dan divalidasi kembali.')">
+                                    <form action="{{ route('faqs.unpublish', $item->id) }}" method="POST" onsubmit="return confirm('Nonaktifkan FAQ ini dan langsung buat pengajuan FAQ baru sebagai penggantinya?')">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="action-menu-item" style="color: #D97706;">
-                                            Tarik ke Draf
+                                        <input type="hidden" name="create_replacement" value="1">
+                                        <button type="submit" class="action-menu-item">
+                                            Nonaktifkan &amp; Buat Baru
                                         </button>
                                     </form>
-                                    <form action="{{ route('faqs.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus permanen informasi FAQ ini? Tindakan ini tidak dapat dibatalkan.')">
+                                    <form action="{{ route('faqs.unpublish', $item->id) }}" method="POST" onsubmit="return confirm('Nonaktifkan informasi FAQ ini dari publik? FAQ yang sudah dinonaktifkan tidak akan tampil lagi di halaman pencarian mahasiswa.')">
                                         @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="action-menu-item danger">
-                                            Hapus
+                                        @method('PATCH')
+                                        <button type="submit" class="action-menu-item">
+                                            Nonaktifkan FAQ
                                         </button>
                                     </form>
                                 </div>
@@ -219,9 +219,10 @@
         <div class="modal-body">
             <div style="font-weight: 600; color: #1E293B; margin-bottom: 6px;">Jawaban / Penjelasan:</div>
             <div id="detailJawaban" style="color: #475569; line-height: 1.6; font-size: 14px;"></div>
-            <div style="margin-top: 20px; font-size: 12px; color: #94A3B8; border-top: 1px solid #F1F5F9; padding-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-                <div>Status: <span id="detailStatus" style="font-weight: 600; text-transform: uppercase;"></span></div>
-                <div id="detailEditBtnContainer"></div>
+            <div style="margin-top: 18px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; font-size: 12.5px; color: #475569; line-height: 1.6;">
+                <div><strong>Dibuat oleh:</strong> <span id="detailAuthor">-</span></div>
+                <div><strong>Tanggal Dibuat:</strong> <span id="detailCreatedAt">-</span></div>
+                <div><strong>Status:</strong> <span id="detailStatus" style="font-weight: 600; color: #059669;">DISETUJUI / PUBLIK</span></div>
             </div>
         </div>
         <div class="modal-footer" style="justify-content: flex-end;">
@@ -254,7 +255,13 @@
     function showDetailModal(faq) {
         document.getElementById('detailPertanyaan').textContent = faq.pertanyaan;
         document.getElementById('detailJawaban').innerHTML = faq.jawaban;
-        document.getElementById('detailStatus').textContent = faq.status === 'published' ? 'Disetujui / Publik' : faq.status;
+        document.getElementById('detailAuthor').textContent = (faq.user && faq.user.name) ? faq.user.name : '-';
+        if (faq.created_at) {
+            const dt = new Date(faq.created_at);
+            document.getElementById('detailCreatedAt').textContent = dt.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + dt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        } else {
+            document.getElementById('detailCreatedAt').textContent = '-';
+        }
 
         const catContainer = document.getElementById('detailCategories');
         catContainer.innerHTML = '';
@@ -266,13 +273,6 @@
                 catContainer.appendChild(badge);
             });
         }
-
-        const editContainer = document.getElementById('detailEditBtnContainer');
-        editContainer.innerHTML = `
-            <a href="/faqs/${faq.id}/edit" class="btn-modal-submit" style="font-size: 12px; padding: 6px 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-                <span>Edit Informasi</span>
-            </a>
-        `;
 
         document.getElementById('detailModal').style.display = 'flex';
         document.body.style.overflow = 'hidden';

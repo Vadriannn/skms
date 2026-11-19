@@ -186,9 +186,9 @@ class TfIdfService
     public function checkSimilarity(string $newQuestion, float $threshold = 0.60, ?int $excludeId = null): array
     {
         // ---------------------------------------------------------------------
-        // [Langkah 4.1] Ambil Seluruh Data FAQ Lama dari Database
+        // [Langkah 4.1] Ambil Seluruh Data FAQ Aktif dari Database (Abaikan FAQ yang sudah dinonaktifkan/inactive)
         // ---------------------------------------------------------------------
-        $query = Faq::with('categories');
+        $query = Faq::with('categories')->where('status', '!=', 'inactive');
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
