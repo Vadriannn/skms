@@ -1,113 +1,132 @@
 @extends('layouts.app', [
-    'title' => 'Daftar Informasi (FAQs) - SKMS',
-    'topbar_class' => 'seamless-topbar'
+    'title' => 'Pusat informasi kampus - SKMS'
 ])
 
-@section('topbar_left')
-    <h1 class="topbar-page-title">Daftar Informasi (FAQs)</h1>
-@endsection
-
 @section('content')
+@php
+    $pendingTotal = \App\Models\Faq::where('status', 'pending')->count();
+    $publishedTotal = \App\Models\Faq::where('status', 'published')->count();
+    $lastUpdatedFaq = \App\Models\Faq::where('status', 'published')->latest('updated_at')->first();
+@endphp
+
 <div class="faq-page-container">
-    <!-- Header Controls: Filter Search + Category + Tombol Tambah Informasi Baru -->
-    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; width: 100%; flex-wrap: wrap;">
-        <!-- Filter Bar: Search + Category Dropdown (Sesuai Mockup) -->
-        <form method="GET" action="{{ route('faqs.index') }}" id="filterForm" class="faq-filter-bar" style="margin-bottom: 0; max-width: 600px; flex: 1; min-width: 280px;">
-            @if(request('status'))
-                <input type="hidden" name="status" value="{{ request('status') }}">
-            @endif
-            <input type="hidden" name="per_page" id="perPageInput" value="{{ $perPage ?? 10 }}">
 
-            <!-- 1. Search Box -->
-            <div class="faq-search-wrapper">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text" 
-                       name="search" 
-                       id="searchInput"
-                       value="{{ request('search') }}" 
-                       placeholder="Cari pertanyaan..." 
-                       class="faq-search-field"
-                       autocomplete="off">
-            </div>
-
-            <!-- 2. Dropdown Kategori -->
-            <div class="faq-select-wrapper">
-                <select name="category_id" id="categorySelect" onchange="document.getElementById('filterForm').submit()" class="faq-category-dropdown">
-                    <option value="">Semua Kategori</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ (string)request('category_id') === (string)$category->id ? 'selected' : '' }}>
-                            {{ $category->nama }}
-                        </option>
-                    @endforeach
-                </select>
-                <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </div>
-        </form>
-
-        @if(Auth::check() && in_array(Auth::user()->role, ['data_entry', 'super_admin']))
-        <a href="{{ route('faqs.create') }}" class="btn-tambah-faq" title="Tambah Informasi FAQ Baru">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <span>Tambah Informasi Baru</span>
-        </a>
-        @endif
-    </div>
-
-    <!-- Table Controls: Tampilkan [10, 25, 50, 100] data & Info Total -->
-    <div class="faq-table-controls">
-        <div class="faq-per-page-wrapper">
-            <span>Tampilkan</span>
-            <select name="per_page_select" id="perPageSelect" class="faq-per-page-select" onchange="document.getElementById('perPageInput').value = this.value; document.getElementById('filterForm').submit();">
-                <option value="10" {{ ($perPage ?? 10) == 10 ? 'selected' : '' }}>10</option>
-                <option value="25" {{ ($perPage ?? 10) == 25 ? 'selected' : '' }}>25</option>
-                <option value="50" {{ ($perPage ?? 10) == 50 ? 'selected' : '' }}>50</option>
-                <option value="100" {{ ($perPage ?? 10) == 100 ? 'selected' : '' }}>100</option>
-            </select>
-            <span>data</span>
+    <!-- Page Intro Header -->
+    <div class="skmk-page-intro">
+        <div>
+            <h1 class="skmk-page-main-title">Pusat informasi kampus</h1>
+            <p class="skmk-page-subtitle">Kelola jawaban tepercaya untuk setiap pertanyaan mahasiswa.</p>
         </div>
-        <div class="faq-total-info">
-            @if($faqs->total() > 0)
-                Menampilkan <strong>{{ $faqs->firstItem() }}</strong> - <strong>{{ $faqs->lastItem() }}</strong> dari <strong>{{ $faqs->total() }}</strong> informasi
-            @else
-                Menampilkan <strong>0</strong> informasi
+        <div>
+            @if(Auth::check() && Auth::user()->role === 'validator')
+                <a href="{{ route('validator.antrian') }}" class="btn-secondary" style="font-weight: 600; color: #16322F;">
+                    <span>Lihat antrean</span>
+                    <span>&rarr;</span>
+                </a>
+            @elseif(Auth::check() && in_array(Auth::user()->role, ['data_entry', 'super_admin']))
+                <a href="{{ route('faqs.create') }}" class="btn-tambah-faq">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Tambah informasi baru</span>
+                </a>
             @endif
         </div>
     </div>
 
-    <!-- Table Container (Sesuai Mockup) -->
-    <div class="faq-table-container">
+    <!-- Hero Banner Mint (Sesuai Gambar 2) -->
+    <div class="skmk-hero-banner">
+        <div>
+            <div class="skmk-hero-kicker">RUANG PENGETAHUAN SKMS</div>
+            <div class="skmk-hero-heading">Satu sumber informasi.<br>Banyak jawaban berarti.</div>
+            <div class="skmk-hero-desc">Informasi yang sudah divalidasi, siap membantu mahasiswa.</div>
+        </div>
+        <div class="skmk-hero-metrics">
+            <div class="skmk-hero-metric-item">
+                <div class="skmk-hero-metric-val">{{ str_pad($publishedTotal, 2, '0', STR_PAD_LEFT) }}</div>
+                <div class="skmk-hero-metric-label">informasi terbit</div>
+            </div>
+            <div class="skmk-hero-metric-item">
+                <div class="skmk-hero-metric-val">{{ str_pad($pendingTotal, 2, '0', STR_PAD_LEFT) }}</div>
+                <div class="skmk-hero-metric-label">menunggu validasi</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- White Card Wrapping Filter & Table (Sesuai Gambar 2) -->
+    <div class="faq-table-container" style="padding: 0; overflow: visible;">
+
+        <!-- Card Top Header -->
+        <div style="padding: 20px 24px 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <h2 style="font-size: 16px; font-weight: 700; color: #16322F; margin: 0;">Daftar informasi</h2>
+                <span style="background: #E8F5F1; color: #0D7F74; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 9999px;">
+                    {{ $faqs->total() }} informasi
+                </span>
+            </div>
+            <div style="font-size: 12.5px; color: #8FA19D;">
+                @if($lastUpdatedFaq)
+                    Terakhir diperbarui {{ $lastUpdatedFaq->updated_at->format('d M Y') }}
+                @endif
+            </div>
+        </div>
+
+        <!-- Filter Bar Inside Card -->
+        <div style="padding: 0 24px 18px 24px;">
+            <form method="GET" action="{{ route('faqs.index') }}" id="filterForm" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <input type="hidden" name="per_page" id="perPageInput" value="{{ $perPage ?? 10 }}">
+
+                <div class="faq-search-wrapper" style="flex: 1; min-width: 240px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FA19D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text"
+                           name="search"
+                           id="searchInput"
+                           value="{{ request('search') }}"
+                           placeholder="Cari pertanyaan atau kata kunci..."
+                           class="faq-search-field"
+                           autocomplete="off">
+                </div>
+
+                <div class="faq-select-wrapper" style="width: 190px;">
+                    <select name="category_id" id="categorySelect" onchange="document.getElementById('filterForm').submit()" class="faq-category-dropdown">
+                        <option value="">Semua kategori</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ (string)request('category_id') === (string)$category->id ? 'selected' : '' }}>
+                                {{ $category->nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <svg class="chevron-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#647874" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+
+                <a href="{{ route('faqs.index') }}" class="btn-secondary" style="padding: 10px 16px; font-size: 13px; font-weight: 600; color: #16322F;">
+                    Atur ulang
+                </a>
+            </form>
+        </div>
+
+        <!-- Table -->
         <table class="faq-custom-table">
             <thead>
                 <tr>
-                    <th style="width: 50px;">No</th>
-                    <th>Pertanyaan</th>
-                    <th style="width: 280px;">Kategori</th>
-                    <th style="width: 140px; text-align: center;">Status</th>
-                    <th style="text-align: right; width: 60px;">Aksi</th>
+                    <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 24px;">PERTANYAAN</th>
+                    <th style="width: 260px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 20px;">KATEGORI</th>
+                    <th style="width: 130px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 20px;">STATUS</th>
+                    <th style="width: 110px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 24px; text-align: right;">AKSI</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($faqs as $index => $item)
+                @forelse($faqs as $item)
                     <tr>
-                        <!-- No -->
-                        <td class="col-no">{{ $faqs->firstItem() + $index }}</td>
-
-                        <!-- Pertanyaan -->
-                        <td class="col-pertanyaan">
-                            <a href="{{ route('faqs.show', ['faq' => $item->id, 'from' => 'index']) }}" class="faq-title-text" style="text-decoration: none;">
-                                {{ Str::limit($item->pertanyaan, 120) }}
+                        <td class="col-pertanyaan" style="padding: 16px 24px;">
+                            <a href="{{ route('faqs.show', ['faq' => $item->id, 'from' => 'index']) }}" class="faq-title-text" style="text-decoration: none; font-weight: 600; color: #16322F;">
+                                {{ Str::limit($item->pertanyaan, 110) }}
                             </a>
                         </td>
-
-                        <!-- Kategori (Multi-Category Badges) -->
-                        <td class="col-kategori">
+                        <td class="col-kategori" style="padding: 16px 20px;">
                             <div class="category-pills-container">
                                 @forelse($item->categories as $cat)
                                     <span class="category-pill">{{ $cat->nama }}</span>
@@ -116,183 +135,59 @@
                                 @endforelse
                             </div>
                         </td>
-
-                        <!-- Status Badge (Draft / Menunggu / Disetujui / Ditolak) -->
-                        <td class="col-status" style="text-align: center;">
-                            @if($item->status === 'draft')
-                                <span class="status-pill status-draft">Draft</span>
-                            @elseif($item->status === 'pending')
-                                <span class="status-pill status-pending">Menunggu</span>
-                            @elseif($item->status === 'published')
-                                <span class="status-pill status-approved">Disetujui</span>
-                            @elseif($item->status === 'rejected')
-                                <span class="status-pill status-rejected">Ditolak</span>
-                            @else
-                                <span class="status-pill status-draft">{{ ucfirst($item->status) }}</span>
-                            @endif
+                        <td style="padding: 16px 20px;">
+                            <span class="skmk-dot-approved">Disetujui</span>
                         </td>
-
-                        <!-- Aksi Dropdown Tiga Titik -->
-                        <td class="col-aksi">
-                            <div class="action-dropdown-wrapper">
-                                <button type="button" class="btn-dots" onclick="toggleDropdown(event, 'menu-{{ $item->id }}')">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="1.5"></circle>
-                                        <circle cx="12" cy="5" r="1.5"></circle>
-                                        <circle cx="12" cy="19" r="1.5"></circle>
-                                    </svg>
-                                </button>
-
-                                <div id="menu-{{ $item->id }}" class="action-menu" style="display: none;">
-                                    <a href="{{ route('faqs.show', ['faq' => $item->id, 'from' => 'index']) }}" class="action-menu-item" style="text-decoration: none;">
-                                        Lihat Detail
-                                    </a>
-                                    <form action="{{ route('faqs.unpublish', $item->id) }}" method="POST" onsubmit="return confirm('Nonaktifkan FAQ ini dan langsung buat pengajuan FAQ baru sebagai penggantinya?')">
-                                        @csrf
-                                        @method('PATCH')
-                                        <input type="hidden" name="create_replacement" value="1">
-                                        <button type="submit" class="action-menu-item">
-                                            Nonaktifkan &amp; Buat Baru
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('faqs.unpublish', $item->id) }}" method="POST" onsubmit="return confirm('Nonaktifkan informasi FAQ ini dari publik? FAQ yang sudah dinonaktifkan tidak akan tampil lagi di halaman pencarian mahasiswa.')">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="action-menu-item">
-                                            Nonaktifkan FAQ
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
+                        <td style="padding: 16px 24px; text-align: right; white-space: nowrap;">
+                            <a href="{{ route('faqs.show', ['faq' => $item->id, 'from' => 'index']) }}" class="skmk-link-action">
+                                <span>Lihat</span>
+                                <span>&rarr;</span>
+                            </a>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" style="text-align: center; padding: 40px; color: #94A3B8;">
+                        <td colspan="4" style="text-align: center; padding: 44px 24px; color: #8FA19D;">
                             Tidak ada informasi ditemukan untuk kata kunci atau kategori yang dipilih.
                         </td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
-    </div>
 
-    <!-- Pagination Khusus (Sesuai Mockup: < 1 2 3 >) -->
-    @if($faqs->hasPages())
-        <div class="faq-pagination-bar">
-            {{-- Tombol Previous (<) --}}
-            @if($faqs->onFirstPage())
-                <span class="page-nav prev-btn disabled">&lsaquo;</span>
-            @else
-                <a href="{{ $faqs->previousPageUrl() }}" class="page-nav prev-btn">&lsaquo;</a>
-            @endif
-
-            {{-- Nomor Halaman --}}
-            @foreach(range(1, $faqs->lastPage()) as $page)
-                @if($page == $faqs->currentPage())
-                    <span class="page-number active">{{ $page }}</span>
-                @else
-                    <a href="{{ $faqs->url($page) }}" class="page-number">{{ $page }}</a>
-                @endif
-            @endforeach
-
-            {{-- Tombol Next (>) --}}
-            @if($faqs->hasMorePages())
-                <a href="{{ $faqs->nextPageUrl() }}" class="page-nav next-btn">&rsaquo;</a>
-            @else
-                <span class="page-nav next-btn disabled">&rsaquo;</span>
-            @endif
-        </div>
-    @endif
-</div>
-
-<!-- Modal Detail FAQ -->
-<div id="detailModal" class="modal-backdrop" style="display: none;" onclick="handleModalBackdrop(event, 'detailModal')">
-    <div class="modal-dialog">
-        <div class="modal-header">
+        <!-- Card Footer: Summary & Pagination -->
+        <div style="padding: 14px 24px; border-top: 1px solid #EDF2F0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: #8FA19D;">
             <div>
-                <h2 class="modal-title" id="detailPertanyaan">Detail Informasi</h2>
-                <div id="detailCategories" class="category-pills-container" style="margin-top: 8px;"></div>
+                @if($faqs->total() > 0)
+                    Menampilkan {{ $faqs->firstItem() }}–{{ $faqs->lastItem() }} dari {{ $faqs->total() }} informasi
+                @else
+                    Menampilkan 0 informasi
+                @endif
             </div>
-            <button type="button" class="modal-close-btn" onclick="closeModal('detailModal')">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div style="font-weight: 600; color: #1E293B; margin-bottom: 6px;">Jawaban / Penjelasan:</div>
-            <div id="detailJawaban" style="color: #475569; line-height: 1.6; font-size: 14px;"></div>
-            <div style="margin-top: 18px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; font-size: 12.5px; color: #475569; line-height: 1.6;">
-                <div><strong>Dibuat oleh:</strong> <span id="detailAuthor">-</span></div>
-                <div><strong>Tanggal Dibuat:</strong> <span id="detailCreatedAt">-</span></div>
-                <div><strong>Status:</strong> <span id="detailStatus" style="font-weight: 600; color: #059669;">DISETUJUI / PUBLIK</span></div>
+
+            <div style="display: flex; align-items: center; gap: 6px;">
+                @if($faqs->onFirstPage())
+                    <span class="page-nav disabled" style="min-width: 28px; height: 28px; font-size: 14px;">&lsaquo;</span>
+                @else
+                    <a href="{{ $faqs->previousPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #647874;">&lsaquo;</a>
+                @endif
+
+                @foreach(range(1, max(1, $faqs->lastPage())) as $page)
+                    @if($page == $faqs->currentPage())
+                        <span class="page-number active" style="min-width: 28px; height: 28px; font-size: 12.5px;">{{ $page }}</span>
+                    @else
+                        <a href="{{ $faqs->url($page) }}" class="page-number" style="min-width: 28px; height: 28px; font-size: 12.5px;">{{ $page }}</a>
+                    @endif
+                @endforeach
+
+                @if($faqs->hasMorePages())
+                    <a href="{{ $faqs->nextPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #647874;">&rsaquo;</a>
+                @else
+                    <span class="page-nav disabled" style="min-width: 28px; height: 28px; font-size: 14px;">&rsaquo;</span>
+                @endif
             </div>
         </div>
-        <div class="modal-footer" style="justify-content: flex-end;">
-            <button type="button" class="btn-modal-cancel" onclick="closeModal('detailModal')">Tutup</button>
-        </div>
+
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    // Tutup dropdown saat klik di luar
-    document.addEventListener('click', function(event) {
-        if (!event.target.closest('.action-dropdown-wrapper')) {
-            document.querySelectorAll('.action-menu').forEach(menu => {
-                menu.style.display = 'none';
-            });
-        }
-    });
-
-    function toggleDropdown(event, menuId) {
-        event.stopPropagation();
-        const menu = document.getElementById(menuId);
-        const isShown = menu.style.display === 'block';
-        
-        document.querySelectorAll('.action-menu').forEach(m => m.style.display = 'none');
-        menu.style.display = isShown ? 'none' : 'block';
-    }
-
-    function showDetailModal(faq) {
-        document.getElementById('detailPertanyaan').textContent = faq.pertanyaan;
-        document.getElementById('detailJawaban').innerHTML = faq.jawaban;
-        document.getElementById('detailAuthor').textContent = (faq.user && faq.user.name) ? faq.user.name : '-';
-        if (faq.created_at) {
-            const dt = new Date(faq.created_at);
-            document.getElementById('detailCreatedAt').textContent = dt.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + dt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-        } else {
-            document.getElementById('detailCreatedAt').textContent = '-';
-        }
-
-        const catContainer = document.getElementById('detailCategories');
-        catContainer.innerHTML = '';
-        if (faq.categories && faq.categories.length > 0) {
-            faq.categories.forEach(c => {
-                const badge = document.createElement('span');
-                badge.className = 'category-pill';
-                badge.textContent = c.nama;
-                catContainer.appendChild(badge);
-            });
-        }
-
-        document.getElementById('detailModal').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-        document.body.style.overflow = '';
-    }
-
-    function handleModalBackdrop(event, modalId) {
-        if (event.target.id === modalId) {
-            closeModal(modalId);
-        }
-    }
-
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            closeModal('detailModal');
-        }
-    });
-</script>
-@endpush

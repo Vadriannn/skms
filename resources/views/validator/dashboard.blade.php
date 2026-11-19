@@ -1,47 +1,54 @@
 @extends('layouts.app', [
-    'title' => 'Dashboard Validator - SKMS',
-    'topbar_class' => 'seamless-topbar'
+    'title' => 'Dashboard Validator - SKMS'
 ])
-
-@section('topbar_left')
-    <h1 class="topbar-page-title">Halaman Validator</h1>
-@endsection
 
 @section('content')
 <div class="validator-dashboard-container">
 
-    {{-- ── Statistik Kartu ─────────────────────────────────────── --}}
-    <div class="validator-stats-grid">
+    <div class="skmk-page-intro">
+        <div>
+            <h1 class="skmk-page-main-title">Ruang kerja validator</h1>
+            <p class="skmk-page-subtitle">Jaga kualitas dan akurasi informasi sebelum diterbitkan untuk mahasiswa.</p>
+        </div>
+        <div>
+            <a href="{{ route('validator.antrian') }}" class="btn-tambah-faq">
+                <span>Buka antrean validasi</span>
+                <span>&rarr;</span>
+            </a>
+        </div>
+    </div>
 
-        {{-- Kartu: Menunggu Validasi --}}
-        <a href="{{ route('validator.antrian') }}" class="vd-stat-card amber" title="Klik untuk melihat antrean validasi">
-            <div class="vd-stat-content">
-                <div class="vd-stat-label">Menunggu Validasi</div>
-                <div class="vd-stat-value">{{ $menungguValidasi }}</div>
+    <div class="skmk-hero-banner">
+        <div>
+            <div class="skmk-hero-kicker">VERIFIKASI PENGETAHUAN SKMS</div>
+            <div class="skmk-hero-heading">Satu sumber informasi.<br>Banyak jawaban berarti.</div>
+            <div class="skmk-hero-desc">Informasi yang sudah divalidasi siap membantu mahasiswa menemukan jawaban tepercaya.</div>
+        </div>
+        <div class="skmk-hero-metrics">
+            <div class="skmk-hero-metric-item">
+                <div class="skmk-hero-metric-val">{{ str_pad($disetujui, 2, '0', STR_PAD_LEFT) }}</div>
+                <div class="skmk-hero-metric-label">informasi terbit</div>
             </div>
-            <div class="vd-stat-icon amber">
-                {{-- Hourglass icon --}}
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#DDA236" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 22h14"></path>
-                    <path d="M5 2h14"></path>
-                    <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path>
-                    <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path>
-                </svg>
+            <div class="skmk-hero-metric-item">
+                <div class="skmk-hero-metric-val">{{ str_pad($menungguValidasi, 2, '0', STR_PAD_LEFT) }}</div>
+                <div class="skmk-hero-metric-label">menunggu validasi</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="skmk-stat-row">
+        <a href="{{ route('validator.antrian') }}" class="skmk-stat-box" style="text-decoration: none;">
+            <div class="skmk-stat-num" style="color: #B4690E;">{{ str_pad($menungguValidasi, 2, '0', STR_PAD_LEFT) }}</div>
+            <div>
+                <div class="skmk-stat-meta-title">Menunggu validasi</div>
+                <div class="skmk-stat-meta-sub">Perlu segera ditinjau &rarr;</div>
             </div>
         </a>
-
-        {{-- Kartu: Disetujui --}}
-        <a href="{{ route('validator.disetujui') }}" class="vd-stat-card emerald" title="Klik untuk melihat FAQ yang disetujui">
-            <div class="vd-stat-content">
-                <div class="vd-stat-label">Disetujui</div>
-                <div class="vd-stat-value">{{ $disetujui }}</div>
-            </div>
-            <div class="vd-stat-icon emerald">
-                {{-- Checkmark circle icon --}}
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
+        <a href="{{ route('faqs.index') }}" class="skmk-stat-box" style="text-decoration: none;">
+            <div class="skmk-stat-num teal">{{ str_pad($disetujui, 2, '0', STR_PAD_LEFT) }}</div>
+            <div>
+                <div class="skmk-stat-meta-title">Informasi terbit</div>
+                <div class="skmk-stat-meta-sub">Lihat daftar informasi publik &rarr;</div>
             </div>
         </a>
     </div>
@@ -49,22 +56,22 @@
     {{-- ── Daftar Terbaru ──────────────────────────────────────── --}}
     <div class="vd-recent-section">
         <div class="vd-recent-header">
-            <h2 class="vd-recent-title">Daftar Terbaru</h2>
-            <a href="{{ route('validator.antrian') }}" class="vd-see-all-link">Lihat Semua</a>
+            <h2 class="vd-recent-title">Daftar pengajuan terbaru</h2>
+            <a href="{{ route('validator.antrian') }}" class="skmk-link-action">Lihat semua &rarr;</a>
         </div>
 
         <div class="vd-recent-list">
             @forelse($daftarTerbaru as $faq)
                 <div class="vd-recent-item">
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1; min-width: 0;">
-                        <span class="vd-recent-question" style="flex: unset;">{{ Str::limit($faq->pertanyaan, 70) }}</span>
+                        <span class="vd-recent-question" style="flex: unset; font-weight: 600;">{{ Str::limit($faq->pertanyaan, 75) }}</span>
                         @if($faq->latestDuplicateLog && $faq->status === 'pending')
                             @php
                                 $dupScoreVal = (float) $faq->latestDuplicateLog->score;
                                 $dupPct = $dupScoreVal <= 1 ? round($dupScoreVal * 100) : round($dupScoreVal);
                             @endphp
-                            <span style="background-color: #FEF2F2; color: #DC2626; border: 1px solid #FCA5A5; font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
-                                ⚠️ Indikasi Duplikat ({{ $dupPct }}%)
+                            <span style="background-color: #FFF4EB; color: #B4690E; border: 1px solid #F5DFB0; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600;">
+                                Mirip {{ $dupPct }}%
                             </span>
                         @endif
                     </div>
@@ -79,15 +86,12 @@
                             <span class="vd-status-badge vd-status-draft">Draft</span>
                         @endif
                         @if($faq->status === 'pending')
-                            <a href="{{ route('validator.faq.show', $faq->id) }}" class="vd-review-btn">Tinjau</a>
+                            <a href="{{ route('validator.faq.show', $faq->id) }}" class="skmk-link-action">Tinjau &rarr;</a>
                         @endif
                     </div>
                 </div>
             @empty
                 <div class="vd-recent-empty">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
                     <p>Belum ada FAQ yang diajukan.</p>
                 </div>
             @endforelse

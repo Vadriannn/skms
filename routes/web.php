@@ -21,6 +21,7 @@ Route::post('/skms/keluar', [SkmsController::class, 'logoutStudent'])->name('skm
 
 Route::middleware('skms.timeout')->group(function () {
     Route::get('/skms', [SkmsController::class, 'index'])->name('skms.beranda');
+    Route::get('/skms/faq/{faq}', [SkmsController::class, 'show'])->name('skms.faq.show');
     Route::post('/skms/faq/{faq}/view', [SkmsController::class, 'incrementView'])->name('skms.faq.view');
     Route::post('/skms/faq/{faq}/helpful', [SkmsController::class, 'toggleHelpful'])->name('skms.faq.helpful');
 });

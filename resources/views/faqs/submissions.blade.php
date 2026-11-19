@@ -1,47 +1,46 @@
 @extends('layouts.app', [
-    'title' => 'Pengajuan & Draf Informasi - SKMS',
-    'topbar_class' => 'seamless-topbar'
+    'title' => 'Pengajuan & draf informasi - SKMS'
 ])
-
-@section('topbar_left')
-    <h1 class="topbar-page-title">Pengajuan & Draf Informasi</h1>
-@endsection
 
 @section('content')
 <div class="faq-page-container">
 
-    <!-- Tab Filter Status (Semua, Disetujui, Perlu Revisi, Menunggu Validasi, Draft) -->
+    <div class="skmk-page-intro">
+        <div>
+            <h1 class="skmk-page-main-title">Pengajuan &amp; draf informasi</h1>
+            <p class="skmk-page-subtitle">Pantau seluruh status pengajuan, perbaiki revisi, dan kelola draf informasi.</p>
+        </div>
+        @if(Auth::check() && in_array(Auth::user()->role, ['data_entry', 'super_admin']))
+        <div>
+            <a href="{{ route('faqs.create') }}" class="btn-tambah-faq">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Tambah informasi baru</span>
+            </a>
+        </div>
+        @endif
+    </div>
+
+    <!-- Tab Filter Status (Semua, Disetujui, Perlu Revisi, Menunggu Validasi, Draft, Nonaktif) -->
     <div class="submission-tabs">
         <a href="{{ route('faqs.submissions', array_merge(request()->except('status', 'page'), [])) }}" 
            class="sub-tab-btn {{ empty($status) ? 'active' : '' }}">
-            <span>Semua Pengajuan</span>
+            <span>Semua pengajuan</span>
             <span class="sub-tab-badge">{{ $countAll }}</span>
         </a>
         <a href="{{ route('faqs.submissions', array_merge(request()->except('page'), ['status' => 'published'])) }}" 
-           class="sub-tab-btn {{ $status === 'published' ? 'active' : '' }}"
-           style="{{ $status === 'published' ? 'background-color: #10B981; border-color: #10B981;' : '' }}">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
+           class="sub-tab-btn {{ $status === 'published' ? 'active' : '' }}">
             <span>Disetujui</span>
-            <span class="sub-tab-badge" style="{{ $countPublished > 0 && $status !== 'published' ? 'background-color: #D1FAE5; color: #047857;' : '' }}">{{ $countPublished }}</span>
+            <span class="sub-tab-badge">{{ $countPublished }}</span>
         </a>
         <a href="{{ route('faqs.submissions', array_merge(request()->except('page'), ['status' => 'rejected'])) }}" 
            class="sub-tab-btn {{ $status === 'rejected' ? 'active' : '' }}"
-           style="{{ $status === 'rejected' ? 'background-color: #DC2626; border-color: #DC2626;' : '' }}">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-            <span>Perlu Revisi (Ditolak)</span>
-            <span class="sub-tab-badge" style="{{ $countRejected > 0 && $status !== 'rejected' ? 'background-color: #FEE2E2; color: #DC2626;' : '' }}">{{ $countRejected }}</span>
+           style="{{ $status === 'rejected' ? 'background-color: #C93535; border-color: #C93535;' : '' }}">
+            <span>Perlu revisi</span>
+            <span class="sub-tab-badge" style="{{ $countRejected > 0 && $status !== 'rejected' ? 'background-color: #FDF2F2; color: #C93535;' : '' }}">{{ $countRejected }}</span>
         </a>
         <a href="{{ route('faqs.submissions', array_merge(request()->except('page'), ['status' => 'pending'])) }}" 
-           class="sub-tab-btn {{ $status === 'pending' ? 'active' : '' }}"
-           style="{{ $status === 'pending' ? 'background-color: #D97706; border-color: #D97706;' : '' }}">
-            <span>Menunggu Validasi</span>
+           class="sub-tab-btn {{ $status === 'pending' ? 'active' : '' }}">
+            <span>Menunggu validasi</span>
             <span class="sub-tab-badge">{{ $countPending }}</span>
         </a>
         <a href="{{ route('faqs.submissions', array_merge(request()->except('page'), ['status' => 'draft'])) }}" 
@@ -50,10 +49,9 @@
             <span class="sub-tab-badge">{{ $countDraft }}</span>
         </a>
         <a href="{{ route('faqs.submissions', array_merge(request()->except('page'), ['status' => 'inactive'])) }}" 
-           class="sub-tab-btn {{ $status === 'inactive' ? 'active' : '' }}"
-           style="{{ $status === 'inactive' ? 'background-color: #64748B; border-color: #64748B;' : '' }}">
+           class="sub-tab-btn {{ $status === 'inactive' ? 'active' : '' }}">
             <span>Nonaktif</span>
-            <span class="sub-tab-badge" style="{{ ($countInactive ?? 0) > 0 && $status !== 'inactive' ? 'background-color: #E2E8F0; color: #334155;' : '' }}">{{ $countInactive ?? 0 }}</span>
+            <span class="sub-tab-badge">{{ $countInactive ?? 0 }}</span>
         </a>
     </div>
 

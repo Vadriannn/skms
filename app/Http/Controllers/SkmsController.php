@@ -74,24 +74,24 @@ class SkmsController extends Controller
         $selectedCategories = array_map('intval', array_filter($selectedCategories));
 
         $results  = collect();
-        $topFaqs  = collect();
         $searched = false;
+        $showAll  = $request->boolean('all');
 
         // Ambil semua kategori untuk kebutuhan filter
         $categories = Category::withCount(['faqs' => function ($q) {
             $q->where('status', 'published');
         }])->orderBy('nama')->get();
 
-        // Mode jika user melakukan pencarian atau memfilter kategori
-        if ($keyword !== '' || !empty($selectedCategories)) {
-            $searched = true;
+        // Ambil Top FAQ berdasarkan view terbanyak (digunakan di Beranda & panel kanan Pencarian)
+        $topFaqs = Faq::with('categories')
+            ->where('status', 'published')
+            ->orderByDesc('views')
+            ->take(5)
+            ->get();
 
-            // Ambil Top FAQ berdasarkan view terbanyak untuk panel sebelah kanan
-            $topFaqs = Faq::with('categories')
-                ->where('status', 'published')
-                ->orderByDesc('views')
-                ->take(5)
-                ->get();
+        // Mode jika user melakukan pencarian, memfilter kategori, atau memilih "Lihat semua FAQ"
+        if ($keyword !== '' || !empty($selectedCategories) || $showAll) {
+            $searched = true;
 
             if ($keyword !== '') {
                 // Pencarian menggunakan TF-IDF
@@ -180,6 +180,72 @@ class SkmsController extends Controller
             'searched',
             'studentNrp',
             'helpfulFaqs'
+        ));
+    }
+
+    /**
+     * Halaman Detail Jawaban FAQ Mahasiswa (Image 3).
+     */
+    public function show(Request $request, Faq $faq)
+    {
+        if ($faq->status !== 'published') {
+            abort(404);
+        }
+
+        $studentNrp = session('student_nrp', null);
+
+        // Tambah jumlah view (cegah duplikasi berulang pada sesi yang sama)
+        $viewedFaqs = session('viewed_faqs', []);
+        if (!in_array($faq->id, $viewedFaqs)) {
+            $faq->increment('views');
+            $faq->refresh();
+            $viewedFaqs[] = $faq->id;
+            session(['viewed_faqs' => $viewedFaqs]);
+        }
+
+        $faq->load('categories');
+        $categoryIds = $faq->categories->pluck('id')->toArray();
+
+        // Ambil FAQ terkait (kategori sama atau populer)
+        $relatedFaqs = Faq::with('categories')
+            ->where('status', 'published')
+            ->where('id', '!=', $faq->id)
+            ->when(!empty($categoryIds), function ($q) use ($categoryIds) {
+                $q->whereHas('categories', function ($cq) use ($categoryIds) {
+                    $cq->whereIn('categories.id', $categoryIds);
+                });
+            })
+            ->orderByDesc('views')
+            ->take(4)
+            ->get();
+
+        if ($relatedFaqs->count() < 3) {
+            $excludeIds = array_merge([$faq->id], $relatedFaqs->pluck('id')->toArray());
+            $fallbackFaqs = Faq::with('categories')
+                ->where('status', 'published')
+                ->whereNotIn('id', $excludeIds)
+                ->orderByDesc('views')
+                ->take(3 - $relatedFaqs->count())
+                ->get();
+            $relatedFaqs = $relatedFaqs->concat($fallbackFaqs);
+        }
+
+        // Cek apakah mahasiswa/pengunjung sudah menandai FAQ ini membantu
+        $voterHash = $studentNrp
+            ? hash('sha256', 'nrp_' . $studentNrp)
+            : hash('sha256', 'guest_' . $request->ip() . '|' . ($request->userAgent() ?? ''));
+
+        $hasVotedDb = FaqHelpfulVote::where('faq_id', $faq->id)
+            ->where('voter_hash', $voterHash)
+            ->exists();
+        $sessionHelpful = session('helpful_faqs', []);
+        $isHelpful = $hasVotedDb || in_array($faq->id, $sessionHelpful);
+
+        return view('skms.detail', compact(
+            'faq',
+            'relatedFaqs',
+            'studentNrp',
+            'isHelpful'
         ));
     }
 

@@ -57,44 +57,39 @@ class ValidatorController extends Controller
     }
 
     /**
-     * Daftar FAQ yang sudah disetujui (status = published).
+     * Daftar FAQ yang sudah disetujui (status = published) -> diarahkan ke Daftar Informasi (FAQs) terpadu.
      */
     public function disetujui(Request $request)
     {
-        $search = $request->query('search');
-
-        $query = Faq::with(['categories', 'user', 'reviews' => function ($q) {
-            $q->where('keputusan', 'approved')->latest()->limit(1);
-        }])
-            ->where('status', 'published')
-            ->latest();
-
-        if ($search) {
-            $query->where('pertanyaan', 'like', "%{$search}%");
-        }
-
-        $faqs = $query->paginate(10)->withQueryString();
-
-        return view('validator.disetujui', compact('faqs', 'search'));
+        return redirect()->route('faqs.index', $request->query());
     }
 
     /**
-     * Daftar semua FAQ (untuk referensi validator).
+     * Riwayat Validasi: hanya menampilkan FAQ yang sudah pernah divalidasi (published, rejected, inactive).
+     * Dilengkapi filter "Semua Validator" vs "Validasi Saya" serta informasi Validator pemeriksa.
      */
     public function semuaFaq(Request $request)
     {
         $search     = $request->query('search');
         $status     = $request->query('status');
         $categoryId = $request->query('category_id');
+        $scope      = $request->query('scope', 'all'); // 'all' | 'mine'
 
-        $query = Faq::with(['categories', 'user', 'reviews', 'latestDuplicateLog.similarFaq'])
-            ->latest();
+        $query = Faq::with(['categories', 'user', 'deactivatedByUser', 'latestReview.user', 'reviews.user'])
+            ->whereIn('status', ['published', 'rejected', 'inactive'])
+            ->latest('updated_at');
+
+        if ($scope === 'mine') {
+            $query->whereHas('reviews', function ($q) {
+                $q->where('user_id', Auth::id());
+            });
+        }
 
         if ($search) {
             $query->where('pertanyaan', 'like', "%{$search}%");
         }
 
-        if ($status && in_array($status, ['draft', 'pending', 'published', 'rejected'])) {
+        if ($status && in_array($status, ['published', 'rejected', 'inactive'])) {
             $query->where('status', $status);
         }
 
@@ -107,7 +102,7 @@ class ValidatorController extends Controller
         $faqs       = $query->paginate(10)->withQueryString();
         $categories = \App\Models\Category::orderBy('nama', 'asc')->get();
 
-        return view('validator.semua_faq', compact('faqs', 'categories', 'search', 'status', 'categoryId'));
+        return view('validator.semua_faq', compact('faqs', 'categories', 'search', 'status', 'categoryId', 'scope'));
     }
 
     /**

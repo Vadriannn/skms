@@ -1,77 +1,73 @@
 @extends('layouts.app', ['title' => 'Dashboard Super Admin - SKMS'])
 
 @section('content')
-    <div class="page-header">
-        <h1 class="page-title">Dashboard</h1>
+    <div class="skmk-page-intro">
+        <div>
+            <h1 class="skmk-page-main-title">Ruang kerja administrator</h1>
+            <p class="skmk-page-subtitle">Pantau seluruh ekosistem pengetahuan, pengguna, dan aktivitas sistem.</p>
+        </div>
+        <div>
+            <a href="{{ route('faqs.create') }}" class="btn-tambah-faq">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Tambah informasi baru</span>
+            </a>
+        </div>
     </div>
 
-    <!-- 4 Cards Statistik -->
-    <div class="stats-grid">
-        <!-- 1. Total Pengguna -->
-        <div class="stat-card">
-            <div class="stat-info">
-                <div class="stat-label">Total Pengguna</div>
-                <div class="stat-value">{{ $totalPengguna }}</div>
+    <div class="skmk-hero-banner">
+        <div>
+            <div class="skmk-hero-kicker">PUSAT KENDALI SKMS</div>
+            <div class="skmk-hero-heading">Satu sumber informasi.<br>Banyak jawaban berarti.</div>
+            <div class="skmk-hero-desc">Kelola pengguna, taksonomi kategori, dan kualitas informasi kampus dalam satu ruang kerja.</div>
+        </div>
+        <div class="skmk-hero-metrics">
+            <div class="skmk-hero-metric-item">
+                <div class="skmk-hero-metric-val">{{ str_pad($dipublikasikan, 2, '0', STR_PAD_LEFT) }}</div>
+                <div class="skmk-hero-metric-label">informasi terbit</div>
             </div>
-            <div class="stat-icon blue">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
+            <div class="skmk-hero-metric-item">
+                <div class="skmk-hero-metric-val">{{ str_pad($menungguValidasi, 2, '0', STR_PAD_LEFT) }}</div>
+                <div class="skmk-hero-metric-label">menunggu validasi</div>
             </div>
         </div>
+    </div>
 
-        <!-- 2. Total Pertanyaan -->
-        <div class="stat-card">
-            <div class="stat-info">
-                <div class="stat-label">Total Pertanyaan</div>
-                <div class="stat-value">{{ $totalPertanyaan }}</div>
+    <div class="skmk-stat-row">
+        <a href="{{ route('users.index') }}" class="skmk-stat-box" style="text-decoration: none;">
+            <div class="skmk-stat-num">{{ str_pad($totalPengguna, 2, '0', STR_PAD_LEFT) }}</div>
+            <div>
+                <div class="skmk-stat-meta-title">Total pengguna</div>
+                <div class="skmk-stat-meta-sub">Kelola akun &amp; peran &rarr;</div>
             </div>
-            <div class="stat-icon indigo">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
+        </a>
+        <a href="{{ route('faqs.submissions') }}" class="skmk-stat-box" style="text-decoration: none;">
+            <div class="skmk-stat-num">{{ str_pad($totalPertanyaan, 2, '0', STR_PAD_LEFT) }}</div>
+            <div>
+                <div class="skmk-stat-meta-title">Total pertanyaan</div>
+                <div class="skmk-stat-meta-sub">Seluruh status informasi &rarr;</div>
             </div>
-        </div>
-
-        <!-- 3. Menunggu Validasi -->
-        <div class="stat-card">
-            <div class="stat-info">
-                <div class="stat-label">Menunggu Validasi</div>
-                <div class="stat-value">{{ $menungguValidasi }}</div>
+        </a>
+        <a href="{{ route('faqs.submissions', ['status' => 'pending']) }}" class="skmk-stat-box" style="text-decoration: none;">
+            <div class="skmk-stat-num" style="color: #B4690E;">{{ str_pad($menungguValidasi, 2, '0', STR_PAD_LEFT) }}</div>
+            <div>
+                <div class="skmk-stat-meta-title">Menunggu validasi</div>
+                <div class="skmk-stat-meta-sub">Dalam antrean tinjauan &rarr;</div>
             </div>
-            <div class="stat-icon amber">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 22h14"></path>
-                    <path d="M5 2h14"></path>
-                    <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path>
-                    <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path>
-                </svg>
+        </a>
+        <a href="{{ route('faqs.index') }}" class="skmk-stat-box" style="text-decoration: none;">
+            <div class="skmk-stat-num teal">{{ str_pad($dipublikasikan, 2, '0', STR_PAD_LEFT) }}</div>
+            <div>
+                <div class="skmk-stat-meta-title">Dipublikasikan</div>
+                <div class="skmk-stat-meta-sub">Tayang untuk mahasiswa &rarr;</div>
             </div>
-        </div>
-
-        <!-- 4. Dipublikasikan -->
-        <div class="stat-card">
-            <div class="stat-info">
-                <div class="stat-label">Dipublikasikan</div>
-                <div class="stat-value">{{ $dipublikasikan }}</div>
-            </div>
-            <div class="stat-icon emerald">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-            </div>
-        </div>
+        </a>
     </div>
 
     <!-- Aktivitas Terbaru -->
     <div class="section-card">
         <div class="section-card-header">
-            <h2>Aktivitas Terbaru</h2>
-            <a href="javascript:void(0)" onclick="alert('Menampilkan seluruh riwayat aktivitas sistem.')">Lihat Semua</a>
+            <h2>Aktivitas terbaru</h2>
+            <a href="{{ route('faqs.history') }}">Lihat riwayat pengajuan &rarr;</a>
         </div>
         <ul class="activity-list">
             @forelse($aktivitasTerbaru as $log)

@@ -125,28 +125,18 @@
                 @enderror
             </div>
 
-            <!-- 2. Kategori Informasi (Multi-Category Selector) -->
+            <!-- 2. Kategori Informasi (Search Bar + Combobox Inline Tags) -->
             <div class="form-group" style="margin-bottom: 22px;">
-                <label class="form-label">
+                <label class="form-label" for="faqCatSearchInput">
                     Kategori Informasi (Dapat memilih lebih dari satu) <span class="required">*</span>
                 </label>
                 @php
                     $selectedCatIds = old('category_ids', $faq->categories->pluck('id')->toArray());
                 @endphp
-                <div class="multi-category-selector">
-                    @foreach($categories as $category)
-                        <label class="category-toggle-chip">
-                            <input type="checkbox" name="category_ids[]" value="{{ $category->id }}" class="chip-checkbox"
-                                   {{ in_array($category->id, $selectedCatIds) ? 'checked' : '' }}>
-                            <span class="chip-content">
-                                <svg class="chip-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                {{ $category->nama }}
-                            </span>
-                        </label>
-                    @endforeach
-                </div>
+                @include('faqs.partials.category_combobox', [
+                    'categories' => $categories,
+                    'selectedCatIds' => $selectedCatIds
+                ])
                 @error('category_ids')
                     <div style="color: #EF4444; font-size: 13px; margin-top: 6px;">{{ $message }}</div>
                 @enderror

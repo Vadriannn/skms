@@ -1,74 +1,62 @@
 @extends('layouts.app', [
-    'title' => 'Dashboard Data Entry - SKMS',
-    'topbar_class' => 'seamless-topbar'
+    'title' => 'Dashboard Data Entry - SKMS'
 ])
 
-@section('topbar_left')
-    <h1 class="topbar-page-title">Dashboard Data Entry</h1>
-@endsection
-
 @section('content')
-<div class="data-entry-container">
-    <!-- Grid 3 Kartu Statistik -->
-    <div class="data-entry-stats-grid">
-        <!-- Kartu 1: Total Draft -->
-        <a href="{{ route('faqs.submissions', ['status' => 'draft']) }}" class="de-stat-card blue" title="Klik untuk melihat seluruh draft">
-            <div class="de-stat-content">
-                <div class="de-stat-label">Total Draft</div>
-                <div class="de-stat-value">{{ $totalDraft ?? 0 }}</div>
-            </div>
-            <div class="de-stat-icon blue">
-                <!-- Icon Message Bubble with Inner Heart -->
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#687AC3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    <path d="M12 7.8c-1-1.2-2.7-.7-2.7 1 0 1.2 1.5 2.4 2.7 3.4 1.2-1 2.7-2.2 2.7-3.4 0-1.7-1.7-2.2-2.7-1z"></path>
-                </svg>
-            </div>
-        </a>
-
-        <!-- Kartu 2: Menunggu Validasi -->
-        <a href="{{ route('faqs.submissions', ['status' => 'pending']) }}" class="de-stat-card amber" title="Klik untuk melihat informasi menunggu validasi">
-            <div class="de-stat-content">
-                <div class="de-stat-label">Menunggu Validasi</div>
-                <div class="de-stat-value">{{ $menungguValidasi ?? 0 }}</div>
-            </div>
-            <div class="de-stat-icon amber">
-                <!-- Icon Hourglass -->
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#DDA236" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 22h14"></path>
-                    <path d="M5 2h14"></path>
-                    <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path>
-                    <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path>
-                </svg>
-            </div>
-        </a>
-
-        <!-- Kartu 3: Perlu Revisi / Ditolak -->
-        <a href="{{ route('faqs.submissions', ['status' => 'rejected']) }}" class="de-stat-card red" title="Klik untuk melihat informasi yang perlu direvisi">
-            <div class="de-stat-content">
-                <div class="de-stat-label">Perlu Revisi</div>
-                <div class="de-stat-value" style="color: #DC2626;">{{ $perluRevisi ?? 0 }}</div>
-            </div>
-            <div class="de-stat-icon" style="color: #EF4444;">
-                <!-- Icon Alert / Refresh -->
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-            </div>
-        </a>
-
-        <!-- Tombol Tambah Informasi Baru (Full Width Grid) -->
-        <div class="de-action-wrapper">
-            <a href="{{ route('faqs.create') }}" class="btn-add-info" style="text-decoration: none;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                <span>Tambah Informasi Baru</span>
+<div>
+    <div class="skmk-page-intro">
+        <div>
+            <h1 class="skmk-page-main-title">Ruang kerja penyusun informasi</h1>
+            <p class="skmk-page-subtitle">Susun draf baru, pantau antrean validasi, dan tindak lanjuti revisi.</p>
+        </div>
+        <div>
+            <a href="{{ route('faqs.create') }}" class="btn-tambah-faq">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Tambah informasi baru</span>
             </a>
         </div>
+    </div>
+
+    <div class="skmk-hero-banner">
+        <div>
+            <div class="skmk-hero-kicker">PENYUSUNAN PENGETAHUAN SKMS</div>
+            <div class="skmk-hero-heading">Terbuka untuk belajar.<br>Terhubung untuk berbagi.</div>
+            <div class="skmk-hero-desc">Setiap pertanyaan yang disusun membantu mahasiswa menemukan jawaban resmi lebih cepat.</div>
+        </div>
+        <div class="skmk-hero-metrics">
+            <div class="skmk-hero-metric-item">
+                <div class="skmk-hero-metric-val">{{ str_pad($totalDraft ?? 0, 2, '0', STR_PAD_LEFT) }}</div>
+                <div class="skmk-hero-metric-label">draf tersimpan</div>
+            </div>
+            <div class="skmk-hero-metric-item">
+                <div class="skmk-hero-metric-val">{{ str_pad($menungguValidasi ?? 0, 2, '0', STR_PAD_LEFT) }}</div>
+                <div class="skmk-hero-metric-label">menunggu validasi</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="skmk-stat-row">
+        <a href="{{ route('faqs.submissions', ['status' => 'draft']) }}" class="skmk-stat-box" style="text-decoration: none;">
+            <div class="skmk-stat-num teal">{{ str_pad($totalDraft ?? 0, 2, '0', STR_PAD_LEFT) }}</div>
+            <div>
+                <div class="skmk-stat-meta-title">Total draf</div>
+                <div class="skmk-stat-meta-sub">Siap disempurnakan &rarr;</div>
+            </div>
+        </a>
+        <a href="{{ route('faqs.submissions', ['status' => 'pending']) }}" class="skmk-stat-box" style="text-decoration: none;">
+            <div class="skmk-stat-num" style="color: #B4690E;">{{ str_pad($menungguValidasi ?? 0, 2, '0', STR_PAD_LEFT) }}</div>
+            <div>
+                <div class="skmk-stat-meta-title">Menunggu validasi</div>
+                <div class="skmk-stat-meta-sub">Sedang ditinjau validator &rarr;</div>
+            </div>
+        </a>
+        <a href="{{ route('faqs.submissions', ['status' => 'rejected']) }}" class="skmk-stat-box" style="text-decoration: none;">
+            <div class="skmk-stat-num" style="color: #C93535;">{{ str_pad($perluRevisi ?? 0, 2, '0', STR_PAD_LEFT) }}</div>
+            <div>
+                <div class="skmk-stat-meta-title">Perlu revisi</div>
+                <div class="skmk-stat-meta-sub">Lihat catatan perbaikan &rarr;</div>
+            </div>
+        </a>
     </div>
 </div>
 @endsection
