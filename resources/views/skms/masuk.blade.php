@@ -125,6 +125,12 @@
         <!-- Form Masuk Mahasiswa (Hanya NRP) -->
         <form id="studentLoginForm" action="{{ route('skms.login.post') }}" method="POST">
             @csrf
+            @if(!empty($redirect))
+                <input type="hidden" name="redirect" value="{{ $redirect }}">
+            @endif
+            @if(!empty($prefillQ))
+                <input type="hidden" name="q" value="{{ $prefillQ }}">
+            @endif
 
             <!-- NRP Field -->
             <div class="form-group" style="margin-bottom: 24px;">

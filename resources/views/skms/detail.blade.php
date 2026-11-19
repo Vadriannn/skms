@@ -558,6 +558,7 @@
             <div class="skms-nav-right">
                 <a href="{{ route('skms.beranda') }}" class="skms-nav-link">Beranda</a>
                 <a href="{{ route('skms.beranda', ['all' => 1]) }}" class="skms-nav-link active">Informasi</a>
+                <a href="{{ route('skms.tanya') }}" class="skms-nav-link">Tanya Staf</a>
 
                 @if($studentNrp)
                     <div class="skms-nrp-pill">
@@ -714,16 +715,16 @@
                     <h3 class="skms-still-help-title">Masih butuh bantuan?</h3>
                     @if($studentNrp)
                         <p class="skms-still-help-desc">
-                            Anda sudah masuk dengan NRP <strong>{{ $studentNrp }}</strong>. Gunakan kolom pencarian atau hubungi layanan administrasi fakultas/direktorat terkait di UBAYA.
+                            Anda sudah masuk dengan NRP <strong>{{ $studentNrp }}</strong>. Jika jawaban di atas belum sesuai dengan kondisi Anda, ajukan pertanyaan langsung kepada staf.
                         </p>
-                        <a href="{{ route('skms.beranda', ['all' => 1]) }}" class="skms-btn-full-teal">
-                            Cari Pertanyaan Lainnya
+                        <a href="{{ route('skms.tanya') }}" class="skms-btn-full-teal">
+                            Tanya Staf (Ajukan Pertanyaan)
                         </a>
                     @else
                         <p class="skms-still-help-desc">
                             Masuk menggunakan NRP untuk mengakses layanan bantuan mahasiswa dan menyampaikan pertanyaan Anda.
                         </p>
-                        <a href="{{ route('skms.login') }}" class="skms-btn-full-teal">
+                        <a href="{{ route('skms.login', ['redirect' => 'tanya']) }}" class="skms-btn-full-teal">
                             Masuk Mahasiswa (NRP)
                         </a>
                     @endif

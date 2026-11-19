@@ -6,6 +6,7 @@ use App\Models\Faq;
 use App\Models\Category;
 use App\Models\Search;
 use App\Models\FaqHelpfulVote;
+use App\Models\QuestionSubmission;
 use App\Services\TfIdfService;
 use Illuminate\Http\Request;
 
@@ -14,13 +15,19 @@ class SkmsController extends Controller
     /**
      * Tampilan form masuk/identifikasi Mahasiswa UBAYA (hanya NRP).
      */
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
         if (session()->has('student_nrp')) {
+            if ($request->query('redirect') === 'tanya') {
+                return redirect()->route('skms.tanya', array_filter(['q' => $request->query('q')]));
+            }
             return redirect()->route('skms.beranda');
         }
 
-        return view('skms.masuk');
+        return view('skms.masuk', [
+            'redirect' => $request->query('redirect'),
+            'prefillQ' => $request->query('q'),
+        ]);
     }
 
     /**
@@ -39,6 +46,12 @@ class SkmsController extends Controller
         session([
             'student_nrp' => $nrp,
         ]);
+
+        if ($request->input('redirect') === 'tanya') {
+            return redirect()
+                ->route('skms.tanya', array_filter(['q' => $request->input('q')]))
+                ->with('success', 'Identitas NRP ' . $nrp . ' terverifikasi. Silakan tuliskan pertanyaan Anda kepada staf.');
+        }
 
         return redirect()->route('skms.beranda')->with('success', 'Selamat datang di SKMS UBAYA (NRP: ' . $nrp . ')!');
     }
@@ -320,5 +333,77 @@ class SkmsController extends Controller
             'helpful'    => (int) $faq->helpful,
             'is_helpful' => $isHelpful,
         ]);
+    }
+
+    /**
+     * Halaman Formulir Pengajuan Pertanyaan Baru (Question Submission / Tanya Staf) Beridentitas NRP (SB-026).
+     */
+    public function showQuestionForm(Request $request)
+    {
+        $studentNrp = session('student_nrp', null);
+
+        if (!$studentNrp) {
+            return redirect()
+                ->route('skms.login', array_filter([
+                    'redirect' => 'tanya',
+                    'q'        => $request->query('q'),
+                ]))
+                ->with('info', 'Silakan masukkan 9 digit NRP Anda terlebih dahulu untuk mengajukan pertanyaan kepada staf.');
+        }
+
+        $prefillQuestion = trim((string) $request->query('q', ''));
+        $studentEmail = 's' . $studentNrp . '@student.ubaya.ac.id';
+
+        // Ambil riwayat pengajuan pertanyaan (question_submissions) dari NRP mahasiswa yang sedang aktif
+        $myQuestions = QuestionSubmission::with(['faq', 'user'])
+            ->where('nrp', $studentNrp)
+            ->latest()
+            ->get();
+
+        return view('skms.tanya', compact(
+            'studentNrp',
+            'prefillQuestion',
+            'studentEmail',
+            'myQuestions'
+        ));
+    }
+
+    /**
+     * Proses penyimpanan tiket pengajuan pertanyaan baru dari Mahasiswa ke tabel question_submissions (SB-026).
+     */
+    public function submitQuestion(Request $request)
+    {
+        $studentNrp = session('student_nrp', null);
+
+        if (!$studentNrp || !preg_match('/^[0-9]{9}$/', $studentNrp)) {
+            return redirect()
+                ->route('skms.login', ['redirect' => 'tanya'])
+                ->with('error', 'Sesi NRP Anda telah berakhir. Silakan masuk kembali menggunakan 9 digit NRP.');
+        }
+
+        $validated = $request->validate([
+            'pertanyaan' => 'required|string|min:5|max:500',
+        ], [
+            'pertanyaan.required' => 'Pertanyaan wajib diisi.',
+            'pertanyaan.min'      => 'Pertanyaan minimal terdiri dari 5 karakter.',
+            'pertanyaan.max'      => 'Pertanyaan maksimal 500 karakter.',
+        ]);
+
+        $submission = QuestionSubmission::create([
+            'nrp'        => $studentNrp,
+            'pertanyaan' => trim($validated['pertanyaan']),
+            'status'     => 'pending',
+        ]);
+
+        $studentEmail = 's' . $studentNrp . '@student.ubaya.ac.id';
+
+        return redirect()
+            ->route('skms.tanya')
+            ->with('submitted_ticket', [
+                'id'         => $submission->id,
+                'nrp'        => $studentNrp,
+                'email'      => $studentEmail,
+                'pertanyaan' => $submission->pertanyaan,
+            ]);
     }
 }

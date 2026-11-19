@@ -1372,7 +1372,6 @@
             <div class="skms-nav-right">
                 <a href="{{ route('skms.beranda') }}" class="skms-nav-link {{ !$searched ? 'active' : '' }}">Beranda</a>
                 <a href="{{ route('skms.beranda', ['all' => 1]) }}" class="skms-nav-link {{ $searched ? 'active' : '' }}">Informasi</a>
-
                 @if($studentNrp)
                     <div class="skms-nrp-pill">
                         <span>NRP: {{ $studentNrp }}</span>
@@ -1506,15 +1505,15 @@
                 </div>
 
                 @if($studentNrp)
-                    <a href="{{ route('skms.beranda', ['all' => 1]) }}" class="skms-btn-white-cta">
-                        <span>Jelajahi semua FAQ</span>
+                    <a href="{{ route('skms.tanya') }}" class="skms-btn-white-cta">
+                        <span>Tanya Staf / Ajukan Pertanyaan</span>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
                         </svg>
                     </a>
                 @else
-                    <a href="{{ route('skms.login') }}" class="skms-btn-white-cta">
+                    <a href="{{ route('skms.login', ['redirect' => 'tanya']) }}" class="skms-btn-white-cta">
                         <span>Masuk untuk bantuan</span>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -1760,27 +1759,23 @@
                                 </svg>
                             </div>
                             <h3 style="font-size: 16px; font-weight: 700; color: var(--skms-forest); margin: 0 0 6px;">Tidak ada FAQ yang cocok</h3>
-                            <p style="font-size: 13px; color: var(--skms-muted); margin: 0 0 16px;">
-                                Kami tidak menemukan pertanyaan yang sesuai dengan filter atau kata kunci Anda.
+                            <p style="font-size: 13px; color: var(--skms-muted); margin: 0 auto 20px; max-width: 440px; line-height: 1.55;">
+                                Kami tidak menemukan pertanyaan yang sesuai dengan filter atau kata kunci Anda. Anda dapat mengajukan pertanyaan ini langsung kepada staf kami.
                             </p>
-                            <a href="{{ route('skms.beranda', ['all' => 1]) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: var(--skms-teal); color: #FFFFFF; border-radius: 8px; font-size: 12.5px; font-weight: 600; text-decoration: none;">
-                                Tampilkan semua FAQ
-                            </a>
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                                <a href="{{ route('skms.tanya', array_filter(['q' => $keyword])) }}" style="display: inline-flex; align-items: center; gap: 7px; padding: 10px 18px; background: var(--skms-teal); color: #FFFFFF; border-radius: 9px; font-size: 13px; font-weight: 700; text-decoration: none;">
+                                    <span>Ajukan pertanyaan baru ke staf</span>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </a>
+                                <a href="{{ route('skms.beranda', ['all' => 1]) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; background: #FFFFFF; border: 1px solid var(--skms-border); color: var(--skms-forest); border-radius: 9px; font-size: 13px; font-weight: 600; text-decoration: none;">
+                                    Tampilkan semua FAQ
+                                </a>
+                            </div>
                         </div>
                     @endforelse
-
-                    <div class="skms-search-tip-box">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <div>
-                            <h4 class="skms-search-tip-title">Belum menemukan informasi yang sesuai?</h4>
-                            <p class="skms-search-tip-desc">
-                                Coba kata kunci yang lebih singkat atau pilih kategori lain untuk mempersempit hasil pencarian.
-                            </p>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- ── KOLOM KANAN: TOP FAQ TERPOPULER ─────────────────────── -->
@@ -1815,28 +1810,6 @@
                         @endforelse
                     </div>
                 </aside>
-            </div>
-
-            <!-- Bottom Callout Bar -->
-            <div class="skms-search-bottom-bar">
-                <div class="skms-search-bottom-left">
-                    <strong>Butuh bantuan lebih lanjut?</strong>
-                    @if($studentNrp)
-                        <span>Anda masuk sebagai Mahasiswa UBAYA dengan NRP <strong>{{ $studentNrp }}</strong>.</span>
-                    @else
-                        <span>Masuk menggunakan NRP untuk mengakses layanan mahasiswa.</span>
-                    @endif
-                </div>
-
-                @if(!$studentNrp)
-                    <a href="{{ route('skms.login') }}" class="skms-search-bottom-link">
-                        <span>Masuk Mahasiswa</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </a>
-                @endif
             </div>
         </main>
     @endif
