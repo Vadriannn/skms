@@ -588,6 +588,173 @@
             color: var(--skms-teal);
         }
 
+        /* ── SEARCH INVALID WARNING ALERT (UI AWAM & ELEGAN) ─────────────── */
+        .skms-search-alert-card {
+            background: #FFFBEB;
+            border: 1px solid #FDE68A;
+            border-radius: 14px;
+            padding: 20px 22px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.08);
+        }
+
+        .skms-search-alert-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #FEF3C7;
+            color: #D97706;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .skms-search-alert-content {
+            flex: 1;
+        }
+
+        .skms-search-alert-title {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: #92400E;
+            margin-bottom: 4px;
+        }
+
+        .skms-search-alert-desc {
+            font-size: 13.5px;
+            color: #78350F;
+            line-height: 1.55;
+            margin-bottom: 12px;
+        }
+
+        .skms-search-alert-desc code {
+            background: #FEF3C7;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-weight: 700;
+            color: #B45309;
+            font-family: inherit;
+        }
+
+        .skms-search-alert-tips {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 12.5px;
+            color: #92400E;
+        }
+
+        .skms-search-alert-tips a {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 11px;
+            border-radius: 999px;
+            background: #FFFFFF;
+            border: 1px solid #FCD34D;
+            color: #92400E;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+
+        .skms-search-alert-tips a:hover {
+            background: #FEF3C7;
+            border-color: #B45309;
+            color: #78350F;
+        }
+
+        /* ── CLIENT-SIDE SEARCH TOAST (FLOATING POPUP NOTIFIKASI AWAM) ──── */
+        .skms-search-toast {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #FFFFFF;
+            border: 1px solid #FCD34D;
+            border-left: 5px solid #D97706;
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            z-index: 9999;
+            max-width: 92%;
+            width: 480px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .skms-search-toast.is-show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .skms-search-toast-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            background: #FEF3C7;
+            color: #D97706;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .skms-search-toast-body {
+            flex: 1;
+        }
+
+        .skms-search-toast-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1A302B;
+            margin-bottom: 2px;
+        }
+
+        .skms-search-toast-msg {
+            font-size: 12.5px;
+            color: #556B66;
+            line-height: 1.45;
+        }
+
+        .skms-search-toast-close {
+            background: none;
+            border: none;
+            color: #8FA39F;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px 6px;
+            line-height: 1;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .skms-search-toast-close:hover {
+            color: #1A302B;
+            background: #F0F4F2;
+        }
+
+        .skms-input-invalid {
+            border-color: #EF4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+            animation: skmsShake 0.3s ease;
+        }
+
+        @keyframes skmsShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-4px); }
+            40%, 80% { transform: translateX(4px); }
+        }
+
         .skms-results-head {
             display: flex;
             align-items: baseline;
@@ -1517,6 +1684,31 @@
                 <span style="color: var(--skms-forest); font-weight: 600;">Pencarian FAQ</span>
             </div>
 
+            @if(!empty($searchWarning))
+                <div class="skms-search-alert-card">
+                    <div class="skms-search-alert-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="skms-search-alert-content">
+                        <div class="skms-search-alert-title">Kata kunci pencarian belum jelas</div>
+                        <div class="skms-search-alert-desc">
+                            Kamu memasukkan kata kunci yang hanya berupa angka atau tanda baca/simbol (<code>{{ $keyword }}</code>). Agar sistem dapat menemukan jawaban yang tepat, silakan ketik kata atau nama topik yang ingin kamu cari.
+                        </div>
+                        <div class="skms-search-alert-tips">
+                            <span>Coba topik berikut:</span>
+                            <a href="{{ route('skms.beranda', ['search' => 'Cuti akademik']) }}">Cuti akademik</a>
+                            <a href="{{ route('skms.beranda', ['search' => 'KRS']) }}">KRS</a>
+                            <a href="{{ route('skms.beranda', ['search' => 'Pembayaran SPP']) }}">Pembayaran SPP</a>
+                            <a href="{{ route('skms.beranda', ['search' => 'Wisuda']) }}">Wisuda</a>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="skms-results-head">
                 <div class="skms-results-head-left">
                     <h2 class="skms-results-h2">Hasil pencarian</h2>
@@ -1958,6 +2150,76 @@
             // Mulai timer saat halaman dimuat
             resetIdleTimer();
         })();
+
+        /* ── Validasi Input Pencarian FAQ (UI Awam & Mencegah Angka/Simbol Murni) ── */
+        (function () {
+            const toast = document.getElementById('searchWarningToast');
+            const toastClose = document.getElementById('searchToastClose');
+            let toastTimer = null;
+
+            function showSearchWarning(input) {
+                if (input) {
+                    input.classList.add('skms-input-invalid');
+                    input.focus();
+                    input.select();
+                    setTimeout(() => input.classList.remove('skms-input-invalid'), 1200);
+                }
+
+                if (toast) {
+                    toast.classList.add('is-show');
+                    if (toastTimer) clearTimeout(toastTimer);
+                    toastTimer = setTimeout(() => {
+                        toast.classList.remove('is-show');
+                    }, 5000);
+                }
+            }
+
+            if (toastClose) {
+                toastClose.addEventListener('click', function () {
+                    if (toast) toast.classList.remove('is-show');
+                });
+            }
+
+            const searchForms = document.querySelectorAll('form.skms-search-bar');
+            searchForms.forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    const input = form.querySelector('input[name="search"]');
+                    if (!input) return;
+                    const val = input.value.trim();
+                    if (val === '') return; // Form bisa disubmit kosong jika ada filter kategori
+
+                    // Cek jika hanya angka dan spasi murni
+                    const isOnlyNumbers = /^[0-9\s]+$/.test(val);
+                    // Cek huruf alfabet
+                    const letterMatches = val.match(/[\p{L}]/gu);
+                    const letterCount = letterMatches ? letterMatches.length : 0;
+
+                    // Jika hanya angka atau tanda baca/simbol murni (huruf < 2)
+                    if (isOnlyNumbers || letterCount < 2) {
+                        e.preventDefault();
+                        showSearchWarning(input);
+                    }
+                });
+            });
+        })();
     </script>
+
+    <!-- ── Floating UI Toast Notifikasi Pencarian Awam ── -->
+    <div id="searchWarningToast" class="skms-search-toast" role="alert">
+        <div class="skms-search-toast-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+        </div>
+        <div class="skms-search-toast-body">
+            <div class="skms-search-toast-title">Kata kunci belum jelas</div>
+            <div class="skms-search-toast-msg">
+                Silakan ketik kata atau kalimat (misal: <em>cuti</em>, <em>krs</em>, <em>spp</em>), jangan hanya angka atau tanda baca/simbol ya.
+            </div>
+        </div>
+        <button type="button" id="searchToastClose" class="skms-search-toast-close" title="Tutup">&times;</button>
+    </div>
 </body>
 </html>
