@@ -145,6 +145,16 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('analytics.knowledge_gap') }}" class="sidebar-link {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                            </svg>
+                            <span>Knowledge Gap</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('faqs.history') }}" class="sidebar-link {{ request()->routeIs('faqs.history') ? 'active' : '' }}">
                             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="1 4 1 10 7 10"></polyline>

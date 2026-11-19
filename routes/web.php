@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FaqController;
+use App\Http\Controllers\KnowledgeGapController;
 use App\Http\Controllers\QuestionSubmissionController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SkmsController;
@@ -65,6 +66,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/settings/profile', [SettingsController::class, 'profile'])->name('settings.profile');
     Route::put('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.update');
+
+    // ─── KNOWLEDGE GAP ANALYTICS (Super Admin & Data Entry) ──────────────────────
+    Route::middleware('knowledge_gap.access')->group(function () {
+        Route::get('/analytics/knowledge-gap', [KnowledgeGapController::class, 'index'])->name('analytics.knowledge_gap');
+        Route::get('/analytics/knowledge-gap/export', [KnowledgeGapController::class, 'export'])->name('analytics.knowledge_gap.export');
+    });
 
     // ─── VALIDATOR ROUTES ───────────────────────────────────────────────────────
     Route::middleware('validator.only')->group(function () {

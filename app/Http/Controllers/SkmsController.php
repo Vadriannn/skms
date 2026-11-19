@@ -150,15 +150,17 @@ class SkmsController extends Controller
                     $results = $query->orderByDesc('views')->get();
                 }
 
-                // Catat riwayat pencarian mahasiswa
-                try {
-                    Search::create([
-                        'nrp'        => $studentNrp ?: null,
-                        'kata_kunci' => $keyword,
-                        'faq_id'     => $results->first()?->id ?? null,
-                    ]);
-                } catch (\Throwable $e) {
-                    // Abaikan kesalahan pencatatan
+                // Catat riwayat pencarian mahasiswa (Hanya jika kata kunci tidak kosong)
+                if (trim($keyword) !== '') {
+                    try {
+                        Search::create([
+                            'nrp'        => $studentNrp ?: null,
+                            'kata_kunci' => trim($keyword),
+                            'faq_id'     => $results->first()?->id ?? null,
+                        ]);
+                    } catch (\Throwable $e) {
+                        // Abaikan kesalahan pencatatan
+                    }
                 }
             } else {
                 // Hanya filter kategori tanpa kata kunci pencarian

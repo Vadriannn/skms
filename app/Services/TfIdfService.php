@@ -34,9 +34,19 @@ class TfIdfService
 
     public function __construct()
     {
-        // Inisialisasi library Stemmer Sastrawi
-        $stemmerFactory = new StemmerFactory();
-        $this->stemmer = $stemmerFactory->createStemmer();
+        // Inisialisasi library Stemmer Sastrawi dengan fallback aman jika is_readable() gagal di Windows
+        try {
+            $stemmerFactory = new StemmerFactory();
+            $this->stemmer = $stemmerFactory->createStemmer();
+        } catch (\Throwable $e) {
+            $dictPath = base_path('vendor/sastrawi/sastrawi/data/kata-dasar.txt');
+            if (file_exists($dictPath)) {
+                $words = explode("\n", file_get_contents($dictPath));
+                $dictionary = new \Sastrawi\Dictionary\ArrayDictionary($words);
+                $stemmer = new \Sastrawi\Stemmer\Stemmer($dictionary);
+                $this->stemmer = new \Sastrawi\Stemmer\CachedStemmer(new \Sastrawi\Stemmer\Cache\ArrayCache(), $stemmer);
+            }
+        }
     }
 
     // =========================================================================
@@ -176,19 +186,29 @@ class TfIdfService
     // =========================================================================
 
     /**
-     * Membandingkan pertanyaan input baru dengan seluruh FAQ yang ada di database.
+     * Membandingkan pertanyaan input baru dengan FAQ yang ada di database.
      *
-     * @param string $newQuestion Pertanyaan baru yang diketik Data Entry
+     * @param string $newQuestion Pertanyaan baru yang diketik pengguna
      * @param float $threshold Batas ambang skor duplikat (default: 0.60 atau 60%)
      * @param int|null $excludeId ID FAQ yang diabaikan (jika sedang mengedit)
+     * @param string|null $status Filter status FAQ (default: null = seluruh status aktif / non-inactive)
      * @return array Hasil evaluasi duplikasi dan daftar kandidat teratas
      */
-    public function checkSimilarity(string $newQuestion, float $threshold = 0.60, ?int $excludeId = null): array
+    public function checkSimilarity(string $newQuestion, float $threshold = 0.60, ?int $excludeId = null, ?string $status = null): array
     {
         // ---------------------------------------------------------------------
-        // [Langkah 4.1] Ambil Seluruh Data FAQ Aktif dari Database (Abaikan FAQ yang sudah dinonaktifkan/inactive)
+        // [Langkah 4.1] Ambil Data FAQ dari Database
+        // Jika $status null, mempertahankan perilaku bawaan (status != inactive untuk cek duplikasi)
+        // Jika $status diisi (misal: 'published'), hanya mengambil FAQ dengan status tersebut
         // ---------------------------------------------------------------------
-        $query = Faq::with('categories')->where('status', '!=', 'inactive');
+        $query = Faq::with('categories');
+        
+        if ($status !== null) {
+            $query->where('status', $status);
+        } else {
+            $query->where('status', '!=', 'inactive');
+        }
+
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
@@ -271,6 +291,19 @@ class TfIdfService
             'similar_faq'   => $mostSimilarFaq,
             'candidates'    => array_slice($candidates, 0, 5), // Ambil 5 teratas
         ];
+    }
+
+    /**
+     * Membandingkan kueri pencarian khusus terhadap FAQ yang berstatus 'published'.
+     * Digunakan oleh Knowledge Gap Analytics untuk mengevaluasi keterjawaban kueri secara objektif.
+     *
+     * @param string $keyword Kata kunci pencarian
+     * @param float $threshold Batas ambang skor kemiripan relevan (default: 0.20 atau 20%)
+     * @return array
+     */
+    public function checkSimilarityAgainstPublished(string $keyword, float $threshold = 0.20): array
+    {
+        return $this->checkSimilarity($keyword, $threshold, null, 'published');
     }
 
     /**

@@ -57,7 +57,7 @@
                            class="form-control"
                            placeholder="Misal: Bagaimana prosedur pengajuan cuti kuliah semester ganjil?"
                            autocomplete="off"
-                           value="{{ old('pertanyaan', $fromTicket->pertanyaan ?? $prefillFaq->pertanyaan ?? '') }}">
+                           value="{{ old('pertanyaan', $fromTicket->pertanyaan ?? $prefillFaq->pertanyaan ?? request()->query('pertanyaan', '')) }}">
                     <div id="similaritySpinner" class="similarity-spinner-icon">
                         <span class="spinner-sm"></span>
                         <span>Mengecek TF-IDF...</span>
