@@ -19,7 +19,7 @@ class ValidatorController extends Controller
         $disetujui        = Faq::where('status', 'published')->count();
 
         // Daftar terbaru: gabungan pending & published, 5 terakhir
-        $daftarTerbaru = Faq::with(['categories', 'user'])
+        $daftarTerbaru = Faq::with(['categories', 'user', 'latestDuplicateLog.similarFaq'])
             ->whereIn('status', ['pending', 'published', 'rejected'])
             ->latest()
             ->take(5)
@@ -36,7 +36,7 @@ class ValidatorController extends Controller
         $search     = $request->query('search');
         $categoryId = $request->query('category_id');
 
-        $query = Faq::with(['categories', 'user', 'reviews.user'])
+        $query = Faq::with(['categories', 'user', 'reviews.user', 'latestDuplicateLog.similarFaq'])
             ->where('status', 'pending')
             ->latest();
 
@@ -87,7 +87,7 @@ class ValidatorController extends Controller
         $status     = $request->query('status');
         $categoryId = $request->query('category_id');
 
-        $query = Faq::with(['categories', 'user', 'reviews'])
+        $query = Faq::with(['categories', 'user', 'reviews', 'latestDuplicateLog.similarFaq'])
             ->latest();
 
         if ($search) {
@@ -115,7 +115,7 @@ class ValidatorController extends Controller
      */
     public function show(Faq $faq)
     {
-        $faq->load(['categories', 'user', 'reviews.user']);
+        $faq->load(['categories', 'user', 'reviews.user', 'latestDuplicateLog.similarFaq.categories']);
         return view('validator.detail', compact('faq'));
     }
 

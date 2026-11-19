@@ -82,6 +82,18 @@
                                         Baru
                                     </span>
                                 @endif
+
+                                @if($faq->latestDuplicateLog)
+                                    @php
+                                        $dupScoreVal = (float) $faq->latestDuplicateLog->score;
+                                        $dupPct = $dupScoreVal <= 1 ? round($dupScoreVal * 100) : round($dupScoreVal);
+                                        $simTitle = $faq->latestDuplicateLog->similarFaq?->pertanyaan ?? 'FAQ lain';
+                                    @endphp
+                                    <span style="background-color: #FEF2F2; color: #DC2626; border: 1px solid #FCA5A5; font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;" title="Data Entry menghiraukan peringatan duplikasi TF-IDF ({{ $dupPct }}% mirip dengan: {{ $simTitle }})">
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                        Indikasi Duplikat ({{ $dupPct }}%)
+                                    </span>
+                                @endif
                             </div>
                         </td>
                         <td class="col-kategori">

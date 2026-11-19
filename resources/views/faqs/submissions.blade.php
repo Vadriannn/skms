@@ -143,7 +143,20 @@
 
                         <!-- Pertanyaan Bersih & Rapi -->
                         <td class="col-pertanyaan">
-                            <span class="faq-title-text">{{ Str::limit($item->pertanyaan, 120) }}</span>
+                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                <span class="faq-title-text">{{ Str::limit($item->pertanyaan, 120) }}</span>
+                                @if($item->latestDuplicateLog && $item->status !== 'published')
+                                    @php
+                                        $dupScoreVal = (float) $item->latestDuplicateLog->score;
+                                        $dupPct = $dupScoreVal <= 1 ? round($dupScoreVal * 100) : round($dupScoreVal);
+                                        $simTitle = $item->latestDuplicateLog->similarFaq?->pertanyaan ?? 'FAQ lain';
+                                    @endphp
+                                    <span style="background-color: #FEF2F2; color: #DC2626; border: 1px solid #FCA5A5; font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;" title="Peringatan duplikasi TF-IDF diabaikan ({{ $dupPct }}% mirip dengan: {{ $simTitle }})">
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                        Indikasi Duplikat ({{ $dupPct }}%)
+                                    </span>
+                                @endif
+                            </div>
                         </td>
 
                         <!-- Kategori (Multi-Category Badges) -->
@@ -261,6 +274,19 @@
             <button type="button" class="modal-close-btn" onclick="closeModal('subDetailModal')">&times;</button>
         </div>
         <div class="modal-body">
+            <!-- Box Peringatan Duplikasi TF-IDF (Jika terdeteksi >= 60% saat diajukan) -->
+            <div id="subDetailDuplicateBox" style="display: none; background-color: #FEF2F2; border: 1px solid #FCA5A5; border-left: 5px solid #EF4444; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px;">
+                <div style="font-size: 13px; font-weight: 700; color: #991B1B; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    <span id="subDetailDuplicateTitle">Peringatan Indikasi Duplikasi TF-IDF</span>
+                </div>
+                <div id="subDetailDuplicateText" style="font-size: 13px; color: #B91C1C; line-height: 1.5;"></div>
+            </div>
+
             <!-- Box Informasi Persetujuan Validator (Hanya muncul jika status published) -->
             <div id="subDetailApprovalBox" style="display: none; background-color: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px;">
                 <div style="font-size: 13px; font-weight: 700; color: #065F46; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
@@ -357,12 +383,26 @@
 
         const approvalBox = document.getElementById('subDetailApprovalBox');
         const rejectionBox = document.getElementById('subDetailRejectionBox');
+        const duplicateBox = document.getElementById('subDetailDuplicateBox');
         const actionBtnContainer = document.getElementById('subDetailActionBtn');
         const historyContainer = document.getElementById('subDetailHistoryContainer');
         const historyList = document.getElementById('subDetailHistoryList');
         
         actionBtnContainer.innerHTML = '';
         historyList.innerHTML = '';
+
+        // Tampilkan Peringatan Duplikasi TF-IDF jika ada di duplicate_logs
+        if (faq.latest_duplicate_log && faq.status !== 'published') {
+            duplicateBox.style.display = 'block';
+            const rawScore = parseFloat(faq.latest_duplicate_log.score || 0);
+            const pct = rawScore <= 1 ? Math.round(rawScore * 100) : Math.round(rawScore);
+            const simQ = faq.latest_duplicate_log.similar_faq ? faq.latest_duplicate_log.similar_faq.pertanyaan : 'FAQ lain di repositori';
+            const simId = faq.latest_duplicate_log.similar_faq ? `#${faq.latest_duplicate_log.similar_faq.id}` : '';
+            document.getElementById('subDetailDuplicateTitle').textContent = `Peringatan Duplikasi TF-IDF Diabaikan (Kemiripan: ${pct}%)`;
+            document.getElementById('subDetailDuplicateText').innerHTML = `Pertanyaan ini terdeteksi mirip dengan <strong>FAQ ${simId}: "${simQ}"</strong> saat diajukan oleh Data Entry.`;
+        } else {
+            duplicateBox.style.display = 'none';
+        }
 
         // Format tanggal helper
         function formatDatetime(dtString) {

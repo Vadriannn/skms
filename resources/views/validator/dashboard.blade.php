@@ -56,7 +56,18 @@
         <div class="vd-recent-list">
             @forelse($daftarTerbaru as $faq)
                 <div class="vd-recent-item">
-                    <span class="vd-recent-question">{{ Str::limit($faq->pertanyaan, 70) }}</span>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1; min-width: 0;">
+                        <span class="vd-recent-question" style="flex: unset;">{{ Str::limit($faq->pertanyaan, 70) }}</span>
+                        @if($faq->latestDuplicateLog && $faq->status === 'pending')
+                            @php
+                                $dupScoreVal = (float) $faq->latestDuplicateLog->score;
+                                $dupPct = $dupScoreVal <= 1 ? round($dupScoreVal * 100) : round($dupScoreVal);
+                            @endphp
+                            <span style="background-color: #FEF2F2; color: #DC2626; border: 1px solid #FCA5A5; font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                                ⚠️ Indikasi Duplikat ({{ $dupPct }}%)
+                            </span>
+                        @endif
+                    </div>
                     <div class="vd-recent-right">
                         @if($faq->status === 'pending')
                             <span class="vd-status-badge vd-status-pending">Menunggu</span>

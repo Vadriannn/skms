@@ -22,6 +22,53 @@
     {{-- ── Panel Kiri: Konten FAQ ──────────────────────────────── --}}
     <div class="validator-detail-main">
 
+        {{-- Banner Peringatan Duplikasi TF-IDF (Jika Data Entry menghiraukan peringatan >= 60%) --}}
+        @if($faq->latestDuplicateLog)
+            @php
+                $dupLog = $faq->latestDuplicateLog;
+                $simFaq = $dupLog->similarFaq;
+                $dupScoreVal = (float) $dupLog->score;
+                $dupPct = $dupScoreVal <= 1 ? round($dupScoreVal * 100) : round($dupScoreVal);
+            @endphp
+            <div style="background-color: #FEF2F2; border: 1px solid #FCA5A5; border-left: 5px solid #EF4444; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px;">
+                <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #991B1B; font-size: 14px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <span>Peringatan: Data Entry Menghiraukan Indikasi Duplikasi Pertanyaan (Kemiripan: {{ $dupPct }}%)</span>
+                    </div>
+                    <span style="background-color: #FEE2E2; color: #B91C1C; border: 1px solid #FCA5A5; padding: 2px 9px; border-radius: 9999px; font-size: 11.5px; font-weight: 700; white-space: nowrap;">
+                        &ge; 60% Threshold
+                    </span>
+                </div>
+                <p style="margin: 0 0 10px 0; color: #7F1D1D; font-size: 13px; line-height: 1.5;">
+                    Saat mengajukan informasi ini, sistem mendeteksi kemiripan tinggi via <strong>TF-IDF &amp; Cosine Similarity</strong> namun Data Entry tetap melanjutkan pengajuan. Mohon bandingkan dengan FAQ berikut sebelum menyetujui:
+                </p>
+
+                @if($simFaq)
+                    <div style="background: #FFFFFF; border: 1px solid #FECACA; border-radius: 8px; padding: 12px 14px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid #F1F5F9;">
+                            <span style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase;">
+                                FAQ Pembanding #{{ $simFaq->id }}
+                            </span>
+                            <a href="{{ route('validator.faq.show', $simFaq->id) }}" style="font-size: 12px; font-weight: 600; color: #4F46E5; text-decoration: none;">
+                                Lihat FAQ Pembanding &rarr;
+                            </a>
+                        </div>
+                        <div style="font-weight: 700; color: #0F172A; font-size: 13.5px; margin-bottom: 6px;">
+                            &ldquo;{{ $simFaq->pertanyaan }}&rdquo;
+                        </div>
+                        <div style="font-size: 12.5px; color: #334155; background: #F8FAFC; border-left: 3px solid #94A3B8; padding: 6px 10px; border-radius: 0 4px 4px 0;">
+                            {{ Str::limit(strip_tags($simFaq->jawaban), 160) }}
+                        </div>
+                    </div>
+                @endif
+            </div>
+        @endif
+
         {{-- Banner Pemberitahuan Status Pengajuan: Editan vs Revisian --}}
         @if($faq->submission_type === 'edit')
             <div style="background-color: #EFF6FF; border: 1px solid #93C5FD; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 12px;">

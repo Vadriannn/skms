@@ -368,7 +368,6 @@
         // Jika terdeteksi kemiripan duplikat via TF-IDF, berikan konfirmasi interaktif
         if (isDuplicateDetected) {
             const confirmed = confirm(
-                `PERINGATAN DETEKSI TF-IDF:\n\n` +
                 `Pertanyaan ini terdeteksi memiliki tingkat kemiripan ${duplicateMaxScore} dengan FAQ yang sudah ada di repositori:\n` +
                 `"${duplicateSimilarTitle}"\n\n` +
                 `Apakah Anda yakin tetap ingin melanjutkan penyimpanan informasi ini?`

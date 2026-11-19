@@ -68,7 +68,7 @@ class FaqController extends Controller
         $countPublished = Faq::where('status', 'published')->count();
         $countAll = $countDraft + $countPending + $countRejected + $countPublished;
 
-        $query = Faq::with(['categories', 'user', 'latestReview.user', 'reviews.user'])
+        $query = Faq::with(['categories', 'user', 'latestReview.user', 'reviews.user', 'latestDuplicateLog.similarFaq'])
             ->latest();
 
         if ($search) {
@@ -271,7 +271,7 @@ class FaqController extends Controller
     /**
      * Perbarui informasi FAQ dan sinkronisasi multi-kategori (dukungan revisi langsung)
      */
-    public function update(Request $request, Faq $faq)
+    public function update(Request $request, Faq $faq, TfIdfService $tfidfService)
     {
         $request->validate([
             'pertanyaan'     => 'required|string|max:500',
@@ -310,6 +310,9 @@ class FaqController extends Controller
             }
         }
 
+        // Jalankan pengecekan ulang TF-IDF (kecualikan FAQ yang sedang diedit ini)
+        $similarity = $tfidfService->checkSimilarity($request->pertanyaan, 0.60, $faq->id);
+
         $faq->update([
             'pertanyaan' => $request->pertanyaan,
             'jawaban'    => $request->jawaban,
@@ -318,6 +321,17 @@ class FaqController extends Controller
 
         if (!empty($categoryIds)) {
             $faq->categories()->sync($categoryIds);
+        }
+
+        // Sinkronisasi catatan duplicate_logs terbaru untuk FAQ ini
+        $faq->duplicateLogs()->delete();
+        if ($similarity['is_duplicate'] && !empty($similarity['similar_faq'])) {
+            DuplicateLog::create([
+                'faq_id'         => $faq->id,
+                'similar_faq_id' => $similarity['similar_faq']->id,
+                'score'          => $similarity['highest_score'],
+                'checked_at'     => now(),
+            ]);
         }
 
         if ($oldStatus === 'published' && $newStatus === 'pending') {

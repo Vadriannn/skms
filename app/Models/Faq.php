@@ -48,6 +48,11 @@ class Faq extends Model
         return $this->hasMany(DuplicateLog::class, 'faq_id');
     }
 
+    public function latestDuplicateLog()
+    {
+        return $this->hasOne(DuplicateLog::class, 'faq_id')->latestOfMany('id');
+    }
+
     public function searches()
     {
         return $this->hasMany(Search::class);
