@@ -1483,47 +1483,7 @@
                     </p>
                 </div>
             </div>
-
-            <div class="skms-help-banner">
-                <div class="skms-help-banner-left">
-                    <div class="skms-help-banner-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                            <line x1="8" y1="9" x2="16" y2="9"></line>
-                            <line x1="8" y1="13" x2="13" y2="13"></line>
-                        </svg>
-                    </div>
-                    <div>
-                        @if($studentNrp)
-                            <h3 class="skms-help-banner-title">Sesi Mahasiswa Aktif (NRP: {{ $studentNrp }})</h3>
-                            <p class="skms-help-banner-sub">Anda dapat menjelajahi seluruh panduan resmi atau memberi penilaian pada jawaban FAQ.</p>
-                        @else
-                            <h3 class="skms-help-banner-title">Belum menemukan jawaban?</h3>
-                            <p class="skms-help-banner-sub">Masuk dengan NRP untuk mengakses layanan bantuan mahasiswa.</p>
-                        @endif
-                    </div>
-                </div>
-
-                @if($studentNrp)
-                    <a href="{{ route('skms.tanya') }}" class="skms-btn-white-cta">
-                        <span>Tanya Staf / Ajukan Pertanyaan</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </a>
-                @else
-                    <a href="{{ route('skms.login', ['redirect' => 'tanya']) }}" class="skms-btn-white-cta">
-                        <span>Masuk untuk bantuan</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </a>
-                @endif
-            </div>
         </main>
-
     @else
         <!-- ===================================================================
              MODE 2: PENCARIAN INFORMASI & FAQ (IMAGE 2)

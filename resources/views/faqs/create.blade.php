@@ -28,6 +28,19 @@
             @csrf
             <input type="hidden" name="action_type" id="actionTypeInput" value="draft">
 
+            @if(!empty($fromTicket))
+                <input type="hidden" name="from_ticket_id" value="{{ $fromTicket->id }}">
+                <div style="background-color: #E8F5F1; border: 1px solid #BCE3D8; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: #16322F;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 4px;">
+                        <strong style="color: #0D7F74;">Penanganan Tiket Pertanyaan Mahasiswa #{{ $fromTicket->id }} (NRP: {{ $fromTicket->nrp }})</strong>
+                        <span style="font-size: 11.5px; color: #4D6661;">Email: {{ $fromTicket->student_email }}</span>
+                    </div>
+                    <div style="color: #3D524E; line-height: 1.5;">
+                        Pertanyaan di bawah ini telah diisi awal dari tiket mahasiswa. Setelah Anda menyimpan draf atau mengirimnya ke Validator, tiket <strong>#{{ $fromTicket->id }}</strong> akan otomatis tertaut ke FAQ baru ini.
+                    </div>
+                </div>
+            @endif
+
             @if(!empty($prefillFaq))
                 <div style="background-color: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: #1E3A8A;">
                     <strong>Pembuatan FAQ Pengganti:</strong> Formulir di bawah ini telah diisi awal dari FAQ lama <em>&ldquo;{{ $prefillFaq->pertanyaan }}&rdquo;</em> yang telah dinonaktifkan. Silakan sesuaikan isinya dan ajukan sebagai FAQ baru.
@@ -44,7 +57,7 @@
                            class="form-control"
                            placeholder="Misal: Bagaimana prosedur pengajuan cuti kuliah semester ganjil?"
                            autocomplete="off"
-                           value="{{ old('pertanyaan', $prefillFaq->pertanyaan ?? '') }}">
+                           value="{{ old('pertanyaan', $fromTicket->pertanyaan ?? $prefillFaq->pertanyaan ?? '') }}">
                     <div id="similaritySpinner" class="similarity-spinner-icon">
                         <span class="spinner-sm"></span>
                         <span>Mengecek TF-IDF...</span>
@@ -87,14 +100,28 @@
                 @enderror
             </div>
 
+            @if(!empty($fromTicket))
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label class="form-label" for="ticket_note">
+                        Catatan Balasan Tiket untuk Mahasiswa <span style="font-weight: 500; color: #647874;">(Opsional)</span>
+                    </label>
+                    <input type="text"
+                           id="ticket_note"
+                           name="ticket_note"
+                           class="form-control"
+                           placeholder="Kosongkan untuk menggunakan pesan balasan otomatis yang merujuk ke FAQ baru ini..."
+                           value="{{ old('ticket_note') }}">
+                </div>
+            @endif
+
             <!-- 4. Tombol Aksi -->
             <div class="faq-create-footer">
-                <a href="{{ route('faqs.index') }}" class="btn-modal-cancel" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                <a href="{{ !empty($fromTicket) ? route('questions.show', $fromTicket->id) : route('faqs.index') }}" class="btn-modal-cancel" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="19" y1="12" x2="5" y2="12"></line>
                         <polyline points="12 19 5 12 12 5"></polyline>
                     </svg>
-                    <span>Kembali ke Daftar</span>
+                    <span>{{ !empty($fromTicket) ? 'Kembali ke Tiket #' . $fromTicket->id : 'Kembali ke Daftar' }}</span>
                 </a>
 
                 <div style="display: flex; align-items: center; gap: 10px;">
@@ -168,6 +195,12 @@
                 runTfidfComparison(query);
             }, 450);
         });
+
+        // Jalankan otomatis saat halaman dibuka jika kolom pertanyaan sudah terisi (prefill dari tiket / FAQ lama)
+        if (inputPertanyaan.value.trim().length >= 3) {
+            document.getElementById('similaritySpinner').style.display = 'inline-flex';
+            runTfidfComparison(inputPertanyaan.value.trim());
+        }
     }
 
     function runTfidfComparison(queryText) {

@@ -51,7 +51,9 @@ Route::middleware('auth')->group(function () {
 
     // ─── ANTREAN TIKET PENGAJUAN PERTANYAAN MAHASISWA (Data Entry & Super Admin) ─
     Route::get('/questions', [QuestionSubmissionController::class, 'index'])->name('questions.index');
+    Route::get('/questions/search-faqs', [QuestionSubmissionController::class, 'searchFaqs'])->name('questions.search_faqs');
     Route::get('/questions/{questionSubmission}', [QuestionSubmissionController::class, 'show'])->name('questions.show');
+    Route::post('/questions/{questionSubmission}/link-faq', [QuestionSubmissionController::class, 'linkFaq'])->name('questions.link_faq');
 
     Route::resource('categories', CategoryController::class)->except(['create', 'show', 'edit']);
 

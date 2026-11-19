@@ -6,6 +6,7 @@ use App\Models\ActivityLog;
 use App\Models\Category;
 use App\Models\DuplicateLog;
 use App\Models\Faq;
+use App\Models\QuestionSubmission;
 use App\Services\TfIdfService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -112,10 +113,16 @@ class FaqController extends Controller
     {
         $categories = Category::orderBy('nama', 'asc')->get();
         $prefillFaq = null;
+        $fromTicket = null;
+
         if ($request->filled('from_faq')) {
             $prefillFaq = Faq::with('categories')->find($request->query('from_faq'));
         }
-        return view('faqs.create', compact('categories', 'prefillFaq'));
+        if ($request->filled('from_ticket')) {
+            $fromTicket = QuestionSubmission::find($request->query('from_ticket'));
+        }
+
+        return view('faqs.create', compact('categories', 'prefillFaq', 'fromTicket'));
     }
 
     /**
@@ -215,6 +222,33 @@ class FaqController extends Controller
         }
 
         ActivityLog::log($logMessage, 'faq');
+
+        // Jika FAQ baru ini dibuat dari Tiket Pertanyaan Mahasiswa (SB-028), tautkan otomatis
+        if ($request->filled('from_ticket_id')) {
+            $ticket = QuestionSubmission::find($request->input('from_ticket_id'));
+            if ($ticket) {
+                $ticketNote = trim((string) $request->input('ticket_note', ''));
+                if ($ticketNote === '') {
+                    $ticketNote = 'Pertanyaan Anda telah ditindaklanjuti menjadi panduan FAQ baru #' . $faq->id . ': "' . $faq->pertanyaan . '".';
+                }
+
+                $ticket->update([
+                    'faq_id'  => $faq->id,
+                    'user_id' => Auth::id(),
+                    'note'    => $ticketNote,
+                    'status'  => 'answered',
+                ]);
+
+                ActivityLog::log(
+                    Auth::user()->name . " menindaklanjuti Tiket Pertanyaan #{$ticket->id} (NRP {$ticket->nrp}) dengan membuat FAQ baru #{$faq->id}",
+                    'faq'
+                );
+
+                return redirect()
+                    ->route('questions.show', $ticket->id)
+                    ->with('success', 'FAQ baru #' . $faq->id . ' berhasil dibuat (' . $statusLabel . ') dan otomatis ditautkan ke Tiket #' . $ticket->id . '!');
+            }
+        }
 
         $message = $status === 'pending'
             ? 'Informasi baru berhasil diajukan dan sedang menunggu validasi!'

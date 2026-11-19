@@ -15,7 +15,7 @@ class UsersSeeder extends Seeder
     {
         $data = [
             [
-                'name' => 'Super Admin',
+                'name' => 'Admin',
                 'email' => 'admin@gmail.com',
                 'password' => 'admin',
                 'role' => 'super_admin',
@@ -29,7 +29,7 @@ class UsersSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'name' => 'Bayu',
+                'name' => 'Data',
                 'email' => 'dataentry@gmail.com',
                 'password' => 'dataentry',
                 'role' => 'data_entry',

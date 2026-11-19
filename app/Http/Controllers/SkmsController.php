@@ -246,7 +246,7 @@ class SkmsController extends Controller
         // Cek apakah mahasiswa/pengunjung sudah menandai FAQ ini membantu
         $voterHash = $studentNrp
             ? hash('sha256', 'nrp_' . $studentNrp)
-            : hash('sha256', 'guest_' . $request->ip() . '|' . ($request->userAgent() ?? ''));
+            : hash('sha256', 'session_' . session()->getId());
 
         $hasVotedDb = FaqHelpfulVote::where('faq_id', $faq->id)
             ->where('voter_hash', $voterHash)

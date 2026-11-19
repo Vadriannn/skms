@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
+use App\Models\Faq;
 use App\Models\QuestionSubmission;
 use App\Services\TfIdfService;
 use Illuminate\Http\Request;
@@ -83,10 +85,100 @@ class QuestionSubmissionController extends Controller
         $similarity = $tfIdf->checkSimilarity($questionSubmission->pertanyaan, 0.20);
         $similarCandidates = collect($similarity['candidates'] ?? [])->take(5);
 
+        // Ambil daftar seluruh FAQ yang sudah terbit (published) untuk pilihan penautan manual
+        $publishedFaqs = Faq::with('categories')
+            ->where('status', 'published')
+            ->orderBy('pertanyaan')
+            ->get();
+
         return view('questions.show', [
             'ticket'            => $questionSubmission,
             'similarCandidates' => $similarCandidates,
             'similarity'        => $similarity,
+            'publishedFaqs'     => $publishedFaqs,
         ]);
+    }
+
+    /**
+     * Endpoint AJAX untuk mencari & memuat daftar FAQ lama (published) beserta jawaban lengkapnya (SB-028).
+     */
+    public function searchFaqs(Request $request)
+    {
+        $this->ensureAuthorized();
+
+        $q = trim((string) $request->query('q', ''));
+
+        $query = Faq::with('categories')
+            ->where('status', 'published');
+
+        if ($q !== '') {
+            $cleanId = ltrim($q, '#');
+            $query->where(function ($sub) use ($q, $cleanId) {
+                $sub->where('pertanyaan', 'like', '%' . $q . '%')
+                    ->orWhere('jawaban', 'like', '%' . $q . '%')
+                    ->orWhereHas('categories', function ($cq) use ($q) {
+                        $cq->where('nama', 'like', '%' . $q . '%');
+                    });
+
+                if (ctype_digit($cleanId)) {
+                    $sub->orWhere('id', (int) $cleanId);
+                }
+            });
+        }
+
+        $faqs = $query->orderByDesc('views')->latest()->take(30)->get()->map(function ($faq) {
+            return [
+                'id'         => $faq->id,
+                'pertanyaan' => $faq->pertanyaan,
+                'jawaban'    => $faq->jawaban,
+                'categories' => $faq->categories->pluck('nama')->values()->all(),
+                'views'      => (int) $faq->views,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'count'   => $faqs->count(),
+            'faqs'    => $faqs,
+        ]);
+    }
+
+    /**
+     * Alur Kerja Penanganan Tiket 1 (SB-028): Tautkan Tiket ke FAQ Lama yang Sudah Ada.
+     */
+    public function linkFaq(Request $request, QuestionSubmission $questionSubmission)
+    {
+        $this->ensureAuthorized();
+
+        $validated = $request->validate([
+            'faq_id' => 'required|exists:faqs,id',
+            'note'   => 'nullable|string|max:2000',
+        ], [
+            'faq_id.required' => 'Silakan pilih FAQ yang ingin ditautkan ke tiket ini.',
+            'faq_id.exists'   => 'FAQ yang dipilih tidak ditemukan di database.',
+        ]);
+
+        $faq = Faq::findOrFail($validated['faq_id']);
+
+        $noteText = trim((string) ($validated['note'] ?? ''));
+        if ($noteText === '') {
+            $noteText = 'Pertanyaan Anda telah dijawab melalui panduan FAQ resmi #' . $faq->id . ': "' . $faq->pertanyaan . '".';
+        }
+
+        $questionSubmission->update([
+            'faq_id'  => $faq->id,
+            'user_id' => Auth::id(),
+            'note'    => $noteText,
+            'status'  => 'answered',
+        ]);
+
+        ActivityLog::log(
+            Auth::user()->name . " menyelesaikan Tiket Pertanyaan #{$questionSubmission->id} (NRP {$questionSubmission->nrp}) dengan menautkan ke FAQ #{$faq->id}: \"{$faq->pertanyaan}\"",
+            'faq'
+        );
+
+        return redirect()
+            ->route('questions.show', $questionSubmission->id)
+            ->with('success', 'Tiket #' . $questionSubmission->id . ' berhasil ditautkan ke FAQ #' . $faq->id . ' dan ditandai sebagai Sudah Dijawab!');
     }
 }
