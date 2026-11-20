@@ -147,6 +147,11 @@ class FaqController extends Controller
      */
     public function edit(Faq $faq)
     {
+        if ($faq->status === 'rejected') {
+            return redirect()->route('faqs.submissions', ['status' => 'rejected'])
+                ->withErrors(['error' => 'Pengajuan FAQ ini telah ditolak oleh validator dan tidak dapat direvisi atau diajukan ulang.']);
+        }
+
         if (in_array($faq->status, ['published', 'inactive'])) {
             return redirect()->route('faqs.submissions', ['status' => $faq->status])
                 ->withErrors(['error' => 'FAQ yang sudah dipublikasikan atau dinonaktifkan tidak dapat diedit. Silakan nonaktifkan FAQ lama lalu buat pengajuan FAQ baru.']);
@@ -335,6 +340,11 @@ class FaqController extends Controller
      */
     public function update(Request $request, Faq $faq, TfIdfService $tfidfService)
     {
+        if ($faq->status === 'rejected') {
+            return redirect()->route('faqs.submissions', ['status' => 'rejected'])
+                ->withErrors(['error' => 'Pengajuan FAQ ini telah ditolak oleh validator dan tidak dapat direvisi atau diperbarui.']);
+        }
+
         if (in_array($faq->status, ['published', 'inactive'])) {
             return redirect()->back()->withErrors([
                 'error' => 'FAQ yang sudah dipublikasikan atau dinonaktifkan bersifat permanen dan tidak dapat diedit. Silakan nonaktifkan FAQ lama lalu buat FAQ baru.'
@@ -393,7 +403,8 @@ class FaqController extends Controller
             ]);
         }
 
-        if ($oldStatus === 'rejected' && $newStatus === 'pending') {
+        $isRevision = $faq->latestReview && in_array($faq->latestReview->keputusan, ['revision', 'rejected']);
+        if ($isRevision && $newStatus === 'pending') {
             $logMsg = $user->name . " merevisi dan mengajukan kembali FAQ ke Validator: \"{$faq->pertanyaan}\"";
             $successMsg = 'Informasi FAQ berhasil direvisi dan telah diajukan kembali ke antrean Validator!';
         } elseif ($newStatus === 'pending') {

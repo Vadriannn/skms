@@ -75,15 +75,31 @@
                 </div>
             @endif
 
-            {{-- 2. Banner Catatan Perbaikan dari Validator (Jika status rejected) --}}
-            @if($faq->status === 'rejected' && $faq->latestReview && $faq->latestReview->catatan)
+            {{-- 2. Banner Catatan Revisi / Alasan Penolakan dari Validator --}}
+            @if($faq->latestReview && $faq->latestReview->keputusan === 'revision' && $faq->latestReview->catatan)
+                <div style="background-color: #FFFBEB; border: 1px solid #FDE68A; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px;">
+                    <div style="font-weight: 700; color: #92400E; font-size: 13.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        <span>Catatan revisi dari Validator (Revisi {{ $faq->reviews->where('keputusan', 'revision')->count() }}/2)</span>
+                    </div>
+                    <p style="margin: 0; color: #78350F; font-size: 13px; line-height: 1.55;">
+                        &ldquo;{{ $faq->latestReview->catatan }}&rdquo;
+                    </p>
+                </div>
+            @elseif($faq->status === 'rejected' && $faq->latestReview && $faq->latestReview->catatan)
                 <div style="background-color: #FDF2F2; border: 1px solid #F5C6C6; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px;">
                     <div style="font-weight: 700; color: #C93535; font-size: 13.5px; margin-bottom: 4px;">
-                        Catatan perbaikan dari Validator
+                        Alasan penolakan dari Validator (Permanen)
                     </div>
                     <p style="margin: 0; color: #991B1B; font-size: 13px; line-height: 1.55;">
                         &ldquo;{{ $faq->latestReview->catatan }}&rdquo;
                     </p>
+                    <div style="margin-top: 6px; font-size: 12px; color: #B91C1C;">
+                        Pengajuan FAQ ini telah ditolak secara permanen dan tidak dapat direvisi atau diajukan ulang.
+                    </div>
                 </div>
             @endif
 
@@ -208,10 +224,22 @@
                         <a href="{{ route('faqs.create', ['from_faq' => $faq->id]) }}" class="btn-modal-submit" style="width: 100%; justify-content: center; padding: 10px 16px; text-decoration: none;">
                             Buat FAQ baru dari ini
                         </a>
+                    @elseif($faq->status === 'rejected')
+                        {{-- DITOLAK: TIDAK BISA DIREVISI --}}
+                        <div style="padding: 10px 14px; background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; font-size: 12.5px; color: #DC2626; font-weight: 600; text-align: center; margin-bottom: 8px;">
+                            Pengajuan ditolak (Tidak dapat direvisi)
+                        </div>
+                        <form action="{{ route('faqs.destroy', $faq->id) }}" method="POST" onsubmit="return confirm('Hapus pengajuan yang ditolak ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn-secondary" style="width: 100%; justify-content: center; color: #C93535; border-color: #F5C6C6;">
+                                Hapus pengajuan
+                            </button>
+                        </form>
                     @else
                         <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <a href="{{ route('faqs.edit', $faq->id) }}" class="btn-modal-submit" style="width: 100%; justify-content: center; padding: 10px 16px; text-decoration: none;">
-                                {{ $faq->status === 'rejected' ? 'Buka halaman revisi' : 'Edit informasi' }}
+                            <a href="{{ route('faqs.edit', $faq->id) }}" class="btn-modal-submit" style="width: 100%; justify-content: center; padding: 10px 16px; text-decoration: none; {{ ($faq->latestReview && $faq->latestReview->keputusan === 'revision') ? 'background-color: #D97706;' : '' }}">
+                                {{ ($faq->latestReview && $faq->latestReview->keputusan === 'revision') ? 'Buka halaman revisi' : 'Edit informasi' }}
                             </a>
                             <form action="{{ route('faqs.destroy', $faq->id) }}" method="POST" onsubmit="return confirm('Hapus draf pengajuan ini?')">
                                 @csrf
@@ -243,6 +271,10 @@
                                         <span style="background: #E8F5F1; color: #0D7F74; padding: 3px 9px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">
                                             &#10003; Disetujui
                                         </span>
+                                    @elseif($review->keputusan === 'revision')
+                                        <span style="background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; padding: 3px 9px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">
+                                            &#8635; Revisi
+                                        </span>
                                     @else
                                         <span style="background: #FDF2F2; color: #C93535; padding: 3px 9px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">
                                             &#10005; Ditolak
@@ -258,7 +290,9 @@
 
                                 @if($review->catatan)
                                     <div style="margin-top: 8px; padding: 10px 12px; background: #F6F8F7; border-radius: 8px; font-size: 12.5px; color: #3D524E;">
-                                        <div style="font-size: 11px; color: #8FA19D; margin-bottom: 2px;">Catatan</div>
+                                        <div style="font-size: 11px; color: #8FA19D; margin-bottom: 2px;">
+                                            {{ $review->keputusan === 'revision' ? 'Deskripsi Revisi' : 'Catatan' }}
+                                        </div>
                                         <div>{{ $review->catatan }}</div>
                                     </div>
                                 @endif

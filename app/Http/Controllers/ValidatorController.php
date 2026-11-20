@@ -144,15 +144,58 @@ class ValidatorController extends Controller
     }
 
     /**
-     * Menolak FAQ: ubah status menjadi rejected, simpan review beserta catatan.
+     * Mengajukan Revisi FAQ ke Data Entry (maksimal 2 kali per FAQ).
+     * Status FAQ tetap 'pending' agar Data Entry dapat melakukan revisi.
+     */
+    public function revision(Request $request, Faq $faq)
+    {
+        $revisionCount = $faq->reviews()->where('keputusan', 'revision')->count();
+        if ($revisionCount >= 2) {
+            return redirect()->route('validator.faq.show', $faq->id)
+                ->withErrors(['catatan' => 'Batas maksimal revisi (2 kali) telah tercapai. FAQ ini hanya dapat disetujui atau ditolak.']);
+        }
+
+        $request->validate([
+            'catatan' => 'required|string|min:5|max:1000',
+        ], [
+            'catatan.required' => 'Deskripsi revisi wajib diisi agar Data Entry mengetahui bagian yang perlu diperbaiki.',
+            'catatan.min'      => 'Deskripsi revisi minimal 5 karakter.',
+            'catatan.max'      => 'Deskripsi revisi maksimal 1000 karakter.',
+        ]);
+
+        // Simpan keputusan ke tabel reviews
+        Review::create([
+            'faq_id'    => $faq->id,
+            'user_id'   => Auth::id(),
+            'keputusan' => 'revision',
+            'catatan'   => $request->input('catatan'),
+        ]);
+
+        // Pastikan status FAQ tetap pending agar Data Entry melihatnya sebagai pending (perlu revisi)
+        $faq->update(['status' => 'pending']);
+
+        $ke = $revisionCount + 1;
+        ActivityLog::log(
+            Auth::user()->name . " mengajukan revisi ke-{$ke} untuk FAQ: \"{$faq->pertanyaan}\" (Catatan: {$request->catatan})",
+            'faq'
+        );
+
+        return redirect()->route('validator.antrian')
+            ->with('success', "Permintaan revisi ke-{$ke} untuk FAQ \"{$faq->pertanyaan}\" telah dikirim ke Data Entry.");
+    }
+
+    /**
+     * Menolak FAQ secara permanen: ubah status menjadi rejected, simpan review beserta alasan penolakan.
+     * FAQ yang ditolak tidak dapat direvisi atau diajukan ulang oleh Data Entry.
      */
     public function reject(Request $request, Faq $faq)
     {
         $request->validate([
             'catatan' => 'required|string|min:5|max:1000',
         ], [
-            'catatan.required' => 'Catatan perbaikan wajib diisi saat menolak FAQ.',
-            'catatan.min'      => 'Catatan perbaikan minimal 5 karakter.',
+            'catatan.required' => 'Alasan penolakan wajib diisi saat menolak FAQ.',
+            'catatan.min'      => 'Alasan penolakan minimal 5 karakter.',
+            'catatan.max'      => 'Alasan penolakan maksimal 1000 karakter.',
         ]);
 
         // Simpan keputusan ke tabel reviews
@@ -163,15 +206,15 @@ class ValidatorController extends Controller
             'catatan'   => $request->input('catatan'),
         ]);
 
-        // Ubah status FAQ menjadi rejected
+        // Ubah status FAQ menjadi rejected (final, tidak dapat direvisi)
         $faq->update(['status' => 'rejected']);
 
         ActivityLog::log(
-            Auth::user()->name . " menolak FAQ: \"{$faq->pertanyaan}\" (Catatan: {$request->catatan})",
+            Auth::user()->name . " menolak FAQ: \"{$faq->pertanyaan}\" (Alasan: {$request->catatan})",
             'faq'
         );
 
         return redirect()->route('validator.antrian')
-            ->with('success', "FAQ \"{$faq->pertanyaan}\" telah ditolak. Catatan perbaikan telah disimpan.");
+            ->with('success', "FAQ \"{$faq->pertanyaan}\" telah ditolak secara permanen dan tidak dapat direvisi kembali oleh Data Entry.");
     }
 }

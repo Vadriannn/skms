@@ -141,6 +141,10 @@
         {{-- ── Panel Kanan: Form Keputusan / Status & Riwayat Review (Sesuai Gambar 4) ── --}}
         <div class="validator-detail-actions">
 
+            @php
+                $revisionCount = $faq->reviews->where('keputusan', 'revision')->count();
+            @endphp
+
             @if($faq->status === 'pending')
                 {{-- Form Setujui --}}
                 <div class="vd-action-card approve-card" style="border-top-color: #0D7F74;">
@@ -167,7 +171,60 @@
                     </form>
                 </div>
 
-                {{-- Form Tolak --}}
+                {{-- Form Ajukan Revisi (Maksimal 2 kali) --}}
+                @if($revisionCount < 2)
+                    <div class="vd-action-card revision-card" style="border-top: 3px solid #D97706;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                            <div class="vd-action-card-title" style="color: #B45309; margin-bottom: 0;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                Ajukan Revisi ke Data Entry
+                            </div>
+                            <span style="background: #FEF3C7; color: #92400E; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 9999px;">
+                                Revisi {{ $revisionCount + 1 }}/2
+                            </span>
+                        </div>
+                        <p class="vd-action-card-desc">FAQ akan dikembalikan ke Data Entry untuk diperbaiki (muncul sebagai pending) sesuai deskripsi yang Anda berikan.</p>
+                        <form action="{{ route('validator.faq.revision', $faq->id) }}" method="POST" id="revisionForm">
+                            @csrf
+                            <div class="form-group" style="margin-bottom: 14px;">
+                                <label class="form-label" for="revision_catatan">
+                                    Deskripsi Revisi <span class="required" style="color: #DC2626;">*</span>
+                                </label>
+                                <textarea id="revision_catatan" name="catatan" rows="3" class="form-control vd-textarea" placeholder="Jelaskan secara detail bagian yang perlu diperbaiki oleh Data Entry..." required></textarea>
+                                @error('catatan')
+                                    <div class="vd-field-error">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <button type="button" class="btn-vd-approve" style="background: #D97706;" onclick="confirmAction('revision', {{ $faq->id }})">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                Ajukan Revisi ({{ $revisionCount + 1 }}/2)
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    {{-- Batas revisi (2x) telah tercapai --}}
+                    <div class="vd-action-card" style="background: #FFFBEB; border: 1px solid #FDE68A; border-top: 3px solid #D97706;">
+                        <div style="display: flex; align-items: center; gap: 8px; color: #92400E; font-weight: 700; font-size: 13.5px; margin-bottom: 6px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            Batas Revisi Tercapai (2/2)
+                        </div>
+                        <p style="margin: 0; font-size: 12.5px; color: #78350F; line-height: 1.55;">
+                            FAQ ini sudah pernah diajukan revisi sebanyak <strong>2 kali</strong>. Kesempatan revisi telah habis, silakan putuskan untuk <strong>menyetujui</strong> atau <strong>menolak</strong> pengajuan FAQ ini.
+                        </p>
+                    </div>
+                @endif
+
+                {{-- Form Tolak (Permanen) --}}
                 <div class="vd-action-card reject-card">
                     <div class="vd-action-card-title">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C93535" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -175,16 +232,16 @@
                             <line x1="15" y1="9" x2="9" y2="15"></line>
                             <line x1="9" y1="9" x2="15" y2="15"></line>
                         </svg>
-                        Tolak FAQ
+                        Tolak FAQ (Permanen)
                     </div>
-                    <p class="vd-action-card-desc">FAQ akan dikembalikan ke pengaju dengan catatan perbaikan.</p>
+                    <p class="vd-action-card-desc">FAQ akan ditolak. Data Entry <strong>tidak dapat merevisi atau mengajukan ulang</strong> pengajuan ini.</p>
                     <form action="{{ route('validator.faq.reject', $faq->id) }}" method="POST" id="rejectForm">
                         @csrf
                         <div class="form-group" style="margin-bottom: 14px;">
                             <label class="form-label" for="reject_catatan">
-                                Catatan Perbaikan <span class="required">*</span>
+                                Alasan Penolakan <span class="required">*</span>
                             </label>
-                            <textarea id="reject_catatan" name="catatan" rows="3" class="form-control vd-textarea" placeholder="Jelaskan alasan penolakan dan apa yang perlu diperbaiki..." required></textarea>
+                            <textarea id="reject_catatan" name="catatan" rows="3" class="form-control vd-textarea" placeholder="Jelaskan alasan penolakan pengajuan FAQ ini..." required></textarea>
                             @error('catatan')
                                 <div class="vd-field-error">{{ $message }}</div>
                             @enderror
@@ -194,7 +251,7 @@
                                 <line x1="18" y1="6" x2="6" y2="18"></line>
                                 <line x1="6" y1="6" x2="18" y2="18"></line>
                             </svg>
-                            Tolak &amp; Kembalikan
+                            Tolak FAQ
                         </button>
                     </form>
                 </div>
@@ -207,7 +264,7 @@
                         @elseif($faq->status === 'inactive')
                             <span style="background: #F0F4F2; color: #4D6661; padding: 4px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">&bull; Nonaktif</span>
                         @elseif($faq->status === 'rejected')
-                            <span style="background: #FDF2F2; color: #C93535; padding: 4px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">&bull; Ditolak</span>
+                            <span style="background: #FDF2F2; color: #C93535; padding: 4px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">&bull; Ditolak (Tidak dapat direvisi)</span>
                         @endif
                     </div>
 
@@ -247,6 +304,10 @@
                                         <span style="background: #E8F5F1; color: #0D7F74; padding: 3px 9px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">
                                             &#10003; Disetujui
                                         </span>
+                                    @elseif($review->keputusan === 'revision')
+                                        <span style="background: #FEF3C7; color: #92400E; padding: 3px 9px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">
+                                            &#8635; Revisi
+                                        </span>
                                     @else
                                         <span style="background: #FDF2F2; color: #C93535; padding: 3px 9px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">
                                             &#10005; Ditolak
@@ -262,7 +323,9 @@
 
                                 @if($review->catatan)
                                     <div style="margin-top: 8px; padding: 10px 12px; background: #F6F8F7; border-radius: 8px; font-size: 12.5px; color: #3D524E;">
-                                        <div style="font-size: 11px; color: #8FA19D; margin-bottom: 2px;">Catatan</div>
+                                        <div style="font-size: 11px; color: #8FA19D; margin-bottom: 2px;">
+                                            {{ $review->keputusan === 'revision' ? 'Deskripsi Revisi' : 'Catatan' }}
+                                        </div>
                                         <div>{{ $review->catatan }}</div>
                                     </div>
                                 @endif
@@ -313,17 +376,31 @@
             desc.textContent  = 'FAQ akan dipublikasikan dan dapat dilihat oleh semua pengguna sistem.';
             btn.textContent   = 'Ya, Setujui';
             btn.className     = 'btn-modal-submit';
+            btn.style.backgroundColor = '#0D7F74';
+        } else if (action === 'revision') {
+            const catatan = document.getElementById('revision_catatan') ? document.getElementById('revision_catatan').value.trim() : '';
+            if (!catatan || catatan.length < 5) {
+                alert('Deskripsi revisi wajib diisi (minimal 5 karakter) sebelum mengajukan revisi.');
+                if (document.getElementById('revision_catatan')) document.getElementById('revision_catatan').focus();
+                return;
+            }
+            title.textContent = 'Ajukan Revisi ke Data Entry?';
+            desc.textContent  = 'FAQ akan dikembalikan ke Data Entry dengan catatan revisi yang Anda tulis agar dapat diperbaiki.';
+            btn.textContent   = 'Ya, Ajukan Revisi';
+            btn.className     = 'btn-modal-submit';
+            btn.style.backgroundColor = '#D97706';
         } else {
             const catatan = document.getElementById('reject_catatan').value.trim();
             if (!catatan || catatan.length < 5) {
-                alert('Catatan perbaikan wajib diisi (minimal 5 karakter) sebelum menolak.');
+                alert('Alasan penolakan wajib diisi (minimal 5 karakter) sebelum menolak.');
                 document.getElementById('reject_catatan').focus();
                 return;
             }
-            title.textContent = 'Tolak FAQ ini?';
-            desc.textContent  = 'FAQ akan dikembalikan ke pengaju dengan catatan perbaikan yang telah Anda tulis.';
-            btn.textContent   = 'Ya, Tolak';
+            title.textContent = 'Tolak Pengajuan FAQ?';
+            desc.textContent  = 'FAQ akan ditolak secara permanen dan Data Entry TIDAK DAPAT merevisi atau mengajukan ulang FAQ ini.';
+            btn.textContent   = 'Ya, Tolak FAQ';
             btn.className     = 'btn-modal-submit btn-confirm-reject';
+            btn.style.backgroundColor = '#DC2626';
         }
 
         modal.style.display = 'flex';
@@ -333,6 +410,8 @@
     document.getElementById('confirmModalBtn').addEventListener('click', function() {
         if (pendingAction === 'approve') {
             document.getElementById('approveForm').submit();
+        } else if (pendingAction === 'revision') {
+            document.getElementById('revisionForm').submit();
         } else if (pendingAction === 'reject') {
             document.getElementById('rejectForm').submit();
         }

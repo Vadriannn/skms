@@ -72,9 +72,25 @@ class Faq extends Model
     }
 
     /**
+     * Hitung berapa kali FAQ ini sudah diminta revisi oleh validator.
+     */
+    public function getRevisionCountAttribute(): int
+    {
+        return $this->reviews->where('keputusan', 'revision')->count();
+    }
+
+    /**
+     * Cek apakah FAQ masih bisa diajukan revisi oleh validator (maksimal 2 kali dan status masih pending).
+     */
+    public function getCanBeRevisedAttribute(): bool
+    {
+        return $this->status === 'pending' && $this->revision_count < 2;
+    }
+
+    /**
      * Mengetahui jenis/tipe pengajuan:
      * - 'edit': Editan dari FAQ yang sudah pernah terbit/disetujui
-     * - 'revision': Revisian dari FAQ yang ditolak validator
+     * - 'revision': Revisian dari FAQ yang diminta revisi atau ditolak validator
      * - 'new': Pengajuan informasi baru
      */
     public function getSubmissionTypeAttribute()
@@ -85,7 +101,7 @@ class Faq extends Model
         }
 
         $latest = $this->latestReview;
-        if ($latest && $latest->keputusan === 'rejected') {
+        if ($latest && in_array($latest->keputusan, ['revision', 'rejected'])) {
             return 'revision';
         }
 

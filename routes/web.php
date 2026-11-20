@@ -81,6 +81,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/validator/semua-faq', [ValidatorController::class, 'semuaFaq'])->name('validator.semua_faq');
         Route::get('/validator/faq/{faq}', [ValidatorController::class, 'show'])->name('validator.faq.show');
         Route::post('/validator/faq/{faq}/approve', [ValidatorController::class, 'approve'])->name('validator.faq.approve');
+        Route::post('/validator/faq/{faq}/revision', [ValidatorController::class, 'revision'])->name('validator.faq.revision');
         Route::post('/validator/faq/{faq}/reject', [ValidatorController::class, 'reject'])->name('validator.faq.reject');
     });
 

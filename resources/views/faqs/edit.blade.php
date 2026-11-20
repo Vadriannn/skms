@@ -1,5 +1,10 @@
+@php
+    $isRevision = $faq->latestReview && $faq->latestReview->keputusan === 'revision';
+    $revisionCount = $faq->reviews->where('keputusan', 'revision')->count();
+@endphp
+
 @extends('layouts.app', [
-    'title' => ($faq->status === 'rejected' ? 'Revisi Informasi FAQ' : 'Edit Informasi FAQ') . ' - SKMS',
+    'title' => ($isRevision ? 'Revisi Informasi FAQ' : 'Edit Informasi FAQ') . ' - SKMS',
     'topbar_class' => 'seamless-topbar'
 ])
 
@@ -13,7 +18,7 @@
             </svg>
         </a>
         <h1 class="topbar-page-title" style="margin: 0;">
-            {{ $faq->status === 'rejected' ? 'Revisi Informasi FAQ' : 'Edit Informasi FAQ' }}
+            {{ $isRevision ? 'Revisi Informasi FAQ' : 'Edit Informasi FAQ' }}
         </h1>
     </div>
 @endsection
@@ -26,17 +31,19 @@
         <div class="faq-create-header">
             <div>
                 <h2 class="faq-create-title">
-                    {{ $faq->status === 'rejected' ? 'Formulir Revisi & Pengajuan Ulang' : 'Perbarui Data Informasi FAQ' }}
+                    {{ $isRevision ? 'Formulir Revisi & Pengajuan Ulang' : 'Perbarui Data Informasi FAQ' }}
                 </h2>
                 <p class="faq-create-subtitle">
-                    {{ $faq->status === 'rejected' 
-                        ? 'Perbaiki pertanyaan dan jawaban sesuai catatan validator sebelum diajukan kembali.' 
+                    {{ $isRevision 
+                        ? "Perbaiki pertanyaan dan jawaban sesuai catatan validator sebelum diajukan kembali (Revisi ke-{$revisionCount} dari maksimal 2 kali)." 
                         : 'Sesuaikan pertanyaan, jawaban, atau kategori informasi akademik yang bersangkutan.' }}
                 </p>
             </div>
             <div>
-                @if($faq->status === 'rejected')
-                    <span class="status-pill status-rejected">Perlu Revisi</span>
+                @if($isRevision)
+                    <span class="status-pill" style="background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;">
+                        Perlu Revisi ({{ $revisionCount }}/2)
+                    </span>
                 @elseif($faq->status === 'pending')
                     <span class="status-pill status-pending">Menunggu Validasi</span>
                 @elseif($faq->status === 'published')
@@ -47,23 +54,22 @@
             </div>
         </div>
 
-        <!-- Alert Alasan Penolakan dari Validator (Jika status rejected) -->
-        @if($faq->status === 'rejected' && $faq->latestReview && $faq->latestReview->catatan)
-            <div style="background-color: #FEF2F2; border: 1px solid #FECACA; border-radius: 10px; padding: 16px 18px; margin-bottom: 24px;">
+        <!-- Alert Catatan Revisi dari Validator -->
+        @if($isRevision && $faq->latestReview && $faq->latestReview->catatan)
+            <div style="background-color: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; padding: 16px 18px; margin-bottom: 24px;">
                 <div style="display: flex; align-items: flex-start; gap: 10px;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                     </svg>
                     <div style="flex: 1;">
-                        <div style="font-weight: 700; color: #991B1B; font-size: 14px; margin-bottom: 4px;">
-                            Alasan Penolakan / Catatan Perbaikan dari Validator
+                        <div style="font-weight: 700; color: #92400E; font-size: 14px; margin-bottom: 4px;">
+                            Catatan Revisi dari Validator (Revisi ke-{{ $revisionCount }} dari 2)
                         </div>
-                        <div style="color: #B91C1C; font-size: 14px; line-height: 1.5;">
+                        <div style="color: #78350F; font-size: 14px; line-height: 1.5;">
                             {{ $faq->latestReview->catatan }}
                         </div>
-                        <div style="margin-top: 8px; font-size: 12px; color: #7F1D1D; opacity: 0.85;">
+                        <div style="margin-top: 8px; font-size: 12px; color: #B45309; opacity: 0.9;">
                             Diverifikasi oleh: <strong>{{ $faq->latestReview->user ? $faq->latestReview->user->name : 'Validator' }}</strong> &bull; {{ $faq->latestReview->created_at->format('d M Y, H:i') }}
                         </div>
                     </div>
@@ -169,7 +175,7 @@
                 </a>
 
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    @if($faq->status === 'rejected')
+                    @if($isRevision || $faq->status === 'pending')
                         <!-- Opsi 1: Simpan Draft -->
                         <button type="button" class="btn-modal-draft" onclick="submitEditForm('draft')">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -180,12 +186,12 @@
                             <span>Simpan sebagai Draft</span>
                         </button>
                         <!-- Opsi 2: Ajukan Kembali ke Validator -->
-                        <button type="button" class="btn-modal-submit" onclick="submitEditForm('resubmit')" style="background-color: #2563EB;">
+                        <button type="button" class="btn-modal-submit" onclick="submitEditForm('pending')" style="background-color: #0D7F74;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="22" y1="2" x2="11" y2="13"></line>
                                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                             </svg>
-                            <span>Ajukan Kembali ke Validator</span>
+                            <span>{{ $isRevision ? 'Ajukan Revisi ke Validator' : 'Kirim untuk Validasi' }}</span>
                         </button>
                     @elseif($faq->status === 'draft')
                         <button type="button" class="btn-modal-draft" onclick="submitEditForm('draft')">

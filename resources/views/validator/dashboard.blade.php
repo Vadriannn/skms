@@ -77,7 +77,11 @@
                     </div>
                     <div class="vd-recent-right">
                         @if($faq->status === 'pending')
-                            <span class="vd-status-badge vd-status-pending">Menunggu</span>
+                            @if($faq->latestReview && $faq->latestReview->keputusan === 'revision')
+                                <span class="vd-status-badge" style="background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;">Perlu Revisi</span>
+                            @else
+                                <span class="vd-status-badge vd-status-pending">Menunggu</span>
+                            @endif
                         @elseif($faq->status === 'published')
                             <span class="vd-status-badge vd-status-approved">Disetujui</span>
                         @elseif($faq->status === 'rejected')

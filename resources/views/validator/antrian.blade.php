@@ -160,8 +160,8 @@
                                         Pembaruan
                                     </span>
                                 @elseif($faq->submission_type === 'revision')
-                                    <span style="background-color: #EEF3FA; color: #345995; border: 1px solid #C9D8EE; font-size: 11.5px; padding: 3px 10px; border-radius: 6px; font-weight: 600;">
-                                        Revisi
+                                    <span style="background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; font-size: 11.5px; padding: 3px 10px; border-radius: 6px; font-weight: 600;">
+                                        Revisi {{ $faq->reviews->where('keputusan', 'revision')->count() }}/2
                                     </span>
                                 @elseif(!$faq->latestDuplicateLog)
                                     <span style="background-color: #F0F4F2; color: #4D6661; border: 1px solid #E2E9E6; font-size: 11.5px; padding: 3px 10px; border-radius: 6px; font-weight: 500;">

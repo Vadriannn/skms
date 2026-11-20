@@ -187,11 +187,17 @@
                             @if($item->status === 'draft')
                                 <span class="status-pill status-draft">Draft</span>
                             @elseif($item->status === 'pending')
-                                <span class="status-pill status-pending">Menunggu</span>
+                                @if($item->latestReview && $item->latestReview->keputusan === 'revision')
+                                    <span class="status-pill" style="background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;">
+                                        Perlu Revisi ({{ $item->reviews->where('keputusan', 'revision')->count() }}/2)
+                                    </span>
+                                @else
+                                    <span class="status-pill status-pending">Menunggu</span>
+                                @endif
                             @elseif($item->status === 'published')
                                 <span class="status-pill status-approved">Disetujui</span>
                             @elseif($item->status === 'rejected')
-                                <span class="status-pill status-rejected">Perlu Revisi</span>
+                                <span class="status-pill status-rejected">Ditolak</span>
                             @elseif($item->status === 'inactive')
                                 <span class="status-pill" style="background-color: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">Nonaktif</span>
                             @else
@@ -234,9 +240,21 @@
                                         <a href="{{ route('faqs.create', ['from_faq' => $item->id]) }}" class="action-menu-item" style="text-decoration: none; color: #4F46E5; font-weight: 600;">
                                             Buat FAQ Baru dari Ini
                                         </a>
+                                    @elseif($item->status === 'rejected')
+                                        {{-- Ditolak: tidak bisa direvisi atau diajukan ulang --}}
+                                        <span class="action-menu-item" style="color: #94A3B8; cursor: not-allowed; font-size: 12.5px;">
+                                            Ditolak (Tidak dapat direvisi)
+                                        </span>
+                                        <form action="{{ route('faqs.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data pengajuan yang ditolak ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="action-menu-item danger">
+                                                Hapus Pengajuan
+                                            </button>
+                                        </form>
                                     @else
-                                        <a href="{{ route('faqs.edit', $item->id) }}" class="action-menu-item" style="text-decoration: none;">
-                                            {{ $item->status === 'rejected' ? 'Revisi / Edit' : 'Edit' }}
+                                        <a href="{{ route('faqs.edit', $item->id) }}" class="action-menu-item" style="text-decoration: none; {{ ($item->latestReview && $item->latestReview->keputusan === 'revision') ? 'color: #D97706; font-weight: 600;' : '' }}">
+                                            {{ ($item->latestReview && $item->latestReview->keputusan === 'revision') ? 'Revisi Sekarang' : 'Edit' }}
                                         </a>
                                         <form action="{{ route('faqs.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus draf pengajuan ini?')">
                                             @csrf
@@ -327,6 +345,19 @@
                 <div id="subDetailApprovalInfo" style="margin-top: 6px; font-size: 11.5px; color: #065F46; opacity: 0.85;"></div>
             </div>
 
+            <!-- Box Catatan Revisi dari Validator (Muncul jika ada permintaan revisi) -->
+            <div id="subDetailRevisionBox" style="display: none; background-color: #FFFBEB; border: 1px solid #FDE68A; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px;">
+                <div style="font-size: 13px; font-weight: 700; color: #92400E; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    <span id="subDetailRevisionTitle">Catatan Revisi dari Validator:</span>
+                </div>
+                <div id="subDetailRevisionCatatan" style="font-size: 13px; color: #78350F; line-height: 1.5;"></div>
+                <div id="subDetailRevisionInfo" style="margin-top: 6px; font-size: 11.5px; color: #B45309; opacity: 0.9;"></div>
+            </div>
+
             <!-- Box Alasan Penolakan (Hanya muncul di modal detail jika status rejected) -->
             <div id="subDetailRejectionBox" class="review-reason-box" style="display: none;">
                 <div class="review-reason-title">
@@ -335,10 +366,13 @@
                         <line x1="12" y1="8" x2="12" y2="12"></line>
                         <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
-                    <span>Catatan Perbaikan dari Validator:</span>
+                    <span>Pengajuan FAQ Ditolak oleh Validator:</span>
                 </div>
                 <div id="subDetailRejectionCatatan" class="review-reason-text"></div>
                 <div id="subDetailReviewerInfo" style="margin-top: 6px; font-size: 11.5px; color: #991B1B; opacity: 0.85;"></div>
+                <div style="margin-top: 8px; font-size: 12px; color: #B91C1C; font-weight: 600;">
+                    &bull; Pengajuan FAQ ini telah ditolak secara permanen dan tidak dapat direvisi atau diajukan ulang.
+                </div>
             </div>
 
             <div style="font-weight: 600; color: #1E293B; margin-bottom: 6px;">Jawaban / Penjelasan:</div>
@@ -398,9 +432,12 @@
         document.getElementById('subDetailJawaban').innerHTML = faq.jawaban;
         
         let statusLabel = faq.status;
+        const revisionReviews = (faq.reviews || []).filter(r => r.keputusan === 'revision');
         if (faq.status === 'draft') statusLabel = 'Draft';
-        if (faq.status === 'pending') statusLabel = 'Menunggu Validasi';
-        if (faq.status === 'rejected') statusLabel = 'Perlu Revisi (Ditolak)';
+        if (faq.status === 'pending') {
+            statusLabel = revisionReviews.length > 0 ? `Perlu Revisi (${revisionReviews.length}/2)` : 'Menunggu Validasi';
+        }
+        if (faq.status === 'rejected') statusLabel = 'Ditolak (Permanen)';
         if (faq.status === 'published') statusLabel = 'Disetujui / Publik';
         if (faq.status === 'inactive') statusLabel = 'Nonaktif';
         document.getElementById('subDetailStatus').textContent = statusLabel;
@@ -419,6 +456,7 @@
 
         const approvalBox = document.getElementById('subDetailApprovalBox');
         const rejectionBox = document.getElementById('subDetailRejectionBox');
+        const revisionBox = document.getElementById('subDetailRevisionBox');
         const duplicateBox = document.getElementById('subDetailDuplicateBox');
         const actionBtnContainer = document.getElementById('subDetailActionBtn');
         const historyContainer = document.getElementById('subDetailHistoryContainer');
@@ -474,13 +512,29 @@
             approvalBox.style.display = 'none';
         }
 
+        // Tampilkan Box Catatan Revisi jika status pending dan ada review revisi
+        const latestRevisionReview = revisionReviews.length > 0 ? revisionReviews[revisionReviews.length - 1] : null;
+        if (faq.status === 'pending' && latestRevisionReview && latestRevisionReview.catatan) {
+            if (revisionBox) {
+                revisionBox.style.display = 'block';
+                document.getElementById('subDetailRevisionTitle').textContent = `Catatan Revisi dari Validator (Revisi ${revisionReviews.length}/2):`;
+                document.getElementById('subDetailRevisionCatatan').textContent = latestRevisionReview.catatan;
+                const revUser = latestRevisionReview.user ? latestRevisionReview.user.name : 'Validator';
+                const revDate = formatDatetime(latestRevisionReview.created_at);
+                document.getElementById('subDetailRevisionInfo').textContent = `Diverifikasi oleh: ${revUser} \u2022 Pada ${revDate}`;
+            }
+        } else if (revisionBox) {
+            revisionBox.style.display = 'none';
+        }
+
         // Tampilkan Catatan Validator jika Ditolak
-        if (faq.status === 'rejected' && faq.latest_review && faq.latest_review.catatan) {
+        if (faq.status === 'rejected') {
             rejectionBox.style.display = 'block';
-            document.getElementById('subDetailRejectionCatatan').textContent = faq.latest_review.catatan;
+            const rejectReview = (faq.reviews || []).slice().reverse().find(r => r.keputusan === 'rejected') || faq.latest_review;
+            document.getElementById('subDetailRejectionCatatan').textContent = (rejectReview && rejectReview.catatan) ? rejectReview.catatan : 'Pengajuan ditolak oleh validator.';
             
-            const reviewerName = faq.latest_review.user ? faq.latest_review.user.name : 'Validator';
-            const rejectDate = formatDatetime(faq.latest_review.created_at);
+            const reviewerName = (rejectReview && rejectReview.user) ? rejectReview.user.name : 'Validator';
+            const rejectDate = rejectReview ? formatDatetime(rejectReview.created_at) : formatDatetime(faq.updated_at);
             document.getElementById('subDetailReviewerInfo').textContent = `Diverifikasi oleh: ${reviewerName} \u2022 Pada ${rejectDate}`;
         } else {
             rejectionBox.style.display = 'none';
@@ -491,12 +545,22 @@
             historyContainer.style.display = 'block';
             faq.reviews.forEach(rev => {
                 const isApproved = rev.keputusan === 'approved';
+                const isRevision = rev.keputusan === 'revision';
                 const revItem = document.createElement('div');
                 revItem.style.padding = '8px 12px';
                 revItem.style.borderRadius = '6px';
                 revItem.style.fontSize = '12px';
-                revItem.style.backgroundColor = isApproved ? '#F0FDF4' : '#FEF2F2';
-                revItem.style.border = `1px solid ${isApproved ? '#BBF7D0' : '#FECACA'}`;
+                
+                if (isApproved) {
+                    revItem.style.backgroundColor = '#F0FDF4';
+                    revItem.style.border = '1px solid #BBF7D0';
+                } else if (isRevision) {
+                    revItem.style.backgroundColor = '#FFFBEB';
+                    revItem.style.border = '1px solid #FDE68A';
+                } else {
+                    revItem.style.backgroundColor = '#FEF2F2';
+                    revItem.style.border = '1px solid #FECACA';
+                }
 
                 const revHeader = document.createElement('div');
                 revHeader.style.display = 'flex';
@@ -506,8 +570,16 @@
 
                 const revBadge = document.createElement('span');
                 revBadge.style.fontWeight = '700';
-                revBadge.style.color = isApproved ? '#166534' : '#991B1B';
-                revBadge.textContent = isApproved ? '\u2713 Disetujui' : '\u2715 Ditolak';
+                if (isApproved) {
+                    revBadge.style.color = '#166534';
+                    revBadge.textContent = '\u2713 Disetujui';
+                } else if (isRevision) {
+                    revBadge.style.color = '#B45309';
+                    revBadge.textContent = '\u21BA Revisi';
+                } else {
+                    revBadge.style.color = '#991B1B';
+                    revBadge.textContent = '\u2715 Ditolak';
+                }
 
                 const revTime = document.createElement('span');
                 revTime.style.color = '#64748B';
@@ -521,6 +593,7 @@
                 const revBody = document.createElement('div');
                 revBody.style.color = '#334155';
                 const reviewer = rev.user ? rev.user.name : 'Validator';
+                const noteLabel = isRevision ? 'Deskripsi Revisi' : 'Catatan';
                 revBody.innerHTML = `<strong>Validator:</strong> ${reviewer} ${rev.catatan ? `&bull; <em>"${rev.catatan}"</em>` : ''}`;
                 revItem.appendChild(revBody);
 
@@ -530,7 +603,7 @@
             historyContainer.style.display = 'none';
         }
 
-        // Tombol aksi di bawah modal detail (FAQ published/inactive tidak boleh diedit)
+        // Tombol aksi di bawah modal detail
         if (faq.status === 'published' || faq.status === 'inactive') {
             const btnNew = document.createElement('a');
             btnNew.href = `/faqs/create?from_faq=${faq.id}`;
@@ -540,6 +613,18 @@
             btnNew.style.textDecoration = 'none';
             btnNew.textContent = 'Buat FAQ Baru dari Ini';
             actionBtnContainer.appendChild(btnNew);
+        } else if (faq.status === 'rejected') {
+            // TIDAK DAPAT DIREVISI
+            const spanRejected = document.createElement('span');
+            spanRejected.style.fontSize = '12px';
+            spanRejected.style.color = '#DC2626';
+            spanRejected.style.fontWeight = '600';
+            spanRejected.style.padding = '6px 12px';
+            spanRejected.style.background = '#FEF2F2';
+            spanRejected.style.borderRadius = '6px';
+            spanRejected.style.border = '1px solid #FECACA';
+            spanRejected.textContent = 'Pengajuan Ditolak (Tidak dapat direvisi)';
+            actionBtnContainer.appendChild(spanRejected);
         } else {
             const btnEdit = document.createElement('a');
             btnEdit.href = `/faqs/${faq.id}/edit`;
@@ -548,8 +633,8 @@
             btnEdit.style.padding = '6px 14px';
             btnEdit.style.textDecoration = 'none';
             
-            if (faq.status === 'rejected') {
-                btnEdit.style.backgroundColor = '#2563EB';
+            if (revisionReviews.length > 0) {
+                btnEdit.style.backgroundColor = '#D97706';
                 btnEdit.textContent = 'Buka Halaman Revisi';
             } else {
                 btnEdit.textContent = 'Edit Informasi';
