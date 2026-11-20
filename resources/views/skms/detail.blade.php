@@ -659,6 +659,81 @@
                     @endif
                 </div>
 
+                {{-- ── MEDIA VIDEO PANDUAN (Jika ada) ── --}}
+                @if($faq->link_video)
+                    <div class="skms-media-video-section" style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--skms-border);">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C93535" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                            <span style="font-size: 14px; font-weight: 700; color: var(--skms-forest);">Video Panduan / Tutorial</span>
+                        </div>
+
+                        @if($faq->youtube_embed_url)
+                            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; background: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                                <iframe src="{{ $faq->youtube_embed_url }}" 
+                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                        allowfullscreen></iframe>
+                            </div>
+                        @else
+                            <div style="background: #FDFBF7; border: 1px solid #F0E8D8; border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 36px; height: 36px; border-radius: 8px; background: #FEF3F2; color: #DC2626; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 13px; font-weight: 700; color: var(--skms-forest);">Tonton Video Tutorial Panduan</div>
+                                        <div style="font-size: 12px; color: var(--skms-muted); word-break: break-all;">{{ $faq->link_video }}</div>
+                                    </div>
+                                </div>
+                                <a href="{{ $faq->link_video }}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #DC2626; color: #FFFFFF; font-size: 12.5px; font-weight: 600; border-radius: 8px; text-decoration: none;">
+                                    <span>Buka Video</span>
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                @endif
+
+                {{-- ── BERKAS LAMPIRAN PENDUKUNG (Jika ada) ── --}}
+                @if($faq->file_lampiran)
+                    <div class="skms-media-file-section" style="margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--skms-border);">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D7F74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                            <span style="font-size: 14px; font-weight: 700; color: var(--skms-forest);">Berkas Lampiran / Unduhan</span>
+                        </div>
+
+                        <div style="background: #FFFFFF; border: 1.5px solid #E2E9E6; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+                                <div style="width: 40px; height: 40px; border-radius: 10px; background: #E8F5F1; color: #0D7F74; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; text-transform: uppercase; flex-shrink: 0;">
+                                    {{ $faq->file_extension ?: 'DOC' }}
+                                </div>
+                                <div style="min-width: 0;">
+                                    <div style="font-size: 13.5px; font-weight: 700; color: var(--skms-forest); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $faq->file_nama_asli ?: 'Berkas Lampiran' }}">
+                                        {{ $faq->file_nama_asli ?: basename($faq->file_lampiran) }}
+                                    </div>
+                                    <div style="font-size: 12px; color: var(--skms-muted); margin-top: 2px;">
+                                        Dokumen panduan resmi penunjang FAQ
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="{{ route('skms.faq.download', $faq->id) }}" style="display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; background: var(--skms-teal); color: #FFFFFF; font-size: 13px; font-weight: 600; border-radius: 8px; text-decoration: none; flex-shrink: 0;">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                <span>Unduh Berkas</span>
+                            </a>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="skms-note-box">
                     <div class="skms-note-label">Catatan</div>
                     <p class="skms-note-text">

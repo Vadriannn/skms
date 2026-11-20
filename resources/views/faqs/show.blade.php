@@ -141,6 +141,49 @@
                 {{-- Jawaban --}}
                 <div class="vd-detail-jawaban-label">JAWABAN / PENJELASAN</div>
                 <div class="vd-detail-jawaban-content">{!! nl2br(e($faq->jawaban)) !!}</div>
+
+                {{-- Media Video (Jika ada) --}}
+                @if($faq->link_video)
+                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #EDF2F0;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: #8FA19D; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+                            VIDEO PANDUAN / TUTORIAL
+                        </div>
+                        @if($faq->youtube_embed_url)
+                            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; background: #000;">
+                                <iframe src="{{ $faq->youtube_embed_url }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+                            </div>
+                        @else
+                            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                <span style="font-size: 13px; color: #16322F; word-break: break-all;">{{ $faq->link_video }}</span>
+                                <a href="{{ $faq->link_video }}" target="_blank" rel="noopener noreferrer" style="font-size: 12.5px; font-weight: 600; color: #DC2626; text-decoration: none; white-space: nowrap;">
+                                    Buka Video &#8599;
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                @endif
+
+                {{-- Berkas Lampiran (Jika ada) --}}
+                @if($faq->file_lampiran)
+                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #EDF2F0;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: #8FA19D; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+                            BERKAS LAMPIRAN
+                        </div>
+                        <div style="background: #FFFFFF; border: 1px solid #C7E6DC; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+                                <span style="width: 32px; height: 32px; border-radius: 6px; background: #E8F5F1; color: #0D7F74; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-transform: uppercase; flex-shrink: 0;">
+                                    {{ $faq->file_extension ?: 'FILE' }}
+                                </span>
+                                <span style="font-size: 13px; font-weight: 600; color: #16322F; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $faq->file_nama_asli ?: basename($faq->file_lampiran) }}">
+                                    {{ $faq->file_nama_asli ?: basename($faq->file_lampiran) }}
+                                </span>
+                            </div>
+                            <a href="{{ route('faqs.download', $faq->id) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: #0D7F74; color: #FFFFFF; font-size: 12px; font-weight: 600; border-radius: 6px; text-decoration: none; white-space: nowrap;">
+                                Unduh
+                            </a>
+                        </div>
+                    </div>
+                @endif
             </div>
 
         </div>

@@ -13,6 +13,9 @@ class Faq extends Model
         'user_id',
         'pertanyaan',
         'jawaban',
+        'file_lampiran',
+        'file_nama_asli',
+        'link_video',
         'status',
         'views',
         'helpful',
@@ -115,5 +118,33 @@ class Faq extends Model
             'revision' => 'Revisi (Perbaikan)',
             default    => 'Pengajuan Baru',
         };
+    }
+
+    /**
+     * Mengambil URL embed YouTube jika link_video adalah tautan YouTube yang valid.
+     */
+    public function getYoutubeEmbedUrlAttribute(): ?string
+    {
+        if (empty($this->link_video)) {
+            return null;
+        }
+
+        $url = trim($this->link_video);
+        if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([^"&?\/\s]{11})/i', $url, $matches)) {
+            return 'https://www.youtube-nocookie.com/embed/' . $matches[1];
+        }
+
+        return null;
+    }
+
+    /**
+     * Mengambil ekstensi file lampiran.
+     */
+    public function getFileExtensionAttribute(): string
+    {
+        if (empty($this->file_lampiran)) {
+            return '';
+        }
+        return strtolower(pathinfo($this->file_nama_asli ?: $this->file_lampiran, PATHINFO_EXTENSION));
     }
 }

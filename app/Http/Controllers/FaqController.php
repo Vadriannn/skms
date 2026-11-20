@@ -10,6 +10,7 @@ use App\Models\QuestionSubmission;
 use App\Services\TfIdfService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class FaqController extends Controller
@@ -170,6 +171,8 @@ class FaqController extends Controller
         $request->validate([
             'pertanyaan'     => 'required|string|max:500',
             'jawaban'        => 'required|string',
+            'file_lampiran'  => 'nullable|file|max:10240|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,zip',
+            'link_video'     => 'nullable|url|max:500',
             'category_ids'   => 'nullable|array',
             'category_ids.*' => 'exists:categories,id',
             'category_id'    => 'nullable|exists:categories,id',
@@ -177,6 +180,9 @@ class FaqController extends Controller
         ], [
             'pertanyaan.required' => 'Pertanyaan informasi wajib diisi.',
             'jawaban.required'    => 'Jawaban informasi wajib diisi.',
+            'file_lampiran.max'   => 'Ukuran file lampiran maksimal 10 MB.',
+            'file_lampiran.mimes' => 'Format file harus berupa PDF, Word, Excel, PowerPoint, Gambar, atau ZIP.',
+            'link_video.url'      => 'Tautan video harus berupa URL yang valid (misal: https://www.youtube.com/watch?v=...).',
         ]);
 
         // Ambil array category_ids atau fallback ke single category_id
@@ -196,15 +202,29 @@ class FaqController extends Controller
             $status = 'draft';
         }
 
+        // Simpan file lampiran jika diunggah
+        $filePath = null;
+        $originalFileName = null;
+        if ($request->hasFile('file_lampiran')) {
+            $file = $request->file('file_lampiran');
+            $originalFileName = $file->getClientOriginalName();
+            $filePath = $file->store('faqs', 'public');
+        }
+
+        $videoUrl = $request->filled('link_video') ? trim($request->input('link_video')) : null;
+
         // Jalankan perbandingan teks pertanyaan dengan repositori FAQ via TF-IDF
         $similarity = $tfidfService->checkSimilarity($request->pertanyaan, 0.60);
 
         $faq = Faq::create([
-            'user_id'    => Auth::id(),
-            'pertanyaan' => $request->pertanyaan,
-            'jawaban'    => $request->jawaban,
-            'status'     => $status,
-            'views'      => 0,
+            'user_id'        => Auth::id(),
+            'pertanyaan'     => $request->pertanyaan,
+            'jawaban'        => $request->jawaban,
+            'file_lampiran'  => $filePath,
+            'file_nama_asli' => $originalFileName,
+            'link_video'     => $videoUrl,
+            'status'         => $status,
+            'views'          => 0,
         ]);
 
         // Hubungkan banyak kategori ke FAQ (Pivot table category_faq)
@@ -354,11 +374,20 @@ class FaqController extends Controller
         $request->validate([
             'pertanyaan'     => 'required|string|max:500',
             'jawaban'        => 'required|string',
+            'file_lampiran'  => 'nullable|file|max:10240|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,zip',
+            'link_video'     => 'nullable|url|max:500',
+            'hapus_file'     => 'nullable|boolean',
             'category_ids'   => 'nullable|array',
             'category_ids.*' => 'exists:categories,id',
             'category_id'    => 'nullable|exists:categories,id',
             'status'         => 'nullable|in:draft,pending,rejected',
             'action_type'    => 'nullable|in:draft,pending,resubmit',
+        ], [
+            'pertanyaan.required' => 'Pertanyaan informasi wajib diisi.',
+            'jawaban.required'    => 'Jawaban informasi wajib diisi.',
+            'file_lampiran.max'   => 'Ukuran file lampiran maksimal 10 MB.',
+            'file_lampiran.mimes' => 'Format file harus berupa PDF, Word, Excel, PowerPoint, Gambar, atau ZIP.',
+            'link_video.url'      => 'Tautan video harus berupa URL yang valid (misal: https://www.youtube.com/watch?v=...).',
         ]);
 
         $categoryIds = $request->input('category_ids', []);
@@ -379,13 +408,39 @@ class FaqController extends Controller
             $newStatus = $request->input('status', $oldStatus);
         }
 
+        // Pengelolaan file lampiran
+        $filePath = $faq->file_lampiran;
+        $originalFileName = $faq->file_nama_asli;
+
+        if ($request->boolean('hapus_file')) {
+            if ($faq->file_lampiran && Storage::disk('public')->exists($faq->file_lampiran)) {
+                Storage::disk('public')->delete($faq->file_lampiran);
+            }
+            $filePath = null;
+            $originalFileName = null;
+        }
+
+        if ($request->hasFile('file_lampiran')) {
+            if ($faq->file_lampiran && Storage::disk('public')->exists($faq->file_lampiran)) {
+                Storage::disk('public')->delete($faq->file_lampiran);
+            }
+            $file = $request->file('file_lampiran');
+            $originalFileName = $file->getClientOriginalName();
+            $filePath = $file->store('faqs', 'public');
+        }
+
+        $videoUrl = $request->filled('link_video') ? trim($request->input('link_video')) : null;
+
         // Jalankan pengecekan ulang TF-IDF (kecualikan FAQ yang sedang diedit ini)
         $similarity = $tfidfService->checkSimilarity($request->pertanyaan, 0.60, $faq->id);
 
         $faq->update([
-            'pertanyaan' => $request->pertanyaan,
-            'jawaban'    => $request->jawaban,
-            'status'     => $newStatus,
+            'pertanyaan'     => $request->pertanyaan,
+            'jawaban'        => $request->jawaban,
+            'file_lampiran'  => $filePath,
+            'file_nama_asli' => $originalFileName,
+            'link_video'     => $videoUrl,
+            'status'         => $newStatus,
         ]);
 
         if (!empty($categoryIds)) {
@@ -505,5 +560,18 @@ class FaqController extends Controller
         $isSuperAdmin = $user->role === 'super_admin';
 
         return view('faqs.history', compact('historyFaqs', 'isSuperAdmin'));
+    }
+
+    /**
+     * Unduh file lampiran FAQ secara aman
+     */
+    public function downloadAttachment(Faq $faq)
+    {
+        if (!$faq->file_lampiran || !Storage::disk('public')->exists($faq->file_lampiran)) {
+            abort(404, 'File lampiran tidak ditemukan atau telah dihapus.');
+        }
+
+        $filename = $faq->file_nama_asli ?: basename($faq->file_lampiran);
+        return Storage::disk('public')->download($faq->file_lampiran, $filename);
     }
 }

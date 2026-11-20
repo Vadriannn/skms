@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <form action="{{ route('faqs.store') }}" method="POST" id="faqForm">
+        <form action="{{ route('faqs.store') }}" method="POST" id="faqForm" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="action_type" id="actionTypeInput" value="draft">
 
@@ -87,7 +87,7 @@
             </div>
 
             <!-- 3. Jawaban Informasi -->
-            <div class="form-group" style="margin-bottom: 12px;">
+            <div class="form-group" style="margin-bottom: 20px;">
                 <label class="form-label" for="jawaban">
                     Jawaban / Penjelasan Informasi <span class="required">*</span>
                 </label>
@@ -98,6 +98,57 @@
                 @error('jawaban')
                     <div style="color: #EF4444; font-size: 13px; margin-top: 6px;">{{ $message }}</div>
                 @enderror
+            </div>
+
+            <!-- 4. Media & Berkas Pendukung (Opsional) -->
+            <div style="background: #F9FBFA; border: 1px solid #E2E9E6; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D7F74" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                    </svg>
+                    <span style="font-size: 14px; font-weight: 700; color: #16322F;">Media &amp; Berkas Pendukung (Opsional)</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px;">
+                    <!-- A. Upload File Lampiran -->
+                    <div>
+                        <label class="form-label" for="file_lampiran" style="margin-bottom: 6px;">
+                            Berkas Lampiran / Panduan
+                        </label>
+                        <div style="position: relative;">
+                            <input type="file" id="file_lampiran" name="file_lampiran" class="form-control" style="padding: 7px 12px; height: auto; background: #FFFFFF;"
+                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.zip">
+                        </div>
+                        <div style="font-size: 11.5px; color: #647874; margin-top: 5px; line-height: 1.4;">
+                            Format didukung: <strong>PDF, Word, Excel, PPT, Gambar, ZIP</strong> (Maks. 10 MB).
+                        </div>
+                        @error('file_lampiran')
+                            <div style="color: #EF4444; font-size: 12.5px; margin-top: 4px;">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- B. Link Video -->
+                    <div>
+                        <label class="form-label" for="link_video" style="margin-bottom: 6px;">
+                            Link Video Panduan / Tutorial
+                        </label>
+                        <div style="position: relative;">
+                            <input type="url" id="link_video" name="link_video" class="form-control" style="padding-left: 36px; background: #FFFFFF;"
+                                   placeholder="Contoh: https://www.youtube.com/watch?v=..."
+                                   value="{{ old('link_video', $prefillFaq->link_video ?? '') }}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FA19D" stroke-width="2" style="position: absolute; left: 12px; top: 11px;">
+                                <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                        </div>
+                        <div style="font-size: 11.5px; color: #647874; margin-top: 5px; line-height: 1.4;">
+                            Masukkan URL video YouTube atau tautan video eksternal lainnya.
+                        </div>
+                        @error('link_video')
+                            <div style="color: #EF4444; font-size: 12.5px; margin-top: 4px;">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
             </div>
 
             @if(!empty($fromTicket))
@@ -295,7 +346,6 @@
                             </svg>
                             <span>Peringatan Duplikasi Pertanyaan (Kemiripan: ${escapeHtml(data.percentage)})</span>
                         </div>
-                        <span class="tfidf-score-badge">&ge; 60% Mirip</span>
                     </div>
 
                     <div class="tfidf-message">
@@ -360,7 +410,6 @@
                             </svg>
                             <span>Pertanyaan Unik / Belum Ada di Repositori</span>
                         </div>
-                        <span class="tfidf-score-badge">Maks: ${escapeHtml(data.percentage)}</span>
                     </div>
                     <div class="tfidf-message" style="margin-bottom: 0;">
                         ${subtitleText}

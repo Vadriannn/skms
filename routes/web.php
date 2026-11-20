@@ -26,6 +26,7 @@ Route::middleware('skms.timeout')->group(function () {
     Route::get('/skms/tanya', [SkmsController::class, 'showQuestionForm'])->name('skms.tanya');
     Route::post('/skms/tanya', [SkmsController::class, 'submitQuestion'])->name('skms.tanya.store');
     Route::get('/skms/faq/{faq}', [SkmsController::class, 'show'])->name('skms.faq.show');
+    Route::get('/skms/faq/{faq}/download', [FaqController::class, 'downloadAttachment'])->name('skms.faq.download');
     Route::post('/skms/faq/{faq}/view', [SkmsController::class, 'incrementView'])->name('skms.faq.view');
     Route::post('/skms/faq/{faq}/helpful', [SkmsController::class, 'toggleHelpful'])->name('skms.faq.helpful');
 });
@@ -44,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/faqs', [FaqController::class, 'store'])->name('faqs.store');
     Route::post('/faqs/check-similarity', [FaqController::class, 'checkSimilarity'])->name('faqs.check_similarity');
     Route::get('/faqs/history', [FaqController::class, 'history'])->name('faqs.history');
+    Route::get('/faqs/{faq}/download', [FaqController::class, 'downloadAttachment'])->name('faqs.download');
     Route::get('/faqs/{faq}', [FaqController::class, 'show'])->name('faqs.show');
     Route::get('/faqs/{faq}/edit', [FaqController::class, 'edit'])->name('faqs.edit');
     Route::put('/faqs/{faq}', [FaqController::class, 'update'])->name('faqs.update');
