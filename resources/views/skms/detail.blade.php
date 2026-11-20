@@ -616,7 +616,7 @@
                     @endforelse
 
                     <span class="skms-answer-stats">
-                        {{ number_format($faq->views) }} views &bull; <span id="helpfulCountDisplay">{{ number_format($faq->helpful ?? 0) }}</span> Membantu
+                        {{ number_format($faq->views) }} Dilihat &bull; <span id="helpfulCountDisplay">{{ number_format($faq->helpful ?? 0) }}</span> Membantu
                     </span>
                 </div>
 

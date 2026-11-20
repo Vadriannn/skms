@@ -113,9 +113,10 @@
             <thead>
                 <tr>
                     <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 24px;">PERTANYAAN</th>
-                    <th style="width: 260px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 20px;">KATEGORI</th>
-                    <th style="width: 130px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 20px;">STATUS</th>
-                    <th style="width: 110px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 24px; text-align: right;">AKSI</th>
+                    <th style="width: 240px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 20px;">KATEGORI</th>
+                    <th style="width: 110px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 16px; text-align: center;">DILIHAT</th>
+                    <th style="width: 115px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 16px; text-align: center;">MEMBANTU</th>
+                    <th style="width: 100px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 24px; text-align: right;">AKSI</th>
                 </tr>
             </thead>
             <tbody>
@@ -135,8 +136,11 @@
                                 @endforelse
                             </div>
                         </td>
-                        <td style="padding: 16px 20px;">
-                            <span class="skmk-dot-approved">Disetujui</span>
+                        <td style="padding: 16px 16px; text-align: center; font-size: 13px; font-weight: 600; color: #3D524E; white-space: nowrap;">
+                            {{ number_format($item->views ?? 0) }}
+                        </td>
+                        <td style="padding: 16px 16px; text-align: center; font-size: 13px; font-weight: 600; color: #0D7F74; white-space: nowrap;">
+                            {{ number_format($item->helpful ?? 0) }}
                         </td>
                         <td style="padding: 16px 24px; text-align: right; white-space: nowrap;">
                             <a href="{{ route('faqs.show', ['faq' => $item->id, 'from' => 'index']) }}" class="skmk-link-action">
@@ -147,7 +151,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" style="text-align: center; padding: 44px 24px; color: #8FA19D;">
+                        <td colspan="5" style="text-align: center; padding: 44px 24px; color: #8FA19D;">
                             Tidak ada informasi ditemukan untuk kata kunci atau kategori yang dipilih.
                         </td>
                     </tr>

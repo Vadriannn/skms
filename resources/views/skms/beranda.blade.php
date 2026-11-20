@@ -1887,7 +1887,7 @@
                                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                         <circle cx="12" cy="12" r="3"></circle>
                                     </svg>
-                                    {{ number_format($faq->views) }} views
+                                    {{ number_format($faq->views) }} Dilihat
                                 </span>
                                 <span>{{ number_format($faq->helpful ?? 0) }} Membantu</span>
                             </div>
@@ -1951,7 +1951,7 @@
                                 <div>
                                     <div class="skms-top-item-q">{{ $top->pertanyaan }}</div>
                                     <div class="skms-top-item-meta">
-                                        {{ number_format($top->views) }} views &bull; {{ $top->categories->first()?->nama ?? 'Umum' }}
+                                        {{ number_format($top->views) }} Dilihat &bull; {{ $top->categories->first()?->nama ?? 'Umum' }}
                                     </div>
                                 </div>
                             </a>

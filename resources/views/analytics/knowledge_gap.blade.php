@@ -272,14 +272,6 @@
         </form>
     </div>
 
-    <!-- Catatan Metodologi & Batasan Ambang 0.20 -->
-    <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px 18px; margin-bottom: 22px; font-size: 12.5px; color: #475569; display: flex; align-items: flex-start; gap: 10px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-        <div style="line-height: 1.5;">
-            <strong>Catatan Metodologi:</strong> Ambang batas Cosine Similarity 0.20 (20%) digunakan sebagai <em>indikator kemiripan leksikal teks</em> antara kata kunci pencarian mahasiswa terhadap judul/pertanyaan FAQ yang berstatus <code>published</code>. Status &ldquo;Terjawab&rdquo; mengindikasikan adanya FAQ terbit dengan kemiripan teks di atas ambang batas, namun disarankan untuk tetap meninjau substansi jawaban secara berkala.
-        </div>
-    </div>
-
     <!-- 4. TABEL KNOWLEDGE GAP -->
     <div class="faq-table-container" style="background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-card);">
         

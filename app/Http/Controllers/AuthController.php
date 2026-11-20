@@ -44,12 +44,6 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            \App\Models\ActivityLog::log(
-                Auth::user()->name . ' login ke sistem',
-                'auth',
-                Auth::id()
-            );
-
             return redirect()->intended(route('dashboard'))
                 ->with('success', 'Selamat datang, ' . Auth::user()->name . '!');
         }
