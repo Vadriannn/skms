@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\FaqAnsweredMail;
 use App\Models\ActivityLog;
 use App\Models\Faq;
+use App\Models\QuestionSubmission;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ValidatorController extends Controller
 {
@@ -138,6 +142,22 @@ class ValidatorController extends Controller
             Auth::user()->name . " menyetujui FAQ: \"{$faq->pertanyaan}\"",
             'faq'
         );
+
+        // SKENARIO 1: Pemicu pengiriman email otomatis ke email kampus mahasiswa jika FAQ berasal dari pengajuan yang memiliki NRP
+        $submissions = QuestionSubmission::where('faq_id', $faq->id)->get();
+        foreach ($submissions as $sub) {
+            $sub->update(['status' => 'answered']);
+
+            if (!empty($sub->nrp)) {
+                $recipientEmail = $sub->student_email;
+                try {
+                    Mail::to($recipientEmail)->send(new FaqAnsweredMail($sub, $faq, 'new_faq'));
+                    Log::info("Email notifikasi FAQ baru disetujui berhasil dikirim ke {$recipientEmail} untuk Tiket #{$sub->id}");
+                } catch (\Throwable $e) {
+                    Log::error("Gagal mengirim email notifikasi FAQ baru ke {$recipientEmail} untuk Tiket #{$sub->id}: " . $e->getMessage());
+                }
+            }
+        }
 
         return redirect()->route('validator.antrian')
             ->with('success', "FAQ \"{$faq->pertanyaan}\" berhasil disetujui dan dipublikasikan!");

@@ -109,12 +109,18 @@
                         </td>
 
                         <td style="padding: 16px 20px;">
-                            <div style="font-size: 13.5px; font-weight: 700; color: #16322F; margin-bottom: 2px;">
-                                NRP {{ $ticket->nrp }}
-                            </div>
-                            <div style="font-size: 12px; color: #647874;">
-                                {{ $ticket->student_email }}
-                            </div>
+                            @if($ticket->nrp)
+                                <div style="font-size: 13.5px; font-weight: 700; color: #16322F; margin-bottom: 2px;">
+                                    NRP {{ $ticket->nrp }}
+                                </div>
+                                <div style="font-size: 12px; color: #647874;">
+                                    {{ $ticket->student_email }}
+                                </div>
+                            @else
+                                <span style="display: inline-block; padding: 3px 8px; border-radius: 6px; background: #F1F5F4; color: #647874; font-size: 11.5px; font-weight: 600;">
+                                    Anonim (Tanpa NRP)
+                                </span>
+                            @endif
                         </td>
 
                         <td style="padding: 16px 20px;">

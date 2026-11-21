@@ -128,4 +128,45 @@ Route::middleware('auth')->group(function () {
             ], 500);
         }
     })->name('mail.test');
+
+    // ─── PRATINJAU & TES EMAIL NOTIFIKASI FAQ RESMI ──────────────────────────────
+    Route::get('/test-faq-email', function (\Illuminate\Http\Request $request) {
+        $submission = \App\Models\QuestionSubmission::latest()->first() ?? new \App\Models\QuestionSubmission([
+            'id' => 1,
+            'nrp' => '161124011',
+            'pertanyaan' => 'Bagaimana prosedur pengajuan beasiswa prestasi dan bantuan biaya kuliah semester ini?',
+            'status' => 'answered',
+            'note' => 'Pertanyaan telah dijawab melalui panduan resmi SKMS.',
+        ]);
+
+        $faq = \App\Models\Faq::where('status', 'published')->latest()->first() ?? new \App\Models\Faq([
+            'id' => 1,
+            'pertanyaan' => 'Panduan & Prosedur Beasiswa Prestasi UBAYA',
+            'jawaban' => "Pengajuan beasiswa prestasi dibuka setiap awal semester melalui Direktorat Kemahasiswaan UBAYA.\nSilakan lengkapi berkas transkrip nilai, sertifikat prestasi, dan surat rekomendasi fakultas.",
+            'status' => 'published',
+        ]);
+
+        $scenario = $request->query('scenario', 'new_faq');
+        $to = $request->query('to');
+
+        // Jika ada query ?to=email@gmail.com, kirim email sungguhan via SMTP Gmail
+        if ($to && filter_var($to, FILTER_VALIDATE_EMAIL)) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($to)->send(new \App\Mail\FaqAnsweredMail($submission, $faq, $scenario));
+                return response()->json([
+                    'status'    => 'success',
+                    'message'   => "Email template resmi FaqAnsweredMail [{$scenario}] berhasil dikirim ke: {$to}!",
+                    'timestamp' => now()->toIso8601String(),
+                ]);
+            } catch (\Throwable $e) {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'Gagal mengirim email: ' . $e->getMessage(),
+                ], 500);
+            }
+        }
+
+        // Tampilkan preview HTML di browser langsung jika tidak ada parameter ?to
+        return (new \App\Mail\FaqAnsweredMail($submission, $faq, $scenario))->render();
+    })->name('mail.test-faq');
 });

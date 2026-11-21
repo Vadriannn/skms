@@ -151,19 +151,7 @@
                 </div>
             </div>
 
-            @if(!empty($fromTicket))
-                <div class="form-group" style="margin-bottom: 16px;">
-                    <label class="form-label" for="ticket_note">
-                        Catatan Balasan Tiket untuk Mahasiswa <span style="font-weight: 500; color: #647874;">(Opsional)</span>
-                    </label>
-                    <input type="text"
-                           id="ticket_note"
-                           name="ticket_note"
-                           class="form-control"
-                           placeholder="Kosongkan untuk menggunakan pesan balasan otomatis yang merujuk ke FAQ baru ini..."
-                           value="{{ old('ticket_note') }}">
-                </div>
-            @endif
+
 
             <!-- 4. Tombol Aksi -->
             <div class="faq-create-footer">

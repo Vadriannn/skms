@@ -49,6 +49,11 @@ class Faq extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function questionSubmissions()
+    {
+        return $this->hasMany(QuestionSubmission::class, 'faq_id');
+    }
+
     public function latestReview()
     {
         return $this->hasOne(Review::class)->latestOfMany();

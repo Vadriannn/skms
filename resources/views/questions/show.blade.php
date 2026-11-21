@@ -135,7 +135,7 @@
             <div style="background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 24px 26px; margin-bottom: 20px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-bottom: 14px; margin-bottom: 16px; border-bottom: 1px solid #EDF2F0;">
                     <div style="font-size: 12.5px; color: #647874;">
-                        Diajukan oleh <strong style="color: #16322F;">NRP {{ $ticket->nrp }}</strong>
+                        Diajukan oleh <strong style="color: #16322F;">{{ $ticket->nrp ? 'NRP ' . $ticket->nrp : 'Anonim (Tanpa NRP)' }}</strong>
                         &bull; {{ $ticket->created_at->format('d F Y, H:i') }}
                     </div>
                     <div>
@@ -158,13 +158,19 @@
                     {{ $ticket->pertanyaan }}
                 </div>
 
-                <div style="background: #F6F8F7; border: 1px solid #E2E9E6; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 12.5px;">
-                    <div>
-                        <span style="color: #647874;">Email Kampus Tujuan Balasan:</span>
-                        <strong style="color: #0D7F74; margin-left: 4px;">{{ $ticket->student_email }}</strong>
+                @if($ticket->nrp)
+                    <div style="background: #F6F8F7; border: 1px solid #E2E9E6; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 12.5px;">
+                        <div>
+                            <span style="color: #647874;">Email Kampus Tujuan Notifikasi:</span>
+                            <strong style="color: #0D7F74; margin-left: 4px;">{{ $ticket->student_email }}</strong>
+                        </div>
+                        <span style="color: #8FA19D; font-size: 11.5px;">Otomatis dari 9 digit NRP &bull; Notifikasi Email Aktif</span>
                     </div>
-                    <span style="color: #8FA19D; font-size: 11.5px;">Otomatis dari 9 digit NRP</span>
-                </div>
+                @else
+                    <div style="background: #F6F8F7; border: 1px solid #E2E9E6; border-radius: 10px; padding: 12px 16px; font-size: 12.5px; color: #647874;">
+                        <span style="font-weight: 700; color: #4D6762;">Pengajuan Tanpa NRP (Anonim):</span> Mahasiswa tidak mencantumkan NRP sehingga sistem tidak akan mengirimkan notifikasi email.
+                    </div>
+                @endif
             </div>
 
             @if($ticket->note || $ticket->faq)
@@ -313,19 +319,8 @@
                         <div style="color: #DC2626; font-size: 12px; margin-bottom: 10px;">{{ $message }}</div>
                     @enderror
 
-                    <!-- Form Catatan & Tombol Submit (Muncul begitu FAQ dipilih) -->
+                    <!-- Tombol Submit (Muncul begitu FAQ dipilih) -->
                     <div id="linkFaqSubmitArea" style="display: {{ $initialSelectedFaq ? 'block' : 'none' }};">
-                        <div style="margin-bottom: 12px;">
-                            <label for="ticketNoteInput" style="display: block; font-size: 12px; font-weight: 700; color: #16322F; margin-bottom: 5px;">
-                                Catatan / Pesan Balasan <span style="font-weight: 500; color: #647874;">(Opsional)</span>
-                            </label>
-                            <textarea name="note"
-                                      id="ticketNoteInput"
-                                      rows="3"
-                                      placeholder="Tulis pesan tambahan untuk mahasiswa, atau biarkan kosong untuk menggunakan pesan rujukan otomatis..."
-                                      style="width: 100%; padding: 9px 12px; border: 1.5px solid #E2E9E6; border-radius: 8px; font-size: 12.5px; color: #16322F; font-family: inherit; resize: vertical; line-height: 1.5; outline: none;">{{ old('note', $ticket->note) }}</textarea>
-                        </div>
-
                         <button type="submit"
                                 id="submitLinkFaqBtn"
                                 class="btn-filter-search"

@@ -252,20 +252,27 @@ class FaqController extends Controller
         if ($request->filled('from_ticket_id')) {
             $ticket = QuestionSubmission::find($request->input('from_ticket_id'));
             if ($ticket) {
-                $ticketNote = trim((string) $request->input('ticket_note', ''));
-                if ($ticketNote === '') {
-                    $ticketNote = 'Pertanyaan Anda telah ditindaklanjuti menjadi panduan FAQ baru #' . $faq->id . ': "' . $faq->pertanyaan . '".';
-                }
+                $isPublished = $faq->status === 'published';
 
                 $ticket->update([
                     'faq_id'  => $faq->id,
                     'user_id' => Auth::id(),
-                    'note'    => $ticketNote,
-                    'status'  => 'answered',
+                    'note'    => null,
+                    'status'  => $isPublished ? 'answered' : 'pending',
                 ]);
 
+                // Jika status langsung published (misal oleh Super Admin) dan mahasiswa mencantumkan NRP, picu email
+                if ($isPublished && !empty($ticket->nrp)) {
+                    try {
+                        \Illuminate\Support\Facades\Mail::to($ticket->student_email)->send(new \App\Mail\FaqAnsweredMail($ticket, $faq, 'new_faq'));
+                        \Illuminate\Support\Facades\Log::info("Email notifikasi FAQ baru langsung terbit dikirim ke {$ticket->student_email} untuk Tiket #{$ticket->id}");
+                    } catch (\Throwable $e) {
+                        \Illuminate\Support\Facades\Log::error("Gagal mengirim email: " . $e->getMessage());
+                    }
+                }
+
                 ActivityLog::log(
-                    Auth::user()->name . " menindaklanjuti Tiket Pertanyaan #{$ticket->id} (NRP {$ticket->nrp}) dengan membuat FAQ baru #{$faq->id}",
+                    Auth::user()->name . " menindaklanjuti Tiket Pertanyaan #{$ticket->id}" . ($ticket->nrp ? " (NRP {$ticket->nrp})" : "") . " dengan membuat FAQ baru #{$faq->id}",
                     'faq'
                 );
 

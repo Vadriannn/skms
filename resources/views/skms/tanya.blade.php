@@ -623,15 +623,20 @@
             <div class="skms-nav-right">
                 <a href="{{ route('skms.beranda') }}" class="skms-nav-link">Beranda</a>
                 <a href="{{ route('skms.beranda', ['all' => 1]) }}" class="skms-nav-link">Informasi</a>
-                <a href="{{ route('skms.tanya') }}" class="skms-nav-link active">Tanya Staf</a>
 
-                <div class="skms-nrp-pill">
-                    <span>NRP: {{ $studentNrp }}</span>
-                    <form action="{{ route('skms.logout') }}" method="POST" style="margin: 0; display: inline;">
-                        @csrf
-                        <button type="submit" class="skms-nrp-logout">Keluar</button>
-                    </form>
-                </div>
+                @if($studentNrp)
+                    <div class="skms-nrp-pill">
+                        <span>NRP: {{ $studentNrp }}</span>
+                        <form action="{{ route('skms.logout') }}" method="POST" style="margin: 0; display: inline;">
+                            @csrf
+                            <button type="submit" class="skms-nrp-logout">Keluar</button>
+                        </form>
+                    </div>
+                @else
+                    <a href="{{ route('skms.login', ['redirect' => 'tanya']) }}" class="skms-nav-link" style="padding: 6px 14px; border: 1px solid var(--skms-mint-border); border-radius: 8px; background: var(--skms-mint-card); color: var(--skms-teal);">
+                        Masuk NRP
+                    </a>
+                @endif
             </div>
         </div>
     </header>
@@ -667,25 +672,39 @@
                     </svg>
                 </div>
 
-                <div style="display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 999px; background: var(--skms-mint-card); color: var(--skms-teal); font-size: 12px; font-weight: 700; margin-bottom: 14px;">
-                    Tiket #{{ $ticket['id'] }} &bull; NRP: {{ $ticket['nrp'] }}
-                </div>
+                @if(!empty($ticket['email']))
+                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 999px; background: var(--skms-mint-card); color: var(--skms-teal); font-size: 12px; font-weight: 700; margin-bottom: 14px;">
+                        Tiket #{{ $ticket['id'] }} &bull; NRP: {{ $ticket['nrp'] }}
+                    </div>
 
-                <h2 style="font-size: 24px; font-weight: 800; color: var(--skms-forest); margin: 0 0 10px; letter-spacing: -0.02em;">
-                    Pertanyaan Anda Telah Diajukan!
-                </h2>
+                    <h2 style="font-size: 24px; font-weight: 800; color: var(--skms-forest); margin: 0 0 10px; letter-spacing: -0.02em;">
+                        Pertanyaan Anda Telah Diajukan!
+                    </h2>
 
-                <p style="font-size: 14px; color: var(--skms-text); line-height: 1.65; margin: 0 auto 18px; max-width: 540px;">
-                    Terima kasih telah menghubungi tim pengelola pengetahuan SKMS UBAYA. <strong>Mohon menunggu</strong>, karena staf kami akan meninjau pertanyaan Anda dan <strong>mengirimkan jawaban resminya melalui email kampus Anda</strong>:
-                </p>
+                    <p style="font-size: 14px; color: var(--skms-text); line-height: 1.65; margin: 0 auto 18px; max-width: 540px;">
+                        Terima kasih telah menghubungi tim pengelola pengetahuan SKMS UBAYA. <strong>Mohon menunggu</strong>, staf kami akan meninjau pertanyaan Anda dan <strong>mengirimkan jawaban resminya ke email kampus Anda</strong>:
+                    </p>
 
-                <div style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: var(--skms-cloud); border: 1px solid var(--skms-border); border-radius: 10px; font-size: 14px; font-weight: 700; color: var(--skms-teal); margin-bottom: 22px;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                        <polyline points="22,6 12,13 2,6"></polyline>
-                    </svg>
-                    <span>{{ $ticket['email'] }}</span>
-                </div>
+                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: var(--skms-cloud); border: 1px solid var(--skms-border); border-radius: 10px; font-size: 14px; font-weight: 700; color: var(--skms-teal); margin-bottom: 22px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        <span>{{ $ticket['email'] }}</span>
+                    </div>
+                @else
+                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 999px; background: #F1F5F4; color: #4D6762; font-size: 12px; font-weight: 700; margin-bottom: 14px;">
+                        Tiket #{{ $ticket['id'] }} &bull; Pengajuan Tanpa Email Notifikasi
+                    </div>
+
+                    <h2 style="font-size: 24px; font-weight: 800; color: var(--skms-forest); margin: 0 0 10px; letter-spacing: -0.02em;">
+                        Pertanyaan Anda Telah Diterima!
+                    </h2>
+
+                    <p style="font-size: 14px; color: var(--skms-text); line-height: 1.65; margin: 0 auto 22px; max-width: 540px;">
+                        Pertanyaan Anda telah diteruskan ke antrean staf SKMS UBAYA untuk ditinjau. Anda dapat memantau jawaban yang dipublikasikan secara berkala melalui repositori pencarian FAQ SKMS.
+                    </p>
+                @endif
 
                 <div style="background: var(--skms-mint-soft); border: 1px solid var(--skms-mint-border); border-radius: 12px; padding: 14px 18px; text-align: left; margin-bottom: 24px;">
                     <div style="font-size: 11.5px; font-weight: 700; color: var(--skms-teal); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
@@ -736,6 +755,19 @@
                 </div>
             @endif
 
+            @if(!empty($prefillQuestion))
+                <div style="margin-bottom: 22px; padding: 14px 18px; border-radius: 12px; background: #E6F4EF; border: 1px solid #8ED8C3; color: #0D7F74; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span>
+                        Topik &ldquo;<strong>{{ $prefillQuestion }}</strong>&rdquo; belum ditemukan di repositori FAQ. Silakan kirimkan pertanyaan ini agar dijawab oleh staf.
+                    </span>
+                </div>
+            @endif
+
             <div class="skms-tanya-grid">
             <!-- ── KOLOM KIRI: FORMULIR PENGAJUAN & RIWAYAT TIKET NRP ─────── -->
             <div>
@@ -743,44 +775,80 @@
                     <div class="skms-form-card-head">
                         <div>
                             <h2 class="skms-form-card-title">Formulir Pengajuan Pertanyaan Baru</h2>
-                            <p class="skms-form-card-sub">Pastikan email penerima aktif agar Anda dapat menerima notifikasi jawaban dari staf.</p>
+                            <p class="skms-form-card-sub">Ajukan pertanyaan seputar akademik atau kemahasiswaan kepada staf pengelola pengetahuan.</p>
                         </div>
-                        <span class="skms-verified-nrp-badge">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                            </svg>
-                            Identitas NRP Terverifikasi
-                        </span>
+                        @if($studentNrp)
+                            <span class="skms-verified-nrp-badge">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                Sesi NRP: {{ $studentNrp }}
+                            </span>
+                        @else
+                            <span class="skms-verified-nrp-badge" style="background: #FFF4EB; border-color: #F5DFB0; color: #B4690E;">
+                                Wajib Identitas 9 Digit NRP
+                            </span>
+                        @endif
                     </div>
 
-                    <form action="{{ route('skms.tanya.store') }}" method="POST">
+                    <form action="{{ route('skms.tanya.store') }}" method="POST" id="formTanyaStaf">
                         @csrf
 
+                        <!-- Baris Input NRP & Pratinjau Email Resmi Kampus -->
                         <div class="skms-form-row-2">
                             <div>
-                                <label class="skms-field-label" for="nrpDisplay">
-                                    NRP Mahasiswa <span class="req">*</span>
-                                </label>
-                                <input type="text"
-                                       id="nrpDisplay"
-                                       class="skms-input"
-                                       value="{{ $studentNrp }}"
-                                       readonly>
-                                <div class="skms-field-hint">NRP 9 digit diambil otomatis dari sesi login mahasiswa Anda.</div>
+                                @if($studentNrp)
+                                    <label class="skms-field-label" for="nrp">
+                                        NRP Mahasiswa <span class="req">*</span>
+                                        <span style="font-size: 11px; font-weight: 700; color: #0D7F74; background: #E8F5F1; border: 1px solid #C7E6DC; padding: 2px 8px; border-radius: 999px; margin-left: 6px;">
+                                            ✓ Terverifikasi dari Login
+                                        </span>
+                                    </label>
+                                    <input type="text"
+                                           id="nrp"
+                                           name="nrp"
+                                           class="skms-input"
+                                           value="{{ $studentNrp }}"
+                                           readonly>
+                                    <div class="skms-field-hint" style="color: #0D7F74; font-weight: 600;">
+                                        ✓ Terisi otomatis dari sesi masuk Anda (tidak perlu mengetik ulang).
+                                    </div>
+                                @else
+                                    <label class="skms-field-label" for="nrp">
+                                        NRP Mahasiswa <span class="req">*</span>
+                                    </label>
+                                    <input type="text"
+                                           id="nrp"
+                                           name="nrp"
+                                           class="skms-input"
+                                           maxlength="9"
+                                           placeholder="Masukkan 9 digit NRP (contoh: 161124011)"
+                                           value="{{ old('nrp') }}"
+                                           required
+                                           autofocus>
+                                    <div class="skms-field-hint">Wajib memasukkan 9 digit angka NRP Universitas Surabaya aktif.</div>
+                                    @error('nrp')
+                                        <div class="skms-field-error">{{ $message }}</div>
+                                    @enderror
+                                @endif
                             </div>
 
                             <div>
-                                <label class="skms-field-label" for="emailDisplay">
-                                    Email Kampus Penerima Balasan
+                                <label class="skms-field-label" for="emailPreview">
+                                    Email Kampus Tujuan Notifikasi
                                 </label>
                                 <input type="text"
-                                       id="emailDisplay"
+                                       id="emailPreview"
                                        class="skms-input"
-                                       value="{{ $studentEmail }}"
+                                       value="{{ $studentEmail ?: (old('nrp') ? 's' . old('nrp') . '@student.ubaya.ac.id' : '-') }}"
                                        readonly>
                                 <div class="skms-field-hint">
-                                    Jawaban resmi dari staf akan dikirimkan otomatis ke email kampus Anda.
+                                    @if($studentNrp)
+                                        <span style="color: #0D7F74; font-weight: 600;">✓ Notifikasi jawaban resmi staf akan otomatis dikirimkan ke email ini.</span>
+                                    @else
+                                        Format otomatis: <code style="color: var(--skms-teal); font-weight: 700;">s{nrp}@student.ubaya.ac.id</code>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -824,56 +892,70 @@
                     </form>
                 </div>
 
-                <!-- ── RIWAYAT TIKET PERTANYAAN MAHASISWA (NRP AKTIF) ──────── -->
+                <!-- ── RIWAYAT TIKET PERTANYAAN MAHASISWA ──────────────────── -->
                 <div class="skms-history-card">
                     <div class="skms-history-head">
-                        <h3 class="skms-history-title">Riwayat Pertanyaan Saya (NRP: {{ $studentNrp }})</h3>
+                        <h3 class="skms-history-title">
+                            Riwayat Pertanyaan Saya {{ $studentNrp ? '(NRP: ' . $studentNrp . ')' : '' }}
+                        </h3>
                         <span style="font-size: 12px; font-weight: 600; color: var(--skms-muted);">
-                            {{ $myQuestions->count() }} tiket diajukan
+                            {{ $myQuestions->count() }} tiket
                         </span>
                     </div>
 
-                    @forelse($myQuestions as $qItem)
-                        <div class="skms-ticket-item">
-                            <div class="skms-ticket-top">
-                                <div class="skms-ticket-meta">
-                                    <span class="skms-ticket-id">Tiket #{{ $qItem->id }}</span>
-                                    <span>&bull; {{ $qItem->created_at->format('d M Y, H:i') }}</span>
-                                    <span>&bull; Email: <strong>{{ $qItem->student_email }}</strong></span>
+                    @if($studentNrp)
+                        @forelse($myQuestions as $qItem)
+                            <div class="skms-ticket-item">
+                                <div class="skms-ticket-top">
+                                    <div class="skms-ticket-meta">
+                                        <span class="skms-ticket-id">Tiket #{{ $qItem->id }}</span>
+                                        <span>&bull; {{ $qItem->created_at->format('d M Y, H:i') }}</span>
+                                        <span>&bull; Email: <strong>{{ $qItem->student_email ?: '-' }}</strong></span>
+                                    </div>
+
+                                    @if($qItem->status === 'answered')
+                                        <span class="skms-ticket-status answered">✓ Sudah Dijawab</span>
+                                    @else
+                                        <span class="skms-ticket-status pending">⏳ Menunggu Tanggapan Staf</span>
+                                    @endif
                                 </div>
 
-                                @if($qItem->status === 'answered')
-                                    <span class="skms-ticket-status answered">✓ Sudah Dijawab</span>
-                                @else
-                                    <span class="skms-ticket-status pending">⏳ Menunggu Tanggapan Staf</span>
+                                <h4 class="skms-ticket-q">{{ $qItem->pertanyaan }}</h4>
+
+                                @if($qItem->status === 'answered' && ($qItem->note || $qItem->faq))
+                                    <div class="skms-ticket-reply">
+                                        <div style="font-size: 11.5px; font-weight: 700; color: var(--skms-teal); margin-bottom: 4px;">
+                                            Catatan / Jawaban Staf SKMS{{ $qItem->user ? ' (' . $qItem->user->name . ')' : '' }}:
+                                        </div>
+                                        @if($qItem->note)
+                                            <div>{!! nl2br(e($qItem->note)) !!}</div>
+                                        @endif
+                                        @if($qItem->faq && $qItem->faq->status === 'published')
+                                            <div style="margin-top: 8px;">
+                                                <a href="{{ route('skms.faq.show', $qItem->faq->id) }}" style="font-size: 12.5px; font-weight: 700; color: var(--skms-teal); text-decoration: none;">
+                                                    Baca Panduan FAQ Terkait: &ldquo;{{ $qItem->faq->pertanyaan }}&rdquo; &rarr;
+                                                </a>
+                                            </div>
+                                        @endif
+                                    </div>
                                 @endif
                             </div>
-
-                            <h4 class="skms-ticket-q">{{ $qItem->pertanyaan }}</h4>
-
-                            @if($qItem->status === 'answered' && ($qItem->note || $qItem->faq))
-                                <div class="skms-ticket-reply">
-                                    <div style="font-size: 11.5px; font-weight: 700; color: var(--skms-teal); margin-bottom: 4px;">
-                                        Catatan / Jawaban Staf SKMS{{ $qItem->user ? ' (' . $qItem->user->name . ')' : '' }}:
-                                    </div>
-                                    @if($qItem->note)
-                                        <div>{!! nl2br(e($qItem->note)) !!}</div>
-                                    @endif
-                                    @if($qItem->faq && $qItem->faq->status === 'published')
-                                        <div style="margin-top: 8px;">
-                                            <a href="{{ route('skms.faq.show', $qItem->faq->id) }}" style="font-size: 12.5px; font-weight: 700; color: var(--skms-teal); text-decoration: none;">
-                                                Baca Panduan FAQ Terkait: &ldquo;{{ $qItem->faq->pertanyaan }}&rdquo; &rarr;
-                                            </a>
-                                        </div>
-                                    @endif
-                                </div>
-                            @endif
+                        @empty
+                            <div style="text-align: center; padding: 24px 16px; color: var(--skms-muted); font-size: 13px; background: var(--skms-cloud); border-radius: 12px;">
+                                Anda belum pernah mengajukan tiket pertanyaan dengan NRP <strong>{{ $studentNrp }}</strong>.
+                            </div>
+                        @endforelse
+                    @else
+                        <div style="text-align: center; padding: 28px 18px; color: var(--skms-muted); font-size: 13px; background: var(--skms-cloud); border-radius: 12px; line-height: 1.55;">
+                            <div style="font-weight: 700; color: var(--skms-forest); margin-bottom: 6px;">Ingin melihat riwayat pertanyaan Anda?</div>
+                            Silakan masuk menggunakan identitas 9 digit NRP untuk melacak status dan balasan tiket yang pernah Anda ajukan.
+                            <div style="margin-top: 12px;">
+                                <a href="{{ route('skms.login', ['redirect' => 'tanya']) }}" class="skms-btn-secondary" style="font-size: 12px; padding: 6px 14px;">
+                                    Masuk dengan NRP &rarr;
+                                </a>
+                            </div>
                         </div>
-                    @empty
-                        <div style="text-align: center; padding: 24px 16px; color: var(--skms-muted); font-size: 13px; background: var(--skms-cloud); border-radius: 12px;">
-                            Anda belum pernah mengajukan tiket pertanyaan dengan NRP <strong>{{ $studentNrp }}</strong>.
-                        </div>
-                    @endforelse
+                    @endif
                 </div>
             </div>
 
@@ -886,8 +968,8 @@
                     <div class="skms-flow-step">
                         <span class="skms-flow-num">1</span>
                         <div>
-                            <div class="skms-flow-head">Ajukan Pertanyaan dengan NRP</div>
-                            <div class="skms-flow-desc">Kirimkan pertanyaan beserta alamat email aktif yang ingin menerima balasan.</div>
+                            <div class="skms-flow-head">Ajukan Pertanyaan</div>
+                            <div class="skms-flow-desc">Tuliskan pertanyaan Anda. NRP bersifat opsional, namun wajib jika Anda ingin mendapatkan jawaban resmi lewat email kampus.</div>
                         </div>
                     </div>
 
@@ -895,25 +977,25 @@
                         <span class="skms-flow-num">2</span>
                         <div>
                             <div class="skms-flow-head">Ditinjau Staf Data Entry</div>
-                            <div class="skms-flow-desc">Pertanyaan masuk ke antrean tiket staf untuk ditautkan ke panduan resmi atau dibuatkan draf FAQ baru.</div>
+                            <div class="skms-flow-desc">Staf menautkan pertanyaan ke FAQ yang sudah terbit atau menyusun draf FAQ baru ke Validator.</div>
                         </div>
                     </div>
 
                     <div class="skms-flow-step">
                         <span class="skms-flow-num">3</span>
                         <div>
-                            <div class="skms-flow-head">Jawaban Dikirim ke Email</div>
-                            <div class="skms-flow-desc">Begitu staf merespons tiket Anda, jawaban resmi otomatis dikirimkan ke email kampus/Gmail Anda.</div>
+                            <div class="skms-flow-head">Notifikasi Email Otomatis</div>
+                            <div class="skms-flow-desc">Jika Anda mencantumkan NRP, jawaban resmi otomatis dikirim ke <code>s{nrp}@student.ubaya.ac.id</code> saat disetujui/ditautkan.</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="skms-mint-tips-card">
-                    <h3 class="skms-side-title" style="margin-bottom: 10px;">Tips Agar Cepat Terjawab</h3>
+                    <h3 class="skms-side-title" style="margin-bottom: 10px;">Tips Pengajuan</h3>
                     <ul style="margin: 0; padding-left: 18px; font-size: 12.5px; color: #4D6762; line-height: 1.65;">
                         <li style="margin-bottom: 6px;">Gunakan kalimat pertanyaan yang jelas dan spesifik.</li>
-                        <li style="margin-bottom: 6px;">Cantumkan informasi fakultas atau semester pada kolom detail jika pertanyaan berkaitan dengan aturan akademik khusus.</li>
-                        <li>Pastikan alamat email penerima balasan ditulis dengan benar.</li>
+                        <li style="margin-bottom: 6px;">Cantumkan NRP jika Anda ingin mendapatkan notifikasi email saat pertanyaan selesai dijawab.</li>
+                        <li>Jawaban juga dapat diakses secara publik pada menu Pencarian FAQ setelah dipublikasikan.</li>
                     </ul>
                 </div>
             </aside>
@@ -932,5 +1014,28 @@
         </div>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const nrpInput = document.getElementById('nrp');
+            const emailPreview = document.getElementById('emailPreview');
+
+            function updateEmailPreview() {
+                if (!nrpInput || !emailPreview) return;
+                const val = nrpInput.value.trim();
+                if (/^[0-9]{9}$/.test(val)) {
+                    emailPreview.value = 's' + val + '@student.ubaya.ac.id';
+                } else if (val.length > 0) {
+                    emailPreview.value = 's' + val + '@student.ubaya.ac.id (belum 9 digit)';
+                } else {
+                    emailPreview.value = '-';
+                }
+            }
+
+            if (nrpInput) {
+                nrpInput.addEventListener('input', updateEmailPreview);
+                updateEmailPreview();
+            }
+        });
+    </script>
 </body>
 </html>

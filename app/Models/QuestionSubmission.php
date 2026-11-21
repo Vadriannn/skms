@@ -21,11 +21,11 @@ class QuestionSubmission extends Model
     ];
 
     /**
-     * Email kampus mahasiswa otomatis dari 9 digit NRP UBAYA.
+     * Email kampus mahasiswa otomatis dari 9 digit NRP UBAYA: s{nrp}@student.ubaya.ac.id.
      */
-    public function getStudentEmailAttribute(): string
+    public function getStudentEmailAttribute(): ?string
     {
-        return 's' . $this->nrp . '@student.ubaya.ac.id';
+        return $this->nrp ? 's' . $this->nrp . '@student.ubaya.ac.id' : null;
     }
 
     public function faq()

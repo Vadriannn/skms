@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Jika request masuk lewat port selain 8000 (misal Apache port 80), otomatis teruskan ke port 8000
+    RewriteCond %{SERVER_PORT} !^8000$
+    RewriteRule ^(.*)$ http://localhost:8000/skms/$1 [R=302,L]
+</IfModule>
