@@ -199,7 +199,7 @@
                             </span>
 
                             <div class="greeting">
-                                Halo Mahasiswa UBAYA (NRP: {{ $submission->nrp }}),
+                                Halo Ubayatizen (NRP: {{ $submission->nrp }}),
                             </div>
 
                             @if($scenario === 'new_faq')
@@ -208,7 +208,7 @@
                                 </div>
                             @else
                                 <div class="intro-text">
-                                    Pertanyaan yang Anda ajukan telah berhasil <strong>ditanggapi oleh staf SKMS</strong> dengan menautkan ke panduan FAQ resmi yang sudah terbit di repositori pengetahuan UBAYA.
+                                    Pertanyaan yang Anda ajukan telah berhasil <strong>ditanggapi oleh staf SKMS</strong>.
                                 </div>
                             @endif
 

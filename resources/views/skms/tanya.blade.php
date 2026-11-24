@@ -913,8 +913,10 @@
                                         <span>&bull; Email: <strong>{{ $qItem->student_email ?: '-' }}</strong></span>
                                     </div>
 
-                                    @if($qItem->status === 'answered')
-                                        <span class="skms-ticket-status answered">✓ Sudah Dijawab</span>
+                                    @if($qItem->status === 'answered' || ($qItem->faq && $qItem->faq->status === 'published'))
+                                        <span class="skms-ticket-status answered">✓ Sudah Terpublikasi</span>
+                                    @elseif($qItem->faq && in_array($qItem->faq->status, ['pending', 'draft']))
+                                        <span class="skms-ticket-status" style="background: #FFF7ED; color: #C2410C; border: 1px solid #FFEDD5;">⏳ Menunggu Persetujuan Validator</span>
                                     @else
                                         <span class="skms-ticket-status pending">⏳ Menunggu Tanggapan Staf</span>
                                     @endif
@@ -922,21 +924,32 @@
 
                                 <h4 class="skms-ticket-q">{{ $qItem->pertanyaan }}</h4>
 
-                                @if($qItem->status === 'answered' && ($qItem->note || $qItem->faq))
+                                @if(($qItem->faq && $qItem->faq->status === 'published') || $qItem->status === 'answered')
                                     <div class="skms-ticket-reply">
                                         <div style="font-size: 11.5px; font-weight: 700; color: var(--skms-teal); margin-bottom: 4px;">
                                             Catatan / Jawaban Staf SKMS{{ $qItem->user ? ' (' . $qItem->user->name . ')' : '' }}:
                                         </div>
-                                        @if($qItem->note)
-                                            <div>{!! nl2br(e($qItem->note)) !!}</div>
-                                        @endif
                                         @if($qItem->faq && $qItem->faq->status === 'published')
-                                            <div style="margin-top: 8px;">
+                                            <div style="font-size: 13px; color: var(--skms-forest); margin-bottom: 8px;">
+                                                Pertanyaan Anda telah resmi dijawab dan <strong>sudah dipublikasikan</strong> ke dalam repositori FAQ.
+                                            </div>
+                                            <div>
                                                 <a href="{{ route('skms.faq.show', $qItem->faq->id) }}" style="font-size: 12.5px; font-weight: 700; color: var(--skms-teal); text-decoration: none;">
                                                     Baca Panduan FAQ Terkait: &ldquo;{{ $qItem->faq->pertanyaan }}&rdquo; &rarr;
                                                 </a>
                                             </div>
+                                        @elseif($qItem->note)
+                                            <div>{!! nl2br(e($qItem->note)) !!}</div>
                                         @endif
+                                    </div>
+                                @elseif($qItem->faq && in_array($qItem->faq->status, ['pending', 'draft']))
+                                    <div class="skms-ticket-reply" style="background: #FFFBF5; border: 1px solid #FED7AA;">
+                                        <div style="font-size: 11.5px; font-weight: 700; color: #C2410C; margin-bottom: 4px;">
+                                            Catatan / Status Tindak Lanjut:
+                                        </div>
+                                        <div style="font-size: 13px; color: #9A3412;">
+                                            Pertanyaan Anda telah ditindaklanjuti menjadi draf FAQ baru dan <strong>sedang menunggu persetujuan Validator</strong> sebelum diterbitkan.
+                                        </div>
                                     </div>
                                 @endif
                             </div>

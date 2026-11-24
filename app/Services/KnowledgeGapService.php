@@ -171,7 +171,7 @@ class KnowledgeGapService
             // CATATAN: has_linked_faq TIDAK BOLEH meng-override status jika skor di bawah threshold
             if ($evaluation['is_relevant']) {
                 $cluster['status']       = 'answered';
-                $cluster['status_label'] = 'Terjawab';
+                $cluster['status_label'] = 'Relevan';
             } else {
                 $cluster['status']       = 'unanswered';
                 $cluster['status_label'] = 'Belum Terjawab';

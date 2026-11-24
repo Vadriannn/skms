@@ -146,7 +146,10 @@ class ValidatorController extends Controller
         // SKENARIO 1: Pemicu pengiriman email otomatis ke email kampus mahasiswa jika FAQ berasal dari pengajuan yang memiliki NRP
         $submissions = QuestionSubmission::where('faq_id', $faq->id)->get();
         foreach ($submissions as $sub) {
-            $sub->update(['status' => 'answered']);
+            $sub->update([
+                'status' => 'answered',
+                'note'   => 'Pertanyaan Anda telah resmi dijawab dan sudah dipublikasikan ke dalam repositori FAQ.',
+            ]);
 
             if (!empty($sub->nrp)) {
                 $recipientEmail = $sub->student_email;

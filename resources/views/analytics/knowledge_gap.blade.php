@@ -210,7 +210,7 @@
                     <select name="status" class="form-control select-filter" style="width: 100%; height: 38px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; background-color: #FFFFFF;">
                         <option value="all" {{ $filters['status'] === 'all' ? 'selected' : '' }}>Semua Status</option>
                         <option value="unanswered" {{ $filters['status'] === 'unanswered' ? 'selected' : '' }}>Belum Terjawab (Gap)</option>
-                        <option value="answered" {{ $filters['status'] === 'answered' ? 'selected' : '' }}>Terjawab</option>
+                        <option value="answered" {{ $filters['status'] === 'answered' ? 'selected' : '' }}>Relevan</option>
                     </select>
                 </div>
 
@@ -365,7 +365,7 @@
                                     </div>
                                 @else
                                     <span class="badge badge-emerald" style="font-size: 12px; padding: 4px 10px;">
-                                        Terindikasi Terjawab
+                                        Relevan
                                     </span>
                                     @if($item['matched_faq'])
                                         <div style="font-size: 11.5px; color: #0D7F74; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px;" title="{{ $item['matched_faq']->pertanyaan }}">
