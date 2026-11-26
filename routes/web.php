@@ -13,7 +13,7 @@ use App\Http\Controllers\ValidatorController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return auth()->check() ? redirect()->route('dashboard') : redirect()->route('login');
+    return redirect()->route('skms.beranda');
 });
 
 // ─── HALAMAN PUBLIK SKMS (Portal Mahasiswa & Beranda FAQ) ───────────────────

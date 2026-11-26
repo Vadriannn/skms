@@ -10,9 +10,13 @@
         :root {
             --skms-teal: #8B0D18;
             --skms-teal-hover: #6B0810;
+            --skms-maroon-deep: #4A070D;
             --skms-mint: #E5A032;
+            --skms-gold-soft: #FEF6E6;
+            --skms-gold-border: #F5DFB0;
+            --skms-gold-text: #A8640C;
             --skms-mint-soft: #FDF2F3;
-            --skms-mint-card: #FDF2F3;
+            --skms-mint-card: #FBE7E9;
             --skms-mint-border: #F1CFD3;
             --skms-forest: #1F1415;
             --skms-text: #3E2F30;
@@ -37,23 +41,31 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── TOP NAVBAR ────────────────────────────────────────────────── */
-        .skms-navbar {
-            background: #FFFFFF;
-            border-bottom: 1px solid var(--skms-border);
+        /* ── FLOATING TOP NAVBAR (SERAGAM DENGAN BERANDA) ──────────────── */
+        .skms-navbar-shell {
+            max-width: 1320px;
+            width: 100%;
+            margin: 16px auto 0;
+            padding: 0 24px;
             position: sticky;
-            top: 0;
+            top: 12px;
             z-index: 50;
         }
 
+        .skms-navbar {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--skms-border);
+            border-radius: 18px;
+            box-shadow: 0 8px 24px -10px rgba(74, 7, 13, 0.08);
+        }
+
         .skms-navbar-inner {
-            max-width: 1220px;
-            margin: 0 auto;
-            padding: 14px 28px;
-            display: flex;
+            padding: 12px 22px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            justify-content: space-between;
-            gap: 20px;
+            gap: 16px;
         }
 
         .skms-logo-link {
@@ -61,6 +73,7 @@
             align-items: center;
             gap: 12px;
             text-decoration: none;
+            justify-self: start;
         }
 
         .skms-logo-text {
@@ -77,43 +90,64 @@
         }
 
         .skms-logo-sub {
-            font-size: 11px;
+            font-size: 11.5px;
             font-weight: 500;
             color: var(--skms-muted);
             margin-top: 1px;
         }
 
+        .skms-nav-segment {
+            display: inline-flex;
+            align-items: center;
+            background: #F6EFEF;
+            padding: 4px;
+            border-radius: 14px;
+            gap: 4px;
+            justify-self: center;
+        }
+
+        .skms-seg-link {
+            padding: 10px 22px;
+            border-radius: 11px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--skms-text);
+            text-decoration: none;
+            transition: all 0.18s ease;
+            white-space: nowrap;
+        }
+
+        .skms-seg-link:hover {
+            color: var(--skms-teal);
+        }
+
+        .skms-seg-link.active {
+            background: var(--skms-teal);
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px -2px rgba(139, 13, 24, 0.35);
+        }
+
         .skms-nav-right {
             display: flex;
             align-items: center;
-            gap: 26px;
-        }
-
-        .skms-nav-link {
-            font-size: 13.5px;
-            font-weight: 600;
-            color: var(--skms-forest);
-            text-decoration: none;
-            transition: color 0.15s ease;
-        }
-
-        .skms-nav-link:hover,
-        .skms-nav-link.active {
-            color: var(--skms-teal);
+            gap: 12px;
+            justify-self: end;
         }
 
         .skms-btn-nrp {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 10px 18px;
+            padding: 12px 20px;
             background-color: var(--skms-teal);
             color: #FFFFFF;
-            font-size: 13px;
-            font-weight: 600;
-            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 700;
+            border-radius: 12px;
             text-decoration: none;
+            box-shadow: 0 6px 16px -6px rgba(139, 13, 24, 0.4);
             transition: background-color 0.15s ease, transform 0.15s ease;
+            white-space: nowrap;
         }
 
         .skms-btn-nrp:hover {
@@ -126,33 +160,39 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 7px 14px;
-            background: var(--skms-mint-card);
+            padding: 8px 14px;
+            background: var(--skms-mint-soft);
             border: 1px solid var(--skms-mint-border);
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 13px;
-            font-weight: 600;
-            color: var(--skms-forest);
+            font-weight: 700;
+            color: var(--skms-teal);
         }
 
         .skms-nrp-logout {
             background: #FFFFFF;
-            border: 1px solid var(--skms-border);
-            color: #DC2626;
-            font-size: 11.5px;
-            font-weight: 600;
-            padding: 4px 9px;
-            border-radius: 6px;
+            border: 1px solid var(--skms-mint-border);
+            color: var(--skms-teal);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 8px;
             cursor: pointer;
             font-family: inherit;
+            transition: all 0.15s ease;
         }
 
-        /* ── MAIN CONTAINER (IMAGE 3) ──────────────────────────────────── */
+        .skms-nrp-logout:hover {
+            background: var(--skms-teal);
+            color: #FFFFFF;
+        }
+
+        /* ── MAIN CONTAINER ────────────────────────────────────────────── */
         .skms-detail-main {
-            max-width: 1220px;
+            max-width: 1320px;
             width: 100%;
             margin: 0 auto;
-            padding: 28px 28px 64px;
+            padding: 26px 24px 56px;
             flex: 1;
         }
 
@@ -160,9 +200,10 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 12px;
+            font-size: 12.5px;
             color: var(--skms-muted);
             margin-bottom: 14px;
+            flex-wrap: wrap;
         }
 
         .skms-breadcrumb a {
@@ -177,17 +218,23 @@
         .skms-back-link {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-size: 13px;
+            gap: 8px;
+            padding: 9px 16px;
+            background: #FFFFFF;
+            border: 1px solid var(--skms-border);
+            border-radius: 12px;
+            font-size: 13.5px;
             font-weight: 700;
             color: var(--skms-teal);
             text-decoration: none;
-            margin-bottom: 10px;
+            margin-bottom: 18px;
+            transition: all 0.15s ease;
         }
 
         .skms-back-link:hover {
+            background: var(--skms-mint-soft);
+            border-color: var(--skms-mint-border);
             color: var(--skms-teal-hover);
-            text-decoration: underline;
         }
 
         .skms-detail-h1 {
@@ -200,7 +247,7 @@
         }
 
         .skms-detail-subtitle {
-            font-size: 14px;
+            font-size: 14.5px;
             color: var(--skms-muted);
             margin: 0 0 26px;
         }
@@ -208,7 +255,7 @@
         /* 2-Column Detail Grid */
         .skms-detail-grid {
             display: grid;
-            grid-template-columns: 1fr 330px;
+            grid-template-columns: 1fr 350px;
             gap: 28px;
             align-items: start;
         }
@@ -217,8 +264,9 @@
         .skms-answer-card {
             background: #FFFFFF;
             border: 1px solid var(--skms-border);
-            border-radius: 16px;
-            padding: 26px 30px;
+            border-radius: 20px;
+            padding: 28px 32px;
+            box-shadow: 0 10px 26px -14px rgba(74, 7, 13, 0.08);
         }
 
         .skms-answer-top {
@@ -302,22 +350,24 @@
         }
 
         .skms-note-box {
-            margin-top: 22px;
-            background: var(--skms-mint-soft);
-            border: 1px solid var(--skms-mint-border);
-            border-radius: 12px;
-            padding: 14px 18px;
+            margin-top: 24px;
+            background: var(--skms-gold-soft);
+            border: 1px solid var(--skms-gold-border);
+            border-radius: 14px;
+            padding: 15px 18px;
         }
 
         .skms-note-label {
             font-size: 12px;
-            font-weight: 700;
-            color: var(--skms-teal);
-            margin-bottom: 3px;
+            font-weight: 800;
+            color: var(--skms-gold-text);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
         }
 
         .skms-note-text {
-            font-size: 12.5px;
+            font-size: 13px;
             color: #6B5B5D;
             line-height: 1.55;
             margin: 0;
@@ -331,12 +381,16 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
-            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .skms-feedback-info {
+            flex: 1;
+            min-width: 0;
         }
 
         .skms-feedback-q {
-            font-size: 14px;
+            font-size: 14.5px;
             font-weight: 700;
             color: var(--skms-forest);
         }
@@ -345,14 +399,15 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-shrink: 0;
         }
 
         .skms-btn-feedback {
-            padding: 9px 22px;
+            padding: 12px 24px;
             background: #FFFFFF;
-            border: 1px solid var(--skms-border);
-            border-radius: 9px;
-            font-size: 13px;
+            border: 1.5px solid var(--skms-border);
+            border-radius: 12px;
+            font-size: 13.5px;
             font-weight: 700;
             color: var(--skms-forest);
             cursor: pointer;
@@ -366,15 +421,15 @@
 
         .skms-btn-feedback.btn-yes:hover,
         .skms-btn-feedback.btn-yes.active {
-            background: var(--skms-mint-soft);
+            background: var(--skms-teal);
             border-color: var(--skms-teal);
-            color: var(--skms-teal);
+            color: #FFFFFF;
         }
 
         .skms-btn-feedback.btn-no:hover,
         .skms-btn-feedback.btn-no.active {
             background: var(--skms-cloud);
-            border-color: #B9C8C4;
+            border-color: #C9B9BB;
         }
 
         /* Right Sidebar Cards */
@@ -387,8 +442,9 @@
         .skms-related-card {
             background: #FFFFFF;
             border: 1px solid var(--skms-border);
-            border-radius: 16px;
-            padding: 22px;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 26px -14px rgba(74, 7, 13, 0.08);
         }
 
         .skms-related-title {
@@ -449,8 +505,8 @@
         .skms-still-help-card {
             background: var(--skms-mint-soft);
             border: 1px solid var(--skms-mint-border);
-            border-radius: 16px;
-            padding: 22px;
+            border-radius: 20px;
+            padding: 24px;
         }
 
         .skms-still-help-title {
@@ -461,10 +517,10 @@
         }
 
         .skms-still-help-desc {
-            font-size: 12.5px;
+            font-size: 13px;
             color: #6B5B5D;
             line-height: 1.6;
-            margin: 0 0 16px;
+            margin: 0 0 18px;
         }
 
         .skms-btn-full-teal {
@@ -472,19 +528,21 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            padding: 11px 16px;
+            padding: 13px 18px;
             background: var(--skms-teal);
             color: #FFFFFF;
-            border-radius: 10px;
-            font-size: 13px;
+            border-radius: 12px;
+            font-size: 13.5px;
             font-weight: 700;
             text-decoration: none;
-            transition: background 0.15s ease;
+            box-shadow: 0 6px 16px -6px rgba(139, 13, 24, 0.35);
+            transition: background 0.15s ease, transform 0.15s ease;
         }
 
         .skms-btn-full-teal:hover {
             background: var(--skms-teal-hover);
             color: #FFFFFF;
+            transform: translateY(-1px);
         }
 
         .skms-side-caption {
@@ -493,7 +551,7 @@
             padding-left: 2px;
         }
 
-        /* ── FOOTER ────────────────────────────────────────────────────── */
+        /* ── MINIMAL KIOSK FOOTER ──────────────────────────────────────── */
         .skms-footer {
             background: #FFFFFF;
             border-top: 1px solid var(--skms-border);
@@ -501,9 +559,9 @@
         }
 
         .skms-footer-inner {
-            max-width: 1220px;
+            max-width: 1320px;
             margin: 0 auto;
-            padding: 20px 28px;
+            padding: 16px 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -515,71 +573,79 @@
             font-size: 13px;
             font-weight: 800;
             color: var(--skms-teal);
-            margin-bottom: 3px;
-        }
-
-        .skms-footer-copy {
-            font-size: 11.5px;
-            color: var(--skms-muted);
-        }
-
-        .skms-footer-right {
-            font-size: 12.5px;
-            font-weight: 500;
-            color: var(--skms-muted);
         }
 
         @media (max-width: 960px) {
+            .skms-navbar-inner {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
             .skms-detail-grid {
                 grid-template-columns: 1fr;
             }
             .skms-detail-h1 {
                 font-size: 24px;
             }
+            .skms-navbar-shell {
+                margin-top: 10px;
+                padding: 0 14px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .skms-feedback-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
 <body class="skms-student-body">
 
-    <!-- ─── TOP NAVBAR ─────────────────────────────────────────────────────── -->
-    <header class="skms-navbar">
-        <div class="skms-navbar-inner">
-            <a href="{{ route('skms.beranda') }}" class="skms-logo-link">
-                <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#8B0D18"/>
-                    <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#E5A032"/>
-                </svg>
-                <div class="skms-logo-text">
-                    <span class="skms-logo-title">SKMS UBAYA</span>
-                    <span class="skms-logo-sub">Student Knowledge Management System</span>
-                </div>
-            </a>
-
-            <div class="skms-nav-right">
-                <a href="{{ route('skms.beranda') }}" class="skms-nav-link">Beranda</a>
-                <a href="{{ route('skms.beranda', ['all' => 1]) }}" class="skms-nav-link active">Informasi</a>
-
-                @if($studentNrp)
-                    <div class="skms-nrp-pill">
-                        <span>NRP: {{ $studentNrp }}</span>
-                        <form action="{{ route('skms.logout') }}" method="POST" style="margin: 0; display: inline;">
-                            @csrf
-                            <button type="submit" class="skms-nrp-logout">Keluar</button>
-                        </form>
+    <!-- ─── FLOATING TOP NAVBAR ────────────────────────────────────────────── -->
+    <div class="skms-navbar-shell">
+        <header class="skms-navbar">
+            <div class="skms-navbar-inner">
+                <a href="{{ route('skms.beranda') }}" class="skms-logo-link">
+                    <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#8B0D18"/>
+                        <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#E5A032"/>
+                    </svg>
+                    <div class="skms-logo-text">
+                        <span class="skms-logo-title">SKMS UBAYA</span>
+                        <span class="skms-logo-sub">Pusat Pengetahuan Mahasiswa</span>
                     </div>
-                @else
-                    <a href="{{ route('skms.login') }}" class="skms-btn-nrp">
-                        <span>Masuk Mahasiswa (NRP)</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-                            <polyline points="10 17 15 12 10 7"></polyline>
-                            <line x1="15" y1="12" x2="3" y2="12"></line>
-                        </svg>
-                    </a>
-                @endif
+                </a>
+
+                <nav class="skms-nav-segment" aria-label="Navigasi Portal Mahasiswa">
+                    <a href="{{ route('skms.beranda') }}" class="skms-seg-link">Beranda</a>
+                    <a href="{{ route('skms.beranda', ['all' => 1]) }}" class="skms-seg-link active">Semua Informasi</a>
+                </nav>
+
+                <div class="skms-nav-right">
+                    @if($studentNrp)
+                        <div class="skms-nrp-pill">
+                            <span>NRP: {{ $studentNrp }}</span>
+                            <form action="{{ route('skms.logout') }}" method="POST" style="margin: 0; display: inline;">
+                                @csrf
+                                <button type="submit" class="skms-nrp-logout">Keluar</button>
+                            </form>
+                        </div>
+                    @else
+                        <a href="{{ route('skms.login') }}" class="skms-btn-nrp">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                <polyline points="10 17 15 12 10 7"></polyline>
+                                <line x1="15" y1="12" x2="3" y2="12"></line>
+                            </svg>
+                            <span>Log In</span>
+                        </a>
+                    @endif
+                </div>
             </div>
-        </div>
-    </header>
+        </header>
+    </div>
 
     <!-- ─── DETAIL MAIN CONTENT (IMAGE 3) ──────────────────────────────────── -->
     <main class="skms-detail-main">
@@ -741,9 +807,9 @@
                 </div>
 
                 <div class="skms-feedback-bar">
-                    <div>
+                    <div class="skms-feedback-info">
                         <span class="skms-feedback-q">Apakah jawaban ini membantu?</span>
-                        <div id="feedbackNotice" style="font-size: 12px; color: var(--skms-muted); margin-top: 3px; display: none;"></div>
+                        <div id="feedbackNotice" style="font-size: 12.5px; color: var(--skms-muted); margin-top: 4px; line-height: 1.5; display: none;"></div>
                     </div>
 
                     <div class="skms-feedback-btns">
@@ -802,14 +868,10 @@
         </div>
     </main>
 
-    <!-- ─── FOOTER ─────────────────────────────────────────────────────────── -->
+    <!-- ─── MINIMAL KIOSK FOOTER ───────────────────────────────────────────── -->
     <footer class="skms-footer">
         <div class="skms-footer-inner">
-            <div>
-                <div class="skms-footer-brand">SKMS UBAYA</div>
-                <div class="skms-footer-copy">&copy; 2026 SKMS UBAYA &mdash; Student Knowledge Management System.</div>
-            </div>
-            <div class="skms-footer-right">Universitas Surabaya</div>
+            <div class="skms-footer-brand">SKMS UBAYA &mdash; Universitas Surabaya</div>
         </div>
     </footer>
 

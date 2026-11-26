@@ -61,11 +61,10 @@
 
         .skms-navbar-inner {
             padding: 12px 22px;
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            flex-wrap: wrap;
+            gap: 16px;
         }
 
         .skms-logo-link {
@@ -73,6 +72,7 @@
             align-items: center;
             gap: 12px;
             text-decoration: none;
+            justify-self: start;
         }
 
         .skms-logo-text {
@@ -103,6 +103,7 @@
             padding: 4px;
             border-radius: 14px;
             gap: 4px;
+            justify-self: center;
         }
 
         .skms-seg-link {
@@ -130,6 +131,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            justify-self: end;
         }
 
         .skms-btn-nrp {
@@ -898,6 +900,7 @@
         }
 
         @media (max-width: 768px) {
+            .skms-navbar-inner { display: flex; flex-wrap: wrap; justify-content: space-between; }
             .skms-three-col { grid-template-columns: 1fr; }
             .skms-filter-card { position: static; }
             .skms-topics-grid, .skms-sub-faqs-grid { grid-template-columns: 1fr; }
@@ -945,7 +948,7 @@
                                 <polyline points="10 17 15 12 10 7"></polyline>
                                 <line x1="15" y1="12" x2="3" y2="12"></line>
                             </svg>
-                            <span>Masuk Mahasiswa (NRP)</span>
+                            <span>Log In</span>
                         </a>
                     @endif
                 </div>
@@ -1425,10 +1428,6 @@
     <footer class="skms-footer">
         <div class="skms-footer-inner">
             <div class="skms-footer-brand">SKMS UBAYA &mdash; Universitas Surabaya</div>
-            <div class="skms-footer-right">
-                <span style="width: 7px; height: 7px; border-radius: 50%; background: var(--ubaya-gold); display: inline-block;"></span>
-                <span>Layar sentuh otomatis reset setelah 3 menit tidak aktif.</span>
-            </div>
         </div>
     </footer>
 

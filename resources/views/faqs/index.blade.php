@@ -37,7 +37,6 @@
         <div>
             <div class="skmk-hero-kicker">RUANG PENGETAHUAN SKMS</div>
             <div class="skmk-hero-heading">Satu sumber informasi.<br>Banyak jawaban berarti.</div>
-            <div class="skmk-hero-desc">Informasi yang sudah divalidasi, siap membantu mahasiswa.</div>
         </div>
         <div class="skmk-hero-metrics">
             <div class="skmk-hero-metric-item">

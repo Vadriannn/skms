@@ -10,9 +10,13 @@
         :root {
             --skms-teal: #8B0D18;
             --skms-teal-hover: #6B0810;
+            --skms-maroon-deep: #4A070D;
             --skms-mint: #E5A032;
+            --skms-gold-soft: #FEF6E6;
+            --skms-gold-border: #F5DFB0;
+            --skms-gold-text: #A8640C;
             --skms-mint-soft: #FDF2F3;
-            --skms-mint-card: #FDF2F3;
+            --skms-mint-card: #FBE7E9;
             --skms-mint-border: #F1CFD3;
             --skms-forest: #1F1415;
             --skms-text: #3E2F30;
@@ -37,23 +41,31 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── TOP NAVBAR ────────────────────────────────────────────────── */
-        .skms-navbar {
-            background: #FFFFFF;
-            border-bottom: 1px solid var(--skms-border);
+        /* ── FLOATING TOP NAVBAR (SERAGAM DENGAN BERANDA) ──────────────── */
+        .skms-navbar-shell {
+            max-width: 1320px;
+            width: 100%;
+            margin: 16px auto 0;
+            padding: 0 24px;
             position: sticky;
-            top: 0;
+            top: 12px;
             z-index: 50;
         }
 
+        .skms-navbar {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--skms-border);
+            border-radius: 18px;
+            box-shadow: 0 8px 24px -10px rgba(74, 7, 13, 0.08);
+        }
+
         .skms-navbar-inner {
-            max-width: 1220px;
-            margin: 0 auto;
-            padding: 14px 28px;
-            display: flex;
+            padding: 12px 22px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            justify-content: space-between;
-            gap: 20px;
+            gap: 16px;
         }
 
         .skms-logo-link {
@@ -61,6 +73,7 @@
             align-items: center;
             gap: 12px;
             text-decoration: none;
+            justify-self: start;
         }
 
         .skms-logo-text {
@@ -77,99 +90,170 @@
         }
 
         .skms-logo-sub {
-            font-size: 11px;
+            font-size: 11.5px;
             font-weight: 500;
             color: var(--skms-muted);
             margin-top: 1px;
         }
 
+        .skms-nav-segment {
+            display: inline-flex;
+            align-items: center;
+            background: #F6EFEF;
+            padding: 4px;
+            border-radius: 14px;
+            gap: 4px;
+            justify-self: center;
+        }
+
+        .skms-seg-link {
+            padding: 10px 22px;
+            border-radius: 11px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--skms-text);
+            text-decoration: none;
+            transition: all 0.18s ease;
+            white-space: nowrap;
+        }
+
+        .skms-seg-link:hover {
+            color: var(--skms-teal);
+        }
+
+        .skms-seg-link.active {
+            background: var(--skms-teal);
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px -2px rgba(139, 13, 24, 0.35);
+        }
+
         .skms-nav-right {
             display: flex;
             align-items: center;
-            gap: 24px;
+            gap: 12px;
+            justify-self: end;
         }
 
-        .skms-nav-link {
+        .skms-btn-nrp {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background-color: var(--skms-teal);
+            color: #FFFFFF;
             font-size: 13.5px;
-            font-weight: 600;
-            color: var(--skms-forest);
+            font-weight: 700;
+            border-radius: 12px;
             text-decoration: none;
-            transition: color 0.15s ease;
+            box-shadow: 0 6px 16px -6px rgba(139, 13, 24, 0.4);
+            transition: background-color 0.15s ease, transform 0.15s ease;
+            white-space: nowrap;
         }
 
-        .skms-nav-link:hover,
-        .skms-nav-link.active {
-            color: var(--skms-teal);
+        .skms-btn-nrp:hover {
+            background-color: var(--skms-teal-hover);
+            color: #FFFFFF;
+            transform: translateY(-1px);
         }
 
         .skms-nrp-pill {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 7px 14px;
-            background: var(--skms-mint-card);
+            padding: 8px 14px;
+            background: var(--skms-mint-soft);
             border: 1px solid var(--skms-mint-border);
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 13px;
-            font-weight: 600;
-            color: var(--skms-forest);
+            font-weight: 700;
+            color: var(--skms-teal);
         }
 
         .skms-nrp-logout {
             background: #FFFFFF;
-            border: 1px solid var(--skms-border);
-            color: #DC2626;
-            font-size: 11.5px;
-            font-weight: 600;
-            padding: 4px 9px;
-            border-radius: 6px;
+            border: 1px solid var(--skms-mint-border);
+            color: var(--skms-teal);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 8px;
             cursor: pointer;
             font-family: inherit;
+            transition: all 0.15s ease;
         }
 
-        /* ── HERO HEADER ───────────────────────────────────────────────── */
+        .skms-nrp-logout:hover {
+            background: var(--skms-teal);
+            color: #FFFFFF;
+        }
+
+        /* ── ROUNDED CRIMSON HERO BANNER (SERAGAM DENGAN BERANDA) ──────── */
         .skms-tanya-hero {
-            background-color: var(--skms-mint-soft);
-            border-bottom: 1px solid var(--skms-mint-border);
-            padding: 32px 28px;
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            background: linear-gradient(112deg, #4A070D 0%, #8B0D18 58%, #A81A27 100%);
+            padding: 32px 38px;
+            margin-bottom: 24px;
+            box-shadow: 0 18px 38px -18px rgba(74, 7, 13, 0.45);
+        }
+
+        .skms-tanya-hero::after {
+            content: "";
+            position: absolute;
+            top: -40%;
+            right: -6%;
+            width: 340px;
+            height: 340px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(229, 160, 50, 0.22) 0%, rgba(229, 160, 50, 0) 70%);
+            pointer-events: none;
         }
 
         .skms-tanya-hero-inner {
-            max-width: 1220px;
-            margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
 
         .skms-tanya-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            color: var(--skms-teal);
-            margin-bottom: 8px;
+            color: #FDE7B2;
+            margin-bottom: 12px;
         }
 
         .skms-tanya-title {
-            font-size: 28px;
+            font-size: 30px;
             font-weight: 800;
-            color: var(--skms-forest);
+            color: #FFFFFF;
             letter-spacing: -0.025em;
-            margin: 0 0 6px;
+            margin: 0 0 8px;
+            line-height: 1.2;
         }
 
         .skms-tanya-sub {
-            font-size: 13.5px;
-            color: #6B5B5D;
+            font-size: 14.5px;
+            color: rgba(255, 245, 245, 0.9);
             margin: 0;
-            max-width: 720px;
-            line-height: 1.55;
+            max-width: 740px;
+            line-height: 1.6;
         }
 
         /* ── MAIN CONTAINER ────────────────────────────────────────────── */
         .skms-tanya-main {
-            max-width: 1220px;
+            max-width: 1320px;
             width: 100%;
             margin: 0 auto;
-            padding: 28px 28px 64px;
+            padding: 20px 24px 56px;
             flex: 1;
         }
 
@@ -177,9 +261,9 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 12px;
+            font-size: 12.5px;
             color: var(--skms-muted);
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .skms-breadcrumb a {
@@ -193,7 +277,7 @@
 
         .skms-tanya-grid {
             display: grid;
-            grid-template-columns: 1fr 340px;
+            grid-template-columns: 1fr 360px;
             gap: 28px;
             align-items: start;
         }
@@ -206,9 +290,10 @@
         .skms-form-card {
             background: #FFFFFF;
             border: 1px solid var(--skms-border);
-            border-radius: 16px;
-            padding: 28px 30px;
+            border-radius: 20px;
+            padding: 30px 32px;
             margin-bottom: 24px;
+            box-shadow: 0 10px 26px -14px rgba(74, 7, 13, 0.08);
         }
 
         .skms-form-card-head {
@@ -275,11 +360,11 @@
         .skms-select,
         .skms-textarea {
             width: 100%;
-            padding: 11px 14px;
+            padding: 13px 16px;
             background: #FFFFFF;
             border: 1.5px solid var(--skms-border);
-            border-radius: 10px;
-            font-size: 13.5px;
+            border-radius: 12px;
+            font-size: 14px;
             color: var(--skms-forest);
             font-family: inherit;
             outline: none;
@@ -329,11 +414,11 @@
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            padding: 10px 18px;
+            padding: 12px 20px;
             background: #FFFFFF;
-            border: 1px solid var(--skms-border);
-            border-radius: 10px;
-            font-size: 13px;
+            border: 1.5px solid var(--skms-border);
+            border-radius: 12px;
+            font-size: 13.5px;
             font-weight: 600;
             color: var(--skms-text);
             text-decoration: none;
@@ -342,22 +427,24 @@
 
         .skms-btn-secondary:hover {
             background: var(--skms-cloud);
-            border-color: #C7D7D2;
+            border-color: var(--skms-mint-border);
+            color: var(--skms-teal);
         }
 
         .skms-btn-submit-q {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 11px 24px;
+            padding: 13px 26px;
             background: var(--skms-teal);
             color: #FFFFFF;
             border: none;
-            border-radius: 10px;
-            font-size: 13.5px;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 700;
             cursor: pointer;
             font-family: inherit;
+            box-shadow: 0 8px 18px -8px rgba(139, 13, 24, 0.45);
             transition: background 0.15s ease, transform 0.15s ease;
         }
 
@@ -370,8 +457,9 @@
         .skms-history-card {
             background: #FFFFFF;
             border: 1px solid var(--skms-border);
-            border-radius: 16px;
-            padding: 24px 28px;
+            border-radius: 20px;
+            padding: 26px 30px;
+            box-shadow: 0 10px 26px -14px rgba(74, 7, 13, 0.08);
         }
 
         .skms-history-head {
@@ -452,8 +540,9 @@
         }
 
         .skms-ticket-status.answered {
-            background: var(--skms-mint-card);
-            color: var(--skms-teal);
+            background: #ECFDF5;
+            color: #059669;
+            border: 1px solid #A7F3D0;
         }
 
         .skms-ticket-q {
@@ -494,8 +583,9 @@
         .skms-side-card {
             background: #FFFFFF;
             border: 1px solid var(--skms-border);
-            border-radius: 16px;
-            padding: 22px;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 26px -14px rgba(74, 7, 13, 0.08);
         }
 
         .skms-side-title {
@@ -552,13 +642,13 @@
         }
 
         .skms-mint-tips-card {
-            background: var(--skms-mint-soft);
-            border: 1px solid var(--skms-mint-border);
-            border-radius: 16px;
-            padding: 22px;
+            background: var(--skms-gold-soft);
+            border: 1px solid var(--skms-gold-border);
+            border-radius: 20px;
+            padding: 24px;
         }
 
-        /* ── FOOTER ────────────────────────────────────────────────────── */
+        /* ── MINIMAL KIOSK FOOTER ──────────────────────────────────────── */
         .skms-footer {
             background: #FFFFFF;
             border-top: 1px solid var(--skms-border);
@@ -566,9 +656,9 @@
         }
 
         .skms-footer-inner {
-            max-width: 1220px;
+            max-width: 1320px;
             margin: 0 auto;
-            padding: 20px 28px;
+            padding: 16px 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -580,80 +670,91 @@
             font-size: 13px;
             font-weight: 800;
             color: var(--skms-teal);
-            margin-bottom: 3px;
-        }
-
-        .skms-footer-copy {
-            font-size: 11.5px;
-            color: var(--skms-muted);
-        }
-
-        .skms-footer-right {
-            font-size: 12.5px;
-            font-weight: 500;
-            color: var(--skms-muted);
         }
 
         @media (max-width: 960px) {
+            .skms-navbar-inner {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
             .skms-tanya-grid {
                 grid-template-columns: 1fr;
             }
             .skms-form-row-2 {
                 grid-template-columns: 1fr;
             }
+            .skms-tanya-hero {
+                padding: 26px 22px;
+            }
+            .skms-tanya-title {
+                font-size: 24px;
+            }
+            .skms-navbar-shell {
+                margin-top: 10px;
+                padding: 0 14px;
+            }
         }
     </style>
 </head>
 <body class="skms-student-body">
 
-    <!-- ─── TOP NAVBAR ─────────────────────────────────────────────────────── -->
-    <header class="skms-navbar">
-        <div class="skms-navbar-inner">
-            <a href="{{ route('skms.beranda') }}" class="skms-logo-link">
-                <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#8B0D18"/>
-                    <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#E5A032"/>
-                </svg>
-                <div class="skms-logo-text">
-                    <span class="skms-logo-title">SKMS UBAYA</span>
-                    <span class="skms-logo-sub">Student Knowledge Management System</span>
-                </div>
-            </a>
-
-            <div class="skms-nav-right">
-                <a href="{{ route('skms.beranda') }}" class="skms-nav-link">Beranda</a>
-                <a href="{{ route('skms.beranda', ['all' => 1]) }}" class="skms-nav-link">Informasi</a>
-
-                @if($studentNrp)
-                    <div class="skms-nrp-pill">
-                        <span>NRP: {{ $studentNrp }}</span>
-                        <form action="{{ route('skms.logout') }}" method="POST" style="margin: 0; display: inline;">
-                            @csrf
-                            <button type="submit" class="skms-nrp-logout">Keluar</button>
-                        </form>
+    <!-- ─── FLOATING TOP NAVBAR ────────────────────────────────────────────── -->
+    <div class="skms-navbar-shell">
+        <header class="skms-navbar">
+            <div class="skms-navbar-inner">
+                <a href="{{ route('skms.beranda') }}" class="skms-logo-link">
+                    <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#8B0D18"/>
+                        <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#E5A032"/>
+                    </svg>
+                    <div class="skms-logo-text">
+                        <span class="skms-logo-title">SKMS UBAYA</span>
+                        <span class="skms-logo-sub">Pusat Pengetahuan Mahasiswa</span>
                     </div>
-                @else
-                    <a href="{{ route('skms.login', ['redirect' => 'tanya']) }}" class="skms-nav-link" style="padding: 6px 14px; border: 1px solid var(--skms-mint-border); border-radius: 8px; background: var(--skms-mint-card); color: var(--skms-teal);">
-                        Masuk NRP
-                    </a>
-                @endif
-            </div>
-        </div>
-    </header>
+                </a>
 
-    <!-- ─── HERO BANNER ────────────────────────────────────────────────────── -->
-    <section class="skms-tanya-hero">
-        <div class="skms-tanya-hero-inner">
-            <div class="skms-tanya-kicker">LAYANAN PENGAJUAN PERTANYAAN MAHASISWA</div>
-            <h1 class="skms-tanya-title">Tanya Staf Pengelola Pengetahuan</h1>
-            <p class="skms-tanya-sub">
-                Belum menemukan jawaban yang kamu butuhkan di daftar FAQ? Kirimkan pertanyaanmu menggunakan identitas NRP dan staf kami akan mengirimkan jawaban resminya melalui email.
-            </p>
-        </div>
-    </section>
+                <nav class="skms-nav-segment" aria-label="Navigasi Portal Mahasiswa">
+                    <a href="{{ route('skms.beranda') }}" class="skms-seg-link">Beranda</a>
+                    <a href="{{ route('skms.beranda', ['all' => 1]) }}" class="skms-seg-link">Semua Informasi</a>
+                </nav>
+
+                <div class="skms-nav-right">
+                    @if($studentNrp)
+                        <div class="skms-nrp-pill">
+                            <span>NRP: {{ $studentNrp }}</span>
+                            <form action="{{ route('skms.logout') }}" method="POST" style="margin: 0; display: inline;">
+                                @csrf
+                                <button type="submit" class="skms-nrp-logout">Keluar</button>
+                            </form>
+                        </div>
+                    @else
+                        <a href="{{ route('skms.login', ['redirect' => 'tanya']) }}" class="skms-btn-nrp">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                <polyline points="10 17 15 12 10 7"></polyline>
+                                <line x1="15" y1="12" x2="3" y2="12"></line>
+                            </svg>
+                            <span>Log In</span>
+                        </a>
+                    @endif
+                </div>
+            </div>
+        </header>
+    </div>
 
     <!-- ─── MAIN CONTENT ───────────────────────────────────────────────────── -->
     <main class="skms-tanya-main">
+        <!-- ─── ROUNDED CRIMSON HERO BANNER ────────────────────────────────── -->
+        <section class="skms-tanya-hero">
+            <div class="skms-tanya-hero-inner">
+                <div class="skms-tanya-kicker">LAYANAN PENGAJUAN PERTANYAAN MAHASISWA</div>
+                <h1 class="skms-tanya-title">Tanya Staf Pengelola Pengetahuan</h1>
+                <p class="skms-tanya-sub">
+                    Belum menemukan jawaban yang kamu butuhkan di daftar FAQ? Kirimkan pertanyaanmu menggunakan identitas NRP dan staf kami akan mengirimkan jawaban resminya melalui email.
+                </p>
+            </div>
+        </section>
         <div class="skms-breadcrumb">
             <a href="{{ route('skms.beranda') }}">Beranda</a>
             <span>/</span>
@@ -755,18 +856,6 @@
                 </div>
             @endif
 
-            @if(!empty($prefillQuestion))
-                <div style="margin-bottom: 22px; padding: 14px 18px; border-radius: 12px; background: #FDF2F3; border: 1px solid #E5A032; color: #8B0D18; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                    <span>
-                        Topik &ldquo;<strong>{{ $prefillQuestion }}</strong>&rdquo; belum ditemukan di repositori FAQ. Silakan kirimkan pertanyaan ini agar dijawab oleh staf.
-                    </span>
-                </div>
-            @endif
 
             <div class="skms-tanya-grid">
             <!-- ── KOLOM KIRI: FORMULIR PENGAJUAN & RIWAYAT TIKET NRP ─────── -->
@@ -1016,14 +1105,10 @@
         @endif
     </main>
 
-    <!-- ─── FOOTER ─────────────────────────────────────────────────────────── -->
+    <!-- ─── MINIMAL KIOSK FOOTER ───────────────────────────────────────────── -->
     <footer class="skms-footer">
         <div class="skms-footer-inner">
-            <div>
-                <div class="skms-footer-brand">SKMS UBAYA</div>
-                <div class="skms-footer-copy">&copy; 2026 SKMS UBAYA &mdash; Student Knowledge Management System.</div>
-            </div>
-            <div class="skms-footer-right">Universitas Surabaya</div>
+            <div class="skms-footer-brand">SKMS UBAYA &mdash; Universitas Surabaya</div>
         </div>
     </footer>
 

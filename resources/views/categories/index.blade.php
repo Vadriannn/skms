@@ -5,7 +5,7 @@
         <div>
             <h1 class="page-title">Kategori Informasi</h1>
             <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">
-                Kelola taksonomi dan pengelompokan pertanyaan FAQ akademik dan kemahasiswaan.
+                Kelola kategori pertanyaan FAQ akademik dan kemahasiswaan.
             </p>
         </div>
     </div>

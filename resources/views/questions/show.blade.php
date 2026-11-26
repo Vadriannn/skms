@@ -264,7 +264,7 @@
                     </div>
                 @empty
                     <div style="background: #FAF8F7; border: 1px dashed #D5E0DC; border-radius: 10px; padding: 20px; text-align: center; font-size: 13px; color: #6B5B5D;">
-                        Tidak ditemukan rekomendasi TF-IDF otomatis. Anda tetap dapat mencari manual lewat tombol <strong>Kaitkan dengan FAQ Lama</strong> atau <strong>Buat Draf FAQ Baru</strong> di sebelah kanan.
+                        Tidak ditemukan rekomendasi. Anda tetap dapat mencari manual lewat tombol <strong>Kaitkan dengan FAQ Lama</strong> atau <strong>Buat Draf FAQ Baru</strong> di sebelah kanan.
                     </div>
                 @endforelse
             </div>
@@ -282,9 +282,6 @@
                         Kaitkan dengan FAQ Lama
                     </h3>
                 </div>
-                <p style="font-size: 12.5px; color: #6B5B5D; line-height: 1.5; margin: 0 0 14px;">
-                    Cari dan pilih dari daftar FAQ yang sudah terbit, lihat jawabannya, lalu tekan <strong>Enter</strong> untuk mengaitkannya.
-                </p>
 
                 <!-- Tombol Pemicu Popup AJAX Daftar FAQ Lama -->
                 <button type="button"
@@ -343,9 +340,6 @@
                         Buat Draf FAQ Baru
                     </h3>
                 </div>
-                <p style="font-size: 12.5px; color: #3E2F30; line-height: 1.55; margin: 0 0 14px;">
-                    Jika pertanyaan mahasiswa ini merupakan <strong>topik baru</strong> yang belum ada di repositori, buat draf FAQ baru yang otomatis terisi dari pertanyaan tiket ini.
-                </p>
 
                 <a href="{{ route('faqs.create', ['from_ticket' => $ticket->id]) }}"
                    style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 11px 16px; background: #8B0D18; color: #FFFFFF; border-radius: 9px; font-size: 13px; font-weight: 700; text-decoration: none;">
