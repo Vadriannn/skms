@@ -13,6 +13,18 @@ use Illuminate\Http\Request;
 class SkmsController extends Controller
 {
     /**
+     * Halaman Idle / Attract Screen Kiosk Layar Sentuh SKMS UBAYA.
+     * Membersihkan sesi NRP mahasiswa sebelumnya agar pengguna berikutnya mulai dari sesi baru.
+     */
+    public function idle()
+    {
+        session()->forget(['student_name', 'student_nrp', 'helpful_faqs', 'skms_last_activity']);
+        session()->regenerate();
+
+        return view('skms.idle');
+    }
+
+    /**
      * Tampilan form masuk/identifikasi Mahasiswa UBAYA (hanya NRP).
      */
     public function showLoginForm(Request $request)

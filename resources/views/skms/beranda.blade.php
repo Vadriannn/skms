@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SKMS UBAYA — Pusat Pengetahuan Mahasiswa</title>
+    <title>SKMS UBAYA - Pusat Pengetahuan Mahasiswa</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
@@ -1562,26 +1562,9 @@
     </script>
     @endif
 
+    @include('skms.partials.idle_redirect')
+
     <script>
-        /* ── Auto-Reset Sesi Setelah 3 Menit Tidak Ada Aktivitas ────────── */
-        (function () {
-            const IDLE_TIMEOUT_MS = 180000;
-            let idleTimer = null;
-
-            function resetIdleTimer() {
-                if (idleTimer) clearTimeout(idleTimer);
-                idleTimer = setTimeout(function () {
-                    window.location.reload();
-                }, IDLE_TIMEOUT_MS);
-            }
-
-            ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(function (evt) {
-                document.addEventListener(evt, resetIdleTimer, { passive: true });
-            });
-
-            resetIdleTimer();
-        })();
-
         /* ── Validasi Input Pencarian FAQ (Mencegah Angka/Simbol Murni) ─── */
         (function () {
             const toast = document.getElementById('searchWarningToast');

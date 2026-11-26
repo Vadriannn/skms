@@ -25,9 +25,7 @@
                     </div>
                 </div>
 
-                <div style="padding: 4px 24px 6px 24px; font-size: 10.5px; font-weight: 700; color: #948486; letter-spacing: 0.8px; text-transform: uppercase;">
-                    RUANG KERJA
-                </div>
+                
 
                 <ul class="sidebar-menu">
                     <li>

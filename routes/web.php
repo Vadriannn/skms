@@ -17,6 +17,7 @@ Route::get('/', function () {
 });
 
 // ─── HALAMAN PUBLIK SKMS (Portal Mahasiswa & Beranda FAQ) ───────────────────
+Route::get('/skms/idle', [SkmsController::class, 'idle'])->name('skms.idle');
 Route::get('/skms/masuk', [SkmsController::class, 'showLoginForm'])->name('skms.login');
 Route::post('/skms/masuk', [SkmsController::class, 'processLogin'])->name('skms.login.post');
 Route::post('/skms/keluar', [SkmsController::class, 'logoutStudent'])->name('skms.logout');

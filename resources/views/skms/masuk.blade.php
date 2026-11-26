@@ -243,5 +243,6 @@
             }
         });
     </script>
+    @include('skms.partials.idle_redirect')
 </body>
 </html>
