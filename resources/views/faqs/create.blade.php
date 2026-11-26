@@ -60,7 +60,7 @@
                            value="{{ old('pertanyaan', $fromTicket->pertanyaan ?? $prefillFaq->pertanyaan ?? request()->query('pertanyaan', '')) }}">
                     <div id="similaritySpinner" class="similarity-spinner-icon">
                         <span class="spinner-sm"></span>
-                        <span>Mengecek TF-IDF...</span>
+                        <span>Sedang melakukan pengecekan..</span>
                     </div>
                 </div>
 
@@ -286,17 +286,15 @@
             duplicateMaxScore = data.percentage;
             duplicateSimilarTitle = data.similar_faq ? data.similar_faq.pertanyaan : '';
 
-            let categoriesHtml = '';
-            if (data.similar_faq && data.similar_faq.categories && data.similar_faq.categories.length > 0) {
-                categoriesHtml = data.similar_faq.categories.map(c => 
-                    `<span style="background: #F1F5F9; color: #475569; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 500;">${escapeHtml(c)}</span>`
-                ).join(' ');
-            }
+            const sim = data.similar_faq || {};
+            const categoriesHtml = (sim.categories && sim.categories.length > 0)
+                ? sim.categories.map(c => `<span class="tfidf-cat-chip">${escapeHtml(c)}</span>`).join('')
+                : '';
 
-            let statusBadge = '';
-            if (data.similar_faq && data.similar_faq.status_label) {
-                statusBadge = `<span style="background: #FEF3C7; color: #D97706; padding: 2px 7px; border-radius: 9999px; font-size: 11px; font-weight: 600;">${escapeHtml(data.similar_faq.status_label)}</span>`;
-            }
+            const statusKey = sim.status || 'draft';
+            const statusBadge = sim.status_label
+                ? `<span class="tfidf-status-chip status-${escapeHtml(statusKey)}">${escapeHtml(sim.status_label)}</span>`
+                : '';
 
             let otherCandidatesHtml = '';
             if (data.candidates && data.candidates.length > 1) {
@@ -304,16 +302,16 @@
                 const itemsHtml = extraCandidates.map(cand => `
                     <div class="tfidf-candidate-item">
                         <span class="candidate-q" title="${escapeHtml(cand.pertanyaan)}">
-                            &bull; ${escapeHtml(cand.pertanyaan)}
+                            #${cand.id || ''} &mdash; ${escapeHtml(cand.pertanyaan)}
                         </span>
-                        <span class="candidate-score">${escapeHtml(cand.percentage)} Mirip</span>
+                        <span class="candidate-score">${escapeHtml(cand.percentage)} mirip</span>
                     </div>
                 `).join('');
 
                 otherCandidatesHtml = `
                     <button type="button" class="tfidf-candidates-toggle" onclick="toggleOtherCandidates(event)">
-                        <span>Lihat ${extraCandidates.length} kemiripan lainnya</span>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <span>Lihat ${extraCandidates.length} FAQ mirip lainnya</span>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
@@ -327,56 +325,36 @@
                 <div class="tfidf-alert-card duplicate">
                     <div class="tfidf-header">
                         <div class="tfidf-title-area">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                            <span>Peringatan Duplikasi Pertanyaan (Kemiripan: ${escapeHtml(data.percentage)})</span>
+                            <span class="tfidf-icon-badge" aria-hidden="true">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </span>
+                            <div>
+                                <div class="tfidf-heading-text">Terdeteksi mirip dengan FAQ yang sudah ada</div>
+                                <div class="tfidf-sub-text">Periksa dulu informasi di bawah agar tidak terjadi duplikasi di repositori.</div>
+                            </div>
                         </div>
+                        <span class="tfidf-score-badge">${escapeHtml(data.percentage)} Mirip</span>
                     </div>
 
-                    <div class="tfidf-message">
-                        Pertanyaan ini terdeteksi memiliki kemiripan tinggi dengan informasi yang sudah terdaftar di repositori FAQ:
-                    </div>
-
-                    <!-- KARTU PREVIEW FAQ PEMBANDING (TERPISAH & JELAS) -->
                     <div class="tfidf-matched-card">
                         <div class="tfidf-matched-topbar">
-                            <span class="tfidf-matched-badge-tag">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                </svg>
-                                FAQ Pembanding #${data.similar_faq.id || ''}
-                            </span>
+                            <div class="tfidf-matched-left-meta">
+                                <span class="tfidf-id-tag">FAQ #${sim.id || ''}</span>
+                                ${categoriesHtml}
+                            </div>
                             ${statusBadge}
                         </div>
 
-                        <!-- 1. Pertanyaan Pembanding -->
-                        <div class="tfidf-matched-row">
-                            <div class="tfidf-field-label">Pertanyaan di Repositori:</div>
-                            <div class="tfidf-matched-q">&ldquo;${escapeHtml(data.similar_faq.pertanyaan)}&rdquo;</div>
-                        </div>
-
-                        <!-- 2. Jawaban Pembanding -->
-                        ${data.similar_faq.jawaban ? `
-                        <div class="tfidf-matched-row">
-                            <div class="tfidf-field-label">Cuplikan Jawaban:</div>
-                            <div class="tfidf-matched-excerpt">${escapeHtml(data.similar_faq.jawaban)}...</div>
-                        </div>` : ''}
-
-                        <!-- 3. Kategori Pembanding -->
-                        ${categoriesHtml ? `
-                        <div class="tfidf-matched-row" style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed #E2E8F0;">
-                            <div class="tfidf-field-label" style="margin-bottom: 6px;">Kategori Terkait:</div>
-                            <div class="tfidf-matched-meta">
-                                ${categoriesHtml}
-                            </div>
-                        </div>` : ''}
+                        <div class="tfidf-matched-q">${escapeHtml(sim.pertanyaan || '')}</div>
+                        ${sim.jawaban ? `<p class="tfidf-matched-excerpt">${escapeHtml(sim.jawaban)}</p>` : ''}
                     </div>
 
                     ${otherCandidatesHtml}
+                </div>
             `;
         } else {
             isDuplicateDetected = false;
@@ -385,22 +363,24 @@
 
             const isLowScore = data.highest_score > 0;
             const subtitleText = isLowScore 
-                ? `Kemiripan tertinggi hanya ${escapeHtml(data.percentage)} (di bawah batas duplikasi 60%). Topik aman diajukan.`
-                : `Tidak ditemukan kemiripan kata kunci dengan data di repositori. Informasi ini terdeteksi sebagai data baru.`;
+                ? `Kemiripan tertinggi hanya ${escapeHtml(data.percentage)} (di bawah batas 60%). Aman untuk diajukan.`
+                : `Belum ada pertanyaan serupa di repositori. Informasi ini terdeteksi unik.`;
 
             feedbackBox.innerHTML = `
                 <div class="tfidf-alert-card safe">
                     <div class="tfidf-header">
                         <div class="tfidf-title-area">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                            </svg>
-                            <span>Pertanyaan Unik / Belum Ada di Repositori</span>
+                            <span class="tfidf-icon-badge" aria-hidden="true">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </span>
+                            <div>
+                                <div class="tfidf-heading-text">Pertanyaan unik &mdash; belum ada di repositori</div>
+                                <div class="tfidf-sub-text">${subtitleText}</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="tfidf-message" style="margin-bottom: 0;">
-                        ${subtitleText}
                     </div>
                 </div>
             `;

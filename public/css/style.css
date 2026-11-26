@@ -1711,7 +1711,7 @@ nav[role="navigation"] svg {
 }
 
 .tfidf-alert-card {
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 16px 18px;
     font-size: 13px;
     line-height: 1.5;
@@ -1719,157 +1719,209 @@ nav[role="navigation"] svg {
     border: 1px solid transparent;
 }
 
-/* Status Duplikat / Peringatan Tinggi */
+/* Status Duplikat / Peringatan Kemiripan (Warm UBAYA Amber-Gold) */
 .tfidf-alert-card.duplicate {
-    background-color: #FEF2F2;
-    border-color: #FECACA;
-    border-left: 5px solid #EF4444;
-    color: #991B1B;
+    background-color: #FFFBF4;
+    border-color: #F3D9A4;
+    color: #5C3A08;
 }
 
-/* Status Aman / Rendah */
+/* Status Aman / Unik (Clean Semantic Green) */
 .tfidf-alert-card.safe {
-    background-color: #F0FDF4;
-    border-color: #BBF7D0;
-    border-left: 5px solid #10B981;
-    color: #166534;
+    background-color: #F2FDF7;
+    border-color: #B7EED0;
+    color: #065F46;
 }
 
 .tfidf-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 8px;
 }
 
 .tfidf-title-area {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    font-size: 14px;
+    align-items: flex-start;
+    gap: 11px;
+    min-width: 0;
 }
 
-.tfidf-title-area svg {
+.tfidf-icon-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.tfidf-alert-card.duplicate .tfidf-icon-badge {
+    background-color: #FDECC8;
+    color: #B45309;
+}
+
+.tfidf-alert-card.safe .tfidf-icon-badge {
+    background-color: #D1FAE5;
+    color: #059669;
+}
+
+.tfidf-heading-text {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: #1F1415;
+    line-height: 1.35;
+}
+
+.tfidf-sub-text {
+    font-size: 12.5px;
+    color: #6B5B5D;
+    margin-top: 2px;
+    line-height: 1.45;
 }
 
 .tfidf-score-badge {
-    padding: 4px 10px;
+    padding: 4px 11px;
     border-radius: 9999px;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .tfidf-alert-card.duplicate .tfidf-score-badge {
-    background-color: #FEE2E2;
-    color: #B91C1C;
-    border: 1px solid #FCA5A5;
+    background-color: #FBE7E9;
+    color: #8B0D18;
+    border: 1px solid #F1CFD3;
 }
 
 .tfidf-alert-card.safe .tfidf-score-badge {
     background-color: #DCFCE7;
-    color: #15803D;
-    border: 1px solid #86EFAC;
+    color: #059669;
+    border: 1px solid #A7F3D0;
 }
 
-.tfidf-message {
-    font-size: 13px;
-    margin-bottom: 12px;
-    color: #7F1D1D;
-    font-weight: 500;
-}
-
-/* KARTU PREVIEW FAQ PEMBANDING (TERSTRUKTUR & TIDAK NABRAK) */
+/* Kartu Preview FAQ Pembanding — Ringkas, Bersih & Modern */
 .tfidf-matched-card {
     background: #FFFFFF;
-    border: 1px solid #E2E8F0;
-    border-radius: 10px;
+    border: 1px solid #EFE4D6;
+    border-radius: 12px;
     padding: 14px 16px;
-    margin-top: 10px;
-    margin-bottom: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    margin-top: 12px;
+    box-shadow: 0 2px 8px -4px rgba(31, 20, 21, 0.06);
 }
 
 .tfidf-matched-topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
     margin-bottom: 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #F1F5F9;
 }
 
-.tfidf-matched-badge-tag {
-    font-size: 11px;
+.tfidf-matched-left-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tfidf-id-tag {
+    font-size: 11.5px;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #64748B;
+    color: #6B5B5D;
+    background: #F6F0F0;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.tfidf-cat-chip {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #8B0D18;
+    background: #FDF2F3;
+    border: 1px solid #F5D5D9;
+    padding: 2px 9px;
+    border-radius: 9999px;
+}
+
+.tfidf-status-chip {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 9999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
-.tfidf-matched-row {
-    margin-bottom: 10px;
+.tfidf-status-chip.status-published {
+    background: #ECFDF5;
+    color: #059669;
+    border: 1px solid #A7F3D0;
 }
 
-.tfidf-matched-row:last-child {
-    margin-bottom: 0;
+.tfidf-status-chip.status-pending {
+    background: #FFF8EB;
+    color: #B4690E;
+    border: 1px solid #F5DFB0;
 }
 
-.tfidf-field-label {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #94A3B8;
-    letter-spacing: 0.4px;
-    margin-bottom: 4px;
+.tfidf-status-chip.status-draft {
+    background: #F3F4F6;
+    color: #4B5563;
+    border: 1px solid #E5E7EB;
+}
+
+.tfidf-status-chip.status-rejected {
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
 }
 
 .tfidf-matched-q {
     font-weight: 700;
-    color: #0F172A;
-    font-size: 14px;
-    line-height: 1.45;
+    color: #1F1415;
+    font-size: 14.5px;
+    line-height: 1.4;
+    margin-bottom: 5px;
 }
 
 .tfidf-matched-excerpt {
     font-size: 13px;
-    color: #334155;
-    line-height: 1.5;
-    background: #F8FAFC;
-    border-left: 3px solid #94A3B8;
-    padding: 8px 12px;
-    border-radius: 0 6px 6px 0;
-}
-
-.tfidf-matched-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    color: #6B5B5D;
+    line-height: 1.55;
+    margin: 0;
 }
 
 .tfidf-candidates-toggle {
     margin-top: 10px;
     font-size: 12.5px;
-    color: #4F46E5;
+    color: #8B0D18;
     background: none;
     border: none;
-    padding: 0;
+    padding: 2px 0;
     cursor: pointer;
     font-weight: 600;
+    font-family: inherit;
     display: inline-flex;
     align-items: center;
     gap: 5px;
+    transition: color 0.15s ease;
 }
 
 .tfidf-candidates-toggle:hover {
+    color: #6B0810;
     text-decoration: underline;
+}
+
+.tfidf-candidates-toggle svg {
+    transition: transform 0.18s ease;
 }
 
 .tfidf-candidates-list {
@@ -1877,32 +1929,35 @@ nav[role="navigation"] svg {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    padding-top: 6px;
-    border-top: 1px dashed #FDE68A;
 }
 
 .tfidf-candidate-item {
-    font-size: 12px;
-    color: var(--text-body);
+    font-size: 12.5px;
+    color: #3E2F30;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
-    background: rgba(255, 255, 255, 0.7);
-    padding: 6px 10px;
-    border-radius: 6px;
+    gap: 10px;
+    background: #FFFFFF;
+    border: 1px solid #EFE4D6;
+    padding: 8px 12px;
+    border-radius: 9px;
 }
 
 .tfidf-candidate-item .candidate-q {
-    font-weight: 500;
+    font-weight: 600;
+    color: #1F1415;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .tfidf-candidate-item .candidate-score {
-    font-weight: 600;
-    color: #B45309;
+    font-weight: 700;
+    color: #8B0D18;
+    background: #FDF2F3;
+    padding: 2px 8px;
+    border-radius: 9999px;
     font-size: 11px;
     flex-shrink: 0;
 }

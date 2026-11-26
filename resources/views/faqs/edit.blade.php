@@ -120,7 +120,7 @@
                            value="{{ old('pertanyaan', $faq->pertanyaan) }}">
                     <div id="similaritySpinner" class="similarity-spinner-icon">
                         <span class="spinner-sm"></span>
-                        <span>Mengecek TF-IDF...</span>
+                        <span>Sedang melakukan pengecekan..</span>
                     </div>
                 </div>
 
@@ -368,35 +368,45 @@
                 return;
             }
 
-            const sim = data.similar_faq;
-            let catsHtml = '';
-            if (sim.categories && sim.categories.length > 0) {
-                catsHtml = sim.categories.map(c => `<span class="category-pill">${escapeHtml(c)}</span>`).join(' ');
-            }
+            const sim = data.similar_faq || {};
+            const catsHtml = (sim.categories && sim.categories.length > 0)
+                ? sim.categories.map(c => `<span class="tfidf-cat-chip">${escapeHtml(c)}</span>`).join('')
+                : '';
+            const statusKey = sim.status || 'draft';
+            const statusBadge = sim.status_label
+                ? `<span class="tfidf-status-chip status-${escapeHtml(statusKey)}">${escapeHtml(sim.status_label)}</span>`
+                : '';
 
             feedbackBox.innerHTML = `
-                <div class="tfidf-alert danger">
-                    <div class="tfidf-alert-header">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                            <span class="tfidf-alert-title">Peringatan Duplikasi Pertanyaan (TF-IDF: ${data.percentage})</span>
-                        </div>
-                    </div>
-                    <p class="tfidf-alert-desc">
-                        Pertanyaan ini terdeteksi memiliki tingkat kemiripan tinggi dengan informasi yang sudah ada di repositori:
-                    </p>
-                    <div class="tfidf-matched-item">
-                        <div class="matched-title">&ldquo;${escapeHtml(sim.pertanyaan)}&rdquo;</div>
-                        <div class="matched-meta">
-                            <span class="status-pill status-${sim.status}">${escapeHtml(sim.status_label)}</span>
-                            <div class="category-pills-container" style="display: inline-flex; margin-left: 6px;">
-                                ${catsHtml}
+                <div class="tfidf-alert-card duplicate">
+                    <div class="tfidf-header">
+                        <div class="tfidf-title-area">
+                            <span class="tfidf-icon-badge" aria-hidden="true">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </span>
+                            <div>
+                                <div class="tfidf-heading-text">Terdeteksi mirip dengan FAQ yang sudah ada</div>
+                                <div class="tfidf-sub-text">Periksa dulu informasi di bawah agar tidak terjadi duplikasi di repositori.</div>
                             </div>
                         </div>
+                        <span class="tfidf-score-badge">${escapeHtml(data.percentage)} Mirip</span>
+                    </div>
+
+                    <div class="tfidf-matched-card">
+                        <div class="tfidf-matched-topbar">
+                            <div class="tfidf-matched-left-meta">
+                                <span class="tfidf-id-tag">FAQ #${sim.id || ''}</span>
+                                ${catsHtml}
+                            </div>
+                            ${statusBadge}
+                        </div>
+
+                        <div class="tfidf-matched-q">${escapeHtml(sim.pertanyaan || '')}</div>
+                        ${sim.jawaban ? `<p class="tfidf-matched-excerpt">${escapeHtml(sim.jawaban)}</p>` : ''}
                     </div>
                 </div>
             `;

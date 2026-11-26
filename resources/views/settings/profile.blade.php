@@ -11,20 +11,10 @@
 @endphp
 
 <div>
-    <!-- Page Intro (Sesuai Gambar 6) -->
-    <div style="margin-bottom: 18px;">
+    <!-- Page Intro -->
+    <div style="margin-bottom: 22px;">
         <h1 class="skmk-page-main-title">Pengaturan akun</h1>
         <p class="skmk-page-subtitle">Kelola profil dan keamanan akun Anda dengan mudah.</p>
-    </div>
-
-    <!-- Top Tabs (Profil & keamanan / Akun role) -->
-    <div style="display: flex; align-items: center; gap: 24px; border-bottom: 1px solid #ECE4E5; margin-bottom: 24px;">
-        <span style="padding-bottom: 10px; border-bottom: 2px solid #8B0D18; color: #8B0D18; font-weight: 600; font-size: 13.5px;">
-            Profil &amp; keamanan
-        </span>
-        <span style="padding-bottom: 10px; color: #6B5B5D; font-size: 13.5px; font-weight: 500;">
-            Akun {{ strtolower($roleLabel) }}
-        </span>
     </div>
 
     <!-- 2-Column Layout (Left: Forms, Right: Security Tips & Help) -->
@@ -125,17 +115,6 @@
                     <li>Gabungkan huruf, angka, dan simbol.</li>
                     <li>Hindari nama atau tanggal lahir.</li>
                 </ul>
-            </div>
-
-            <div style="padding: 4px 8px;">
-                <div style="font-size: 13.5px; font-weight: 700; color: #1F1415; margin-bottom: 4px;">Butuh bantuan?</div>
-                <p style="font-size: 12.5px; color: #6B5B5D; line-height: 1.5; margin-bottom: 8px;">
-                    Hubungi administrator kampus untuk perubahan peran atau kendala akses.
-                </p>
-                <a href="javascript:void(0)" onclick="alert('Silakan hubungi Super Admin SKMS untuk bantuan perubahan peran atau akses akun.')" class="skmk-link-action" style="font-size: 12.5px;">
-                    <span>Hubungi administrator</span>
-                    <span>&#8599;</span>
-                </a>
             </div>
         </div>
 

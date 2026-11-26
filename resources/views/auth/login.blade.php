@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SKMS</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}?v=2">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body class="login-wrapper" style="background-color: #FAF8F7;">
