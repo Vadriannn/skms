@@ -163,12 +163,12 @@
             </div>
 
             <!-- 4. Media & Berkas Pendukung (Opsional) -->
-            <div style="background: #F9FBFA; border: 1px solid #E2E9E6; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+            <div style="background: #F9FBFA; border: 1px solid #ECE4E5; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D7F74" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B0D18" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
                     </svg>
-                    <span style="font-size: 14px; font-weight: 700; color: #16322F;">Media &amp; Berkas Pendukung (Opsional)</span>
+                    <span style="font-size: 14px; font-weight: 700; color: #1F1415;">Media &amp; Berkas Pendukung (Opsional)</span>
                 </div>
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px;">
@@ -179,17 +179,17 @@
                         </label>
 
                         @if($faq->file_lampiran)
-                            <div style="background: #FFFFFF; border: 1px solid #C7E6DC; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                            <div style="background: #FFFFFF; border: 1px solid #F1CFD3; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                                 <div style="display: flex; align-items: center; gap: 8px; overflow: hidden;">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D7F74" stroke-width="2" style="flex-shrink: 0;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B0D18" stroke-width="2" style="flex-shrink: 0;">
                                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                                         <polyline points="14 2 14 8 20 8"></polyline>
                                     </svg>
-                                    <span style="font-size: 12.5px; font-weight: 600; color: #16322F; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $faq->file_nama_asli ?: 'File Lampiran' }}">
+                                    <span style="font-size: 12.5px; font-weight: 600; color: #1F1415; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $faq->file_nama_asli ?: 'File Lampiran' }}">
                                         {{ $faq->file_nama_asli ?: basename($faq->file_lampiran) }}
                                     </span>
                                 </div>
-                                <a href="{{ route('faqs.download', $faq->id) }}" target="_blank" style="font-size: 11.5px; font-weight: 600; color: #0D7F74; text-decoration: none; white-space: nowrap;">
+                                <a href="{{ route('faqs.download', $faq->id) }}" target="_blank" style="font-size: 11.5px; font-weight: 600; color: #8B0D18; text-decoration: none; white-space: nowrap;">
                                     Unduh
                                 </a>
                             </div>
@@ -205,7 +205,7 @@
                             <input type="file" id="file_lampiran" name="file_lampiran" class="form-control" style="padding: 7px 12px; height: auto; background: #FFFFFF;"
                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.zip">
                         </div>
-                        <div style="font-size: 11.5px; color: #647874; margin-top: 5px; line-height: 1.4;">
+                        <div style="font-size: 11.5px; color: #6B5B5D; margin-top: 5px; line-height: 1.4;">
                             {{ $faq->file_lampiran ? 'Pilih file baru jika ingin mengganti file yang sudah ada.' : 'Format didukung: PDF, Word, Excel, PPT, Gambar, ZIP (Maks. 10 MB).' }}
                         </div>
                         @error('file_lampiran')
@@ -222,12 +222,12 @@
                             <input type="url" id="link_video" name="link_video" class="form-control" style="padding-left: 36px; background: #FFFFFF;"
                                    placeholder="Contoh: https://www.youtube.com/watch?v=..."
                                    value="{{ old('link_video', $faq->link_video) }}">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FA19D" stroke-width="2" style="position: absolute; left: 12px; top: 11px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#948486" stroke-width="2" style="position: absolute; left: 12px; top: 11px;">
                                 <polygon points="23 7 16 12 23 17 23 7"></polygon>
                                 <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
                             </svg>
                         </div>
-                        <div style="font-size: 11.5px; color: #647874; margin-top: 5px; line-height: 1.4;">
+                        <div style="font-size: 11.5px; color: #6B5B5D; margin-top: 5px; line-height: 1.4;">
                             Masukkan URL video YouTube atau tautan video eksternal lainnya.
                         </div>
                         @error('link_video')
@@ -261,7 +261,7 @@
                             <span>Simpan sebagai Draft</span>
                         </button>
                         <!-- Opsi 2: Ajukan Kembali ke Validator -->
-                        <button type="button" class="btn-modal-submit" onclick="submitEditForm('pending')" style="background-color: #0D7F74;">
+                        <button type="button" class="btn-modal-submit" onclick="submitEditForm('pending')" style="background-color: #8B0D18;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="22" y1="2" x2="11" y2="13"></line>
                                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>

@@ -10,7 +10,7 @@
             padding: 0;
             background-color: #F4F7F6;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            color: #2C4642;
+            color: #3E2F30;
             -webkit-text-size-adjust: none;
             text-size-adjust: none;
         }
@@ -24,10 +24,10 @@
             background-color: #FFFFFF;
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid #E2E9E6;
+            border: 1px solid #ECE4E5;
         }
         .header {
-            background: linear-gradient(135deg, #0D7F74 0%, #16322F 100%);
+            background: linear-gradient(135deg, #8B0D18 0%, #1F1415 100%);
             padding: 28px 32px;
             text-align: left;
         }
@@ -39,7 +39,7 @@
             letter-spacing: -0.02em;
         }
         .header p {
-            color: #8ED8C3;
+            color: #E5A032;
             font-size: 12px;
             margin: 0;
             font-weight: 500;
@@ -51,8 +51,8 @@
         }
         .badge {
             display: inline-block;
-            background-color: #E8F5F1;
-            color: #0D7F74;
+            background-color: #FDF2F3;
+            color: #8B0D18;
             padding: 4px 10px;
             border-radius: 999px;
             font-size: 11.5px;
@@ -62,18 +62,18 @@
         .greeting {
             font-size: 15px;
             font-weight: 700;
-            color: #16322F;
+            color: #1F1415;
             margin-bottom: 10px;
         }
         .intro-text {
             font-size: 14px;
             line-height: 1.6;
-            color: #4D6762;
+            color: #6B5B5D;
             margin-bottom: 24px;
         }
         .box-pertanyaan {
             background-color: #F8FAFA;
-            border-left: 4px solid #8ED8C3;
+            border-left: 4px solid #E5A032;
             border-radius: 6px;
             padding: 16px 18px;
             margin-bottom: 24px;
@@ -81,7 +81,7 @@
         .box-title {
             font-size: 11px;
             font-weight: 700;
-            color: #647874;
+            color: #6B5B5D;
             text-transform: uppercase;
             letter-spacing: 0.06em;
             margin-bottom: 6px;
@@ -89,14 +89,14 @@
         .box-pertanyaan p {
             font-size: 14px;
             font-weight: 600;
-            color: #16322F;
+            color: #1F1415;
             margin: 0;
             line-height: 1.5;
             font-style: italic;
         }
         .box-jawaban {
-            background-color: #E6F4EF;
-            border: 1px solid #C7E6DC;
+            background-color: #FDF2F3;
+            border: 1px solid #F1CFD3;
             border-radius: 10px;
             padding: 20px 22px;
             margin-bottom: 24px;
@@ -104,7 +104,7 @@
         .faq-title {
             font-size: 15px;
             font-weight: 800;
-            color: #0D7F74;
+            color: #8B0D18;
             margin: 0 0 10px;
             line-height: 1.4;
         }
@@ -114,8 +114,8 @@
         .cat-tag {
             display: inline-block;
             background: #FFFFFF;
-            border: 1px solid #8ED8C3;
-            color: #0D7F74;
+            border: 1px solid #E5A032;
+            color: #8B0D18;
             font-size: 11px;
             font-weight: 600;
             padding: 2px 8px;
@@ -125,18 +125,18 @@
         }
         .faq-body {
             font-size: 13.5px;
-            color: #2C4642;
+            color: #3E2F30;
             line-height: 1.65;
             margin-bottom: 14px;
         }
         .attachment-item {
             display: inline-block;
             background-color: #FFFFFF;
-            border: 1px solid #C7E6DC;
+            border: 1px solid #F1CFD3;
             border-radius: 6px;
             padding: 8px 12px;
             font-size: 12px;
-            color: #0D7F74;
+            color: #8B0D18;
             font-weight: 600;
             text-decoration: none;
             margin-top: 8px;
@@ -160,7 +160,7 @@
         }
         .btn-portal {
             display: inline-block;
-            background-color: #0D7F74;
+            background-color: #8B0D18;
             color: #FFFFFF !important;
             font-size: 14px;
             font-weight: 700;
@@ -171,7 +171,7 @@
         }
         .footer {
             background-color: #FAFCFB;
-            border-top: 1px solid #EEF3F1;
+            border-top: 1px solid #F3ECEC;
             padding: 22px 32px;
             text-align: center;
             font-size: 11.5px;
@@ -220,7 +220,7 @@
 
                             <!-- Box Jawaban Resmi / FAQ -->
                             <div class="box-jawaban">
-                                <div class="box-title" style="color: #0D7F74;">Jawaban Resmi SKMS UBAYA:</div>
+                                <div class="box-title" style="color: #8B0D18;">Jawaban Resmi SKMS UBAYA:</div>
                                 <div class="faq-title">{{ $faq->pertanyaan }}</div>
 
                                 @if($faq->categories && $faq->categories->count() > 0)
@@ -237,7 +237,7 @@
 
                                 @if($faq->file_lampiran)
                                     <div style="margin-top: 10px;">
-                                        <span style="font-size: 11px; font-weight: 700; color: #4D6762; text-transform: uppercase; display: block; margin-bottom: 4px;">File Lampiran:</span>
+                                        <span style="font-size: 11px; font-weight: 700; color: #6B5B5D; text-transform: uppercase; display: block; margin-bottom: 4px;">File Lampiran:</span>
                                         <a href="{{ route('faqs.download-attachment', $faq->id) }}" class="attachment-item" target="_blank">
                                             📎 Unduh {{ $faq->file_nama_asli ?: 'File Lampiran' }}
                                         </a>
@@ -246,7 +246,7 @@
 
                                 @if($faq->link_video)
                                     <div style="margin-top: 10px;">
-                                        <span style="font-size: 11px; font-weight: 700; color: #4D6762; text-transform: uppercase; display: block; margin-bottom: 4px;">Tautan Video Edukatif:</span>
+                                        <span style="font-size: 11px; font-weight: 700; color: #6B5B5D; text-transform: uppercase; display: block; margin-bottom: 4px;">Tautan Video Edukatif:</span>
                                         <a href="{{ $faq->link_video }}" class="video-item" target="_blank">
                                             ▶ Tonton Video Tutorial ({{ $faq->link_video }})
                                         </a>
@@ -261,9 +261,9 @@
                                 </a>
                             </div>
 
-                            <div style="text-align: center; margin-top: 14px; margin-bottom: 6px; font-size: 12px; color: #647874; line-height: 1.5;">
+                            <div style="text-align: center; margin-top: 14px; margin-bottom: 6px; font-size: 12px; color: #6B5B5D; line-height: 1.5;">
                                 Atau buka tautan FAQ resmi yang telah dipublikasikan berikut:<br>
-                                <a href="{{ route('skms.faq.show', $faq->id) }}" style="color: #0D7F74; font-weight: 600; text-decoration: underline; word-break: break-all;">
+                                <a href="{{ route('skms.faq.show', $faq->id) }}" style="color: #8B0D18; font-weight: 600; text-decoration: underline; word-break: break-all;">
                                     {{ route('skms.faq.show', $faq->id) }}
                                 </a>
                             </div>
@@ -271,7 +271,7 @@
 
                         <!-- Footer -->
                         <div class="footer">
-                            <p style="margin: 0 0 4px; font-weight: 600; color: #4D6762;">
+                            <p style="margin: 0 0 4px; font-weight: 600; color: #6B5B5D;">
                                 Direktorat Sistem Informasi & Pengelolaan Pengetahuan Mahasiswa
                             </p>
                             <p style="margin: 0 0 8px;">

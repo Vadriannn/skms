@@ -6,13 +6,13 @@
 <div>
     <!-- Back Link & Title Header (Sesuai Gambar 4) -->
     <div style="margin-bottom: 20px;">
-        <a href="{{ request('from') === 'index' ? route('faqs.index') : route('faqs.submissions', ['status' => $faq->status]) }}" style="display: inline-flex; align-items: center; gap: 6px; color: #0D7F74; font-size: 13px; font-weight: 600; text-decoration: none; margin-bottom: 10px;">
+        <a href="{{ request('from') === 'index' ? route('faqs.index') : route('faqs.submissions', ['status' => $faq->status]) }}" style="display: inline-flex; align-items: center; gap: 6px; color: #8B0D18; font-size: 13px; font-weight: 600; text-decoration: none; margin-bottom: 10px;">
             <span>&larr;</span>
             <span>{{ request('from') === 'index' ? 'Kembali ke daftar informasi' : 'Kembali ke pengajuan & draf' }}</span>
         </a>
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
             <h1 class="skmk-page-main-title" style="margin: 0;">Detail informasi</h1>
-            <span style="background: #F0F4F2; color: #3D524E; border: 1px solid #E2E9E6; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 9999px;">
+            <span style="background: #F6F0F0; color: #3E2F30; border: 1px solid #ECE4E5; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 9999px;">
                 FAQ #{{ $faq->id }}
             </span>
         </div>
@@ -53,17 +53,17 @@
                     @if($simFaq)
                         <div style="background: #FFFFFF; border: 1px solid #F3DEC0; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;">
                             <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px;">
-                                <span style="font-size: 11px; font-weight: 700; color: #8FA19D; text-transform: uppercase; letter-spacing: 0.4px;">
+                                <span style="font-size: 11px; font-weight: 700; color: #948486; text-transform: uppercase; letter-spacing: 0.4px;">
                                     FAQ PEMBANDING #{{ $simFaq->id }}
                                 </span>
-                                <a href="{{ route('faqs.show', $simFaq->id) }}" style="font-size: 12.5px; font-weight: 600; color: #0D7F74; text-decoration: none;">
+                                <a href="{{ route('faqs.show', $simFaq->id) }}" style="font-size: 12.5px; font-weight: 600; color: #8B0D18; text-decoration: none;">
                                     Lihat pembanding &#8599;
                                 </a>
                             </div>
-                            <div style="font-weight: 700; color: #16322F; font-size: 14px; margin-bottom: 6px;">
+                            <div style="font-weight: 700; color: #1F1415; font-size: 14px; margin-bottom: 6px;">
                                 &ldquo;{{ $simFaq->pertanyaan }}&rdquo;
                             </div>
-                            <div style="font-size: 13px; color: #647874; line-height: 1.5;">
+                            <div style="font-size: 13px; color: #6B5B5D; line-height: 1.5;">
                                 {{ Str::limit(strip_tags($simFaq->jawaban), 180) }}
                             </div>
                         </div>
@@ -106,8 +106,8 @@
             {{-- 3. Kartu Konten FAQ (Sesuai Gambar 4) --}}
             <div class="vd-detail-card">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap;">
-                    <div style="font-size: 12.5px; color: #647874;">
-                        Diajukan oleh <strong style="color: #3D524E;">{{ $faq->user?->name ?? '-' }}</strong>
+                    <div style="font-size: 12.5px; color: #6B5B5D;">
+                        Diajukan oleh <strong style="color: #3E2F30;">{{ $faq->user?->name ?? '-' }}</strong>
                         &bull; {{ $faq->created_at->format('d F Y, H:i') }}
                     </div>
                     <div>
@@ -120,18 +120,18 @@
                         @elseif($faq->status === 'rejected')
                             <span class="status-pill status-rejected">Ditolak</span>
                         @elseif($faq->status === 'inactive')
-                            <span class="status-pill" style="background-color: #F0F4F2; color: #4D6661; border: 1px solid #E2E9E6;">Nonaktif</span>
+                            <span class="status-pill" style="background-color: #F6F0F0; color: #6B5B5D; border: 1px solid #ECE4E5;">Nonaktif</span>
                         @endif
                     </div>
                 </div>
 
-                <h2 class="vd-detail-pertanyaan" style="font-size: 20px; margin-bottom: 12px; {{ $faq->status === 'inactive' ? 'color: #647874; text-decoration: line-through;' : '' }}">
+                <h2 class="vd-detail-pertanyaan" style="font-size: 20px; margin-bottom: 12px; {{ $faq->status === 'inactive' ? 'color: #6B5B5D; text-decoration: line-through;' : '' }}">
                     {{ $faq->pertanyaan }}
                 </h2>
 
                 {{-- Kategori --}}
                 @if($faq->categories->count() > 0)
-                    <div class="vd-detail-categories" style="padding-bottom: 18px; border-bottom: 1px solid #EDF2F0; margin-bottom: 18px;">
+                    <div class="vd-detail-categories" style="padding-bottom: 18px; border-bottom: 1px solid #F3ECEC; margin-bottom: 18px;">
                         @foreach($faq->categories as $cat)
                             <span class="category-pill">{{ $cat->nama }}</span>
                         @endforeach
@@ -144,8 +144,8 @@
 
                 {{-- Media Video (Jika ada) --}}
                 @if($faq->link_video)
-                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #EDF2F0;">
-                        <div style="font-size: 11.5px; font-weight: 700; color: #8FA19D; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #F3ECEC;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: #948486; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
                             VIDEO PANDUAN / TUTORIAL
                         </div>
                         @if($faq->youtube_embed_url)
@@ -154,7 +154,7 @@
                             </div>
                         @else
                             <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                <span style="font-size: 13px; color: #16322F; word-break: break-all;">{{ $faq->link_video }}</span>
+                                <span style="font-size: 13px; color: #1F1415; word-break: break-all;">{{ $faq->link_video }}</span>
                                 <a href="{{ $faq->link_video }}" target="_blank" rel="noopener noreferrer" style="font-size: 12.5px; font-weight: 600; color: #DC2626; text-decoration: none; white-space: nowrap;">
                                     Buka Video &#8599;
                                 </a>
@@ -165,20 +165,20 @@
 
                 {{-- Berkas Lampiran (Jika ada) --}}
                 @if($faq->file_lampiran)
-                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #EDF2F0;">
-                        <div style="font-size: 11.5px; font-weight: 700; color: #8FA19D; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #F3ECEC;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: #948486; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
                             BERKAS LAMPIRAN
                         </div>
-                        <div style="background: #FFFFFF; border: 1px solid #C7E6DC; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                        <div style="background: #FFFFFF; border: 1px solid #F1CFD3; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                             <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
-                                <span style="width: 32px; height: 32px; border-radius: 6px; background: #E8F5F1; color: #0D7F74; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-transform: uppercase; flex-shrink: 0;">
+                                <span style="width: 32px; height: 32px; border-radius: 6px; background: #FDF2F3; color: #8B0D18; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-transform: uppercase; flex-shrink: 0;">
                                     {{ $faq->file_extension ?: 'FILE' }}
                                 </span>
-                                <span style="font-size: 13px; font-weight: 600; color: #16322F; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $faq->file_nama_asli ?: basename($faq->file_lampiran) }}">
+                                <span style="font-size: 13px; font-weight: 600; color: #1F1415; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $faq->file_nama_asli ?: basename($faq->file_lampiran) }}">
                                     {{ $faq->file_nama_asli ?: basename($faq->file_lampiran) }}
                                 </span>
                             </div>
-                            <a href="{{ route('faqs.download', $faq->id) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: #0D7F74; color: #FFFFFF; font-size: 12px; font-weight: 600; border-radius: 6px; text-decoration: none; white-space: nowrap;">
+                            <a href="{{ route('faqs.download', $faq->id) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: #8B0D18; color: #FFFFFF; font-size: 12px; font-weight: 600; border-radius: 6px; text-decoration: none; white-space: nowrap;">
                                 Unduh
                             </a>
                         </div>
@@ -194,9 +194,9 @@
             <div class="vd-action-card">
                 <div style="margin-bottom: 12px;">
                     @if($faq->status === 'published')
-                        <span style="background: #E8F5F1; color: #0D7F74; padding: 4px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">&bull; Disetujui</span>
+                        <span style="background: #FDF2F3; color: #8B0D18; padding: 4px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">&bull; Disetujui</span>
                     @elseif($faq->status === 'inactive')
-                        <span style="background: #F0F4F2; color: #4D6661; padding: 4px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">&bull; Nonaktif</span>
+                        <span style="background: #F6F0F0; color: #6B5B5D; padding: 4px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">&bull; Nonaktif</span>
                     @elseif($faq->status === 'rejected')
                         <span style="background: #FDF2F2; color: #C93535; padding: 4px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">&bull; Perlu revisi</span>
                     @elseif($faq->status === 'pending')
@@ -207,30 +207,30 @@
                 </div>
 
                 @if($faq->status === 'published')
-                    <div style="font-size: 16px; font-weight: 700; color: #16322F; margin-bottom: 6px;">FAQ telah terbit</div>
+                    <div style="font-size: 16px; font-weight: 700; color: #1F1415; margin-bottom: 6px;">FAQ telah terbit</div>
                     <p class="vd-action-card-desc">
                         Informasi yang sudah terbit tidak dapat diedit atau dihapus. Jika ada pembaruan, nonaktifkan FAQ ini lalu buat pengajuan baru.
                     </p>
                 @elseif($faq->status === 'inactive')
-                    <div style="font-size: 16px; font-weight: 700; color: #16322F; margin-bottom: 6px;">FAQ telah diproses</div>
+                    <div style="font-size: 16px; font-weight: 700; color: #1F1415; margin-bottom: 6px;">FAQ telah diproses</div>
                     <p class="vd-action-card-desc">
                         Informasi ini sudah berstatus nonaktif dan tidak tampil di halaman mahasiswa.
                     </p>
                 @else
-                    <div style="font-size: 16px; font-weight: 700; color: #16322F; margin-bottom: 6px;">Pengelolaan draf</div>
+                    <div style="font-size: 16px; font-weight: 700; color: #1F1415; margin-bottom: 6px;">Pengelolaan draf</div>
                     <p class="vd-action-card-desc">
                         Informasi ini belum terbit dan masih dapat diperbarui atau dihapus.
                     </p>
                 @endif
 
-                <div style="font-size: 12.5px; border-top: 1px solid #EDF2F0; padding-top: 10px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px;">
+                <div style="font-size: 12.5px; border-top: 1px solid #F3ECEC; padding-top: 10px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px;">
                     <div style="display: flex; justify-content: space-between;">
-                        <span style="color: #647874;">Dibuat oleh</span>
-                        <strong style="color: #16322F;">{{ $faq->user?->name ?? '-' }}</strong>
+                        <span style="color: #6B5B5D;">Dibuat oleh</span>
+                        <strong style="color: #1F1415;">{{ $faq->user?->name ?? '-' }}</strong>
                     </div>
                     <div style="display: flex; justify-content: space-between;">
-                        <span style="color: #647874;">Tanggal dibuat</span>
-                        <strong style="color: #16322F;">{{ $faq->created_at->format('d M Y') }}</strong>
+                        <span style="color: #6B5B5D;">Tanggal dibuat</span>
+                        <strong style="color: #1F1415;">{{ $faq->created_at->format('d M Y') }}</strong>
                     </div>
                     @if($faq->status === 'inactive' && $faq->deactivated_at)
                         <div style="display: flex; justify-content: space-between;">
@@ -238,8 +238,8 @@
                             <strong style="color: #C93535;">{{ $faq->deactivatedByUser?->name ?? '-' }}</strong>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #647874;">Dinonaktifkan</span>
-                            <strong style="color: #16322F;">{{ $faq->deactivated_at->format('d M Y, H:i') }}</strong>
+                            <span style="color: #6B5B5D;">Dinonaktifkan</span>
+                            <strong style="color: #1F1415;">{{ $faq->deactivated_at->format('d M Y, H:i') }}</strong>
                         </div>
                     @endif
                 </div>
@@ -300,18 +300,18 @@
             @if($faq->reviews->count() > 0)
                 <div class="vd-action-card">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
-                        <span style="font-size: 15px; font-weight: 700; color: #16322F;">Riwayat review</span>
-                        <span style="background: #E8F5F1; color: #0D7F74; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 9999px;">
+                        <span style="font-size: 15px; font-weight: 700; color: #1F1415;">Riwayat review</span>
+                        <span style="background: #FDF2F3; color: #8B0D18; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 9999px;">
                             {{ $faq->reviews->count() }}
                         </span>
                     </div>
 
                     <div style="display: flex; flex-direction: column; gap: 14px;">
                         @foreach($faq->reviews->sortByDesc('created_at') as $review)
-                            <div style="padding-bottom: 14px; border-bottom: 1px solid #EDF2F0;">
+                            <div style="padding-bottom: 14px; border-bottom: 1px solid #F3ECEC;">
                                 <div style="margin-bottom: 6px;">
                                     @if($review->keputusan === 'approved')
-                                        <span style="background: #E8F5F1; color: #0D7F74; padding: 3px 9px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">
+                                        <span style="background: #FDF2F3; color: #8B0D18; padding: 3px 9px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">
                                             &#10003; Disetujui
                                         </span>
                                     @elseif($review->keputusan === 'revision')
@@ -324,16 +324,16 @@
                                         </span>
                                     @endif
                                 </div>
-                                <div style="font-size: 13px; font-weight: 600; color: #16322F;">
+                                <div style="font-size: 13px; font-weight: 600; color: #1F1415;">
                                     oleh {{ $review->user?->name ?? 'Validator' }}
                                 </div>
-                                <div style="font-size: 11.5px; color: #8FA19D; margin-top: 2px;">
+                                <div style="font-size: 11.5px; color: #948486; margin-top: 2px;">
                                     {{ $review->created_at->format('d M Y, H:i') }}
                                 </div>
 
                                 @if($review->catatan)
-                                    <div style="margin-top: 8px; padding: 10px 12px; background: #F6F8F7; border-radius: 8px; font-size: 12.5px; color: #3D524E;">
-                                        <div style="font-size: 11px; color: #8FA19D; margin-bottom: 2px;">
+                                    <div style="margin-top: 8px; padding: 10px 12px; background: #FAF8F7; border-radius: 8px; font-size: 12.5px; color: #3E2F30;">
+                                        <div style="font-size: 11px; color: #948486; margin-bottom: 2px;">
                                             {{ $review->keputusan === 'revision' ? 'Deskripsi Revisi' : 'Catatan' }}
                                         </div>
                                         <div>{{ $review->catatan }}</div>

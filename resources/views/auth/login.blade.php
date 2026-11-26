@@ -6,18 +6,18 @@
     <title>Login - SKMS</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
-<body class="login-wrapper" style="background-color: #F6F8F7;">
+<body class="login-wrapper" style="background-color: #FAF8F7;">
 
-    <div class="login-card" style="border: 1px solid #E2E9E6;">
+    <div class="login-card" style="border: 1px solid #ECE4E5;">
         <!-- Logo & Header (SKMK Dual-Tone Book Logo) -->
         <div class="login-logo">
             <svg width="52" height="52" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 14px;">
-                <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#0D7F74"/>
-                <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#8ED8C3"/>
+                <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#8B0D18"/>
+                <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#E5A032"/>
             </svg>
-            <h1 style="color: #16322F; font-size: 24px;">SKMS</h1>
-            <p style="color: #0D7F74; font-weight: 600; font-size: 13px; margin-bottom: 4px;">Student Knowledge Management System</p>
-            <p style="font-size: 13px; color: #647874;">Masuk ke ruang kerja akun Anda</p>
+            <h1 style="color: #1F1415; font-size: 24px;">SKMS</h1>
+            <p style="color: #8B0D18; font-weight: 600; font-size: 13px; margin-bottom: 4px;">Student Knowledge Management System</p>
+            <p style="font-size: 13px; color: #6B5B5D;">Masuk ke ruang kerja akun Anda</p>
         </div>
 
         <!-- Alert Notifikasi -->

@@ -15,7 +15,7 @@
             <p class="skmk-page-subtitle">Deteksi dan analisis kata kunci pencarian mahasiswa yang belum terjawab atau belum memiliki FAQ relevan di sistem.</p>
         </div>
         <div style="display: flex; gap: 10px; align-items: center;">
-            <a href="{{ route('analytics.knowledge_gap.export', request()->query()) }}" class="btn-secondary" style="font-weight: 600; color: #16322F; background: #FFFFFF; border: 1px solid var(--border-color); display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; text-decoration: none;" title="Ekspor laporan ke format CSV">
+            <a href="{{ route('analytics.knowledge_gap.export', request()->query()) }}" class="btn-secondary" style="font-weight: 600; color: #1F1415; background: #FFFFFF; border: 1px solid var(--border-color); display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; text-decoration: none;" title="Ekspor laporan ke format CSV">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>
@@ -44,10 +44,10 @@
                 <span class="badge badge-gray" style="font-size: 11px;">Semua Sesi</span>
             </div>
             <div>
-                <div style="font-size: 30px; font-weight: 800; color: #16322F; line-height: 1.1; margin-bottom: 6px;">
+                <div style="font-size: 30px; font-weight: 800; color: #1F1415; line-height: 1.1; margin-bottom: 6px;">
                     {{ number_format($metrics['total_searches']) }}
                 </div>
-                <div style="font-size: 13.5px; font-weight: 600; color: #16322F;">Total Pencarian Mahasiswa</div>
+                <div style="font-size: 13.5px; font-weight: 600; color: #1F1415;">Total Pencarian Mahasiswa</div>
             </div>
         </div>
 
@@ -69,7 +69,7 @@
                 <div style="font-size: 30px; font-weight: 800; color: #C93535; line-height: 1.1; margin-bottom: 6px;">
                     {{ number_format($metrics['unanswered_searches']) }}
                 </div>
-                <div style="font-size: 13.5px; font-weight: 600; color: #16322F;">Pencarian Tanpa FAQ Relevan</div>
+                <div style="font-size: 13.5px; font-weight: 600; color: #1F1415;">Pencarian Tanpa FAQ Relevan</div>
             </div>
         </div>
 
@@ -88,7 +88,7 @@
                 <div style="font-size: 30px; font-weight: 800; color: #B4690E; line-height: 1.1; margin-bottom: 6px;">
                     {{ number_format($metrics['unanswered_keywords_count']) }}
                 </div>
-                <div style="font-size: 13.5px; font-weight: 600; color: #16322F;">Kata Kunci Belum Memiliki FAQ</div>
+                <div style="font-size: 13.5px; font-weight: 600; color: #1F1415;">Kata Kunci Belum Memiliki FAQ</div>
             </div>
         </div>
 
@@ -106,10 +106,10 @@
                 </span>
             </div>
             <div>
-                <div style="font-size: 20px; font-weight: 800; color: #16322F; line-height: 1.2; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $metrics['top_unanswered_keyword'] }}">
+                <div style="font-size: 20px; font-weight: 800; color: #1F1415; line-height: 1.2; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $metrics['top_unanswered_keyword'] }}">
                     &ldquo;{{ $metrics['top_unanswered_keyword'] }}&rdquo;
                 </div>
-                <div style="font-size: 13.5px; font-weight: 600; color: #16322F;">Kata Kunci Terbanyak Belum Terjawab</div>
+                <div style="font-size: 13.5px; font-weight: 600; color: #1F1415;">Kata Kunci Terbanyak Belum Terjawab</div>
             </div>
         </div>
     </div>
@@ -118,8 +118,8 @@
     <div style="background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 24px; margin-bottom: 26px; box-shadow: var(--shadow-card);">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
             <div>
-                <h2 style="font-size: 16px; font-weight: 700; color: #16322F; margin: 0; display: flex; align-items: center; gap: 8px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D7F74" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <h2 style="font-size: 16px; font-weight: 700; color: #1F1415; margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B0D18" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="20" x2="18" y2="10"></line>
                         <line x1="12" y1="20" x2="12" y2="4"></line>
                         <line x1="6" y1="20" x2="6" y2="14"></line>
@@ -143,7 +143,7 @@
 
             <!-- Fallback Pure CSS Horizontal Bars untuk visual responsif -->
             <div class="chart-bars-list" style="margin-top: 18px; border-top: 1px solid var(--border-subtle); padding-top: 18px;">
-                <div style="font-size: 12px; font-weight: 700; color: #647874; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                <div style="font-size: 12px; font-weight: 700; color: #6B5B5D; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
                     Rincian Kata Kunci Knowledge Gap Terbanyak:
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -155,7 +155,7 @@
                             $barWidth = max(5, min(100, round(($topItem['total_searches'] / $maxChartVal) * 100)));
                         @endphp
                         <div style="display: grid; grid-template-columns: minmax(180px, 260px) 1fr 80px; align-items: center; gap: 14px;">
-                            <div style="font-size: 13px; font-weight: 600; color: #16322F; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $topItem['display_keyword'] }}">
+                            <div style="font-size: 13px; font-weight: 600; color: #1F1415; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $topItem['display_keyword'] }}">
                                 {{ $topItem['display_keyword'] }}
                             </div>
                             <div style="background: #F1F5F4; border-radius: 6px; height: 18px; width: 100%; overflow: hidden; position: relative;">
@@ -169,14 +169,14 @@
                 </div>
             </div>
         @else
-            <div style="text-align: center; padding: 48px 20px; background: #FDFBF7; border: 1px dashed #E2E9E6; border-radius: 10px;">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#8ED8C3" stroke-width="1.8" style="margin-bottom: 8px;">
+            <div style="text-align: center; padding: 48px 20px; background: #FDFBF7; border: 1px dashed #ECE4E5; border-radius: 10px;">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#E5A032" stroke-width="1.8" style="margin-bottom: 8px;">
                     <circle cx="12" cy="12" r="10"></circle>
                     <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
                     <line x1="9" y1="9" x2="9.01" y2="9"></line>
                     <line x1="15" y1="9" x2="15.01" y2="9"></line>
                 </svg>
-                <div style="font-size: 14px; font-weight: 700; color: #16322F; margin-bottom: 4px;">Tidak Ada Knowledge Gap Aktif</div>
+                <div style="font-size: 14px; font-weight: 700; color: #1F1415; margin-bottom: 4px;">Tidak Ada Knowledge Gap Aktif</div>
                 <div style="font-size: 12.5px; color: var(--text-muted); max-width: 440px; margin: 0 auto;">
                     Luar biasa! Seluruh riwayat pencarian mahasiswa pada rentang waktu ini telah memiliki FAQ yang relevan di sistem.
                 </div>
@@ -190,12 +190,12 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: flex-end;">
                 <!-- Pencarian Kata Kunci -->
                 <div style="grid-column: span 2;">
-                    <label style="display: block; font-size: 12px; font-weight: 600; color: #16322F; margin-bottom: 6px;">
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: #1F1415; margin-bottom: 6px;">
                         Pencarian Kata Kunci
                     </label>
                     <div style="position: relative;">
                         <input type="text" name="search" value="{{ $filters['search'] }}" placeholder="Ketik kata kunci pencarian..." class="form-control" style="width: 100%; padding-left: 36px; height: 38px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FA19D" stroke-width="2" style="position: absolute; left: 12px; top: 11px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#948486" stroke-width="2" style="position: absolute; left: 12px; top: 11px;">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
@@ -204,7 +204,7 @@
 
                 <!-- Filter Status -->
                 <div>
-                    <label style="display: block; font-size: 12px; font-weight: 600; color: #16322F; margin-bottom: 6px;">
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: #1F1415; margin-bottom: 6px;">
                         Status Keterjawaban
                     </label>
                     <select name="status" class="form-control select-filter" style="width: 100%; height: 38px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; background-color: #FFFFFF;">
@@ -216,7 +216,7 @@
 
                 <!-- Filter Prioritas -->
                 <div>
-                    <label style="display: block; font-size: 12px; font-weight: 600; color: #16322F; margin-bottom: 6px;">
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: #1F1415; margin-bottom: 6px;">
                         Tingkat Prioritas
                     </label>
                     <select name="priority" class="form-control select-filter" style="width: 100%; height: 38px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; background-color: #FFFFFF;">
@@ -229,7 +229,7 @@
 
                 <!-- Filter Tanggal Mulai -->
                 <div>
-                    <label style="display: block; font-size: 12px; font-weight: 600; color: #16322F; margin-bottom: 6px;">
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: #1F1415; margin-bottom: 6px;">
                         Dari Tanggal
                     </label>
                     <input type="date" name="start_date" value="{{ $filters['start_date'] }}" class="form-control" style="width: 100%; height: 38px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px;">
@@ -237,7 +237,7 @@
 
                 <!-- Filter Tanggal Selesai -->
                 <div>
-                    <label style="display: block; font-size: 12px; font-weight: 600; color: #16322F; margin-bottom: 6px;">
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: #1F1415; margin-bottom: 6px;">
                         Sampai Tanggal
                     </label>
                     <input type="date" name="end_date" value="{{ $filters['end_date'] }}" class="form-control" style="width: 100%; height: 38px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px;">
@@ -245,7 +245,7 @@
 
                 <!-- Pengurutan -->
                 <div>
-                    <label style="display: block; font-size: 12px; font-weight: 600; color: #16322F; margin-bottom: 6px;">
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: #1F1415; margin-bottom: 6px;">
                         Urutkan
                     </label>
                     <select name="sort" class="form-control select-filter" style="width: 100%; height: 38px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; background-color: #FFFFFF;">
@@ -278,7 +278,7 @@
         <!-- Table Top Header Info -->
         <div style="padding: 18px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <h3 style="font-size: 15px; font-weight: 700; color: #16322F; margin: 0;">
+                <h3 style="font-size: 15px; font-weight: 700; color: #1F1415; margin: 0;">
                     Tabel Analitik Kata Kunci
                 </h3>
                 <span class="badge badge-indigo" style="font-size: 11.5px;">
@@ -314,20 +314,20 @@
                             <!-- Kata Kunci & Variasi -->
                             <td>
                                 <div style="display: flex; flex-direction: column; gap: 4px;">
-                                    <div style="font-weight: 700; font-size: 14.5px; color: #16322F;">
+                                    <div style="font-weight: 700; font-size: 14.5px; color: #1F1415;">
                                         {{ $item['display_keyword'] }}
                                     </div>
                                     @if(count($item['keyword_variants']) > 1)
                                         <div style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                                             <span style="font-weight: 600;">Variasi diketik:</span>
                                             @foreach($item['keyword_variants'] as $variant => $vCount)
-                                                <span style="background: #F1F5F4; padding: 2px 7px; border-radius: 4px; border: 1px solid #E2E9E6; font-size: 11px;">
+                                                <span style="background: #F1F5F4; padding: 2px 7px; border-radius: 4px; border: 1px solid #ECE4E5; font-size: 11px;">
                                                     &ldquo;{{ $variant }}&rdquo; ({{ $vCount }}x)
                                                 </span>
                                             @endforeach
                                         </div>
                                     @endif
-                                    <div style="font-size: 11px; color: #8FA19D;">
+                                    <div style="font-size: 11px; color: #948486;">
                                         Token Dasar: <code>{{ $item['cluster_key'] }}</code>
                                     </div>
                                 </div>
@@ -343,7 +343,7 @@
                             <!-- Tanggal Terakhir -->
                             <td>
                                 @if($item['last_searched_at'])
-                                    <div style="font-weight: 600; font-size: 13px; color: #16322F;">
+                                    <div style="font-weight: 600; font-size: 13px; color: #1F1415;">
                                         {{ $item['last_searched_at']->translatedFormat('d M Y') }}
                                     </div>
                                     <div style="font-size: 11.5px; color: var(--text-muted);">
@@ -368,11 +368,11 @@
                                         Relevan
                                     </span>
                                     @if($item['matched_faq'])
-                                        <div style="font-size: 11.5px; color: #0D7F74; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px;" title="{{ $item['matched_faq']->pertanyaan }}">
+                                        <div style="font-size: 11.5px; color: #8B0D18; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px;" title="{{ $item['matched_faq']->pertanyaan }}">
                                             &bull; FAQ Terdekat: &ldquo;{{ $item['matched_faq']->pertanyaan }}&rdquo; ({{ $item['similarity_percentage'] }})
                                         </div>
                                     @else
-                                        <div style="font-size: 11.5px; color: #0D7F74; margin-top: 4px;">
+                                        <div style="font-size: 11.5px; color: #8B0D18; margin-top: 4px;">
                                             &bull; Kemiripan: {{ $item['similarity_percentage'] }} (&ge; 20%)
                                         </div>
                                     @endif
@@ -405,7 +405,7 @@
                                     </a>
                                 @else
                                     @if($item['matched_faq'])
-                                        <a href="{{ route('faqs.show', $item['matched_faq']->id) }}" class="btn-secondary" style="padding: 6px 10px; font-size: 12px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--border-color); background: #FFFFFF; color: #16322F;" title="Lihat FAQ terkait">
+                                        <a href="{{ route('faqs.show', $item['matched_faq']->id) }}" class="btn-secondary" style="padding: 6px 10px; font-size: 12px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--border-color); background: #FFFFFF; color: #1F1415;" title="Lihat FAQ terkait">
                                             <span>Lihat FAQ</span>
                                             <span>&rarr;</span>
                                         </a>
@@ -419,11 +419,11 @@
                         <tr>
                             <td colspan="7" style="text-align: center; padding: 48px 20px; color: var(--text-muted);">
                                 <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
-                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#8FA19D" stroke-width="1.6">
+                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#948486" stroke-width="1.6">
                                         <circle cx="11" cy="11" r="8"></circle>
                                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                     </svg>
-                                    <div style="font-size: 14px; font-weight: 600; color: #16322F;">Tidak Ada Data Kata Kunci</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #1F1415;">Tidak Ada Data Kata Kunci</div>
                                     <div style="font-size: 12.5px; color: var(--text-muted); max-width: 400px;">
                                         Tidak ditemukan riwayat pencarian yang sesuai dengan kriteria filter yang Anda tentukan. Silakan ubah filter atau tanggal pencarian.
                                     </div>
@@ -447,23 +447,23 @@
 
             <div style="display: flex; align-items: center; gap: 6px;">
                 @if($clusters->onFirstPage())
-                    <span class="page-nav disabled" style="min-width: 28px; height: 28px; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #E2E9E6; color: #CBD5E1; cursor: not-allowed;">&lsaquo;</span>
+                    <span class="page-nav disabled" style="min-width: 28px; height: 28px; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #ECE4E5; color: #CBD5E1; cursor: not-allowed;">&lsaquo;</span>
                 @else
-                    <a href="{{ $clusters->previousPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #647874; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #E2E9E6; text-decoration: none;">&lsaquo;</a>
+                    <a href="{{ $clusters->previousPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #6B5B5D; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #ECE4E5; text-decoration: none;">&lsaquo;</a>
                 @endif
 
                 @foreach(range(1, max(1, $clusters->lastPage())) as $page)
                     @if($page == $clusters->currentPage())
-                        <span class="page-number active" style="min-width: 28px; height: 28px; font-size: 12.5px; background: #0D7F74; color: #FFFFFF; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px;">{{ $page }}</span>
+                        <span class="page-number active" style="min-width: 28px; height: 28px; font-size: 12.5px; background: #8B0D18; color: #FFFFFF; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px;">{{ $page }}</span>
                     @else
-                        <a href="{{ $clusters->url($page) }}" class="page-number" style="min-width: 28px; height: 28px; font-size: 12.5px; color: #647874; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #E2E9E6; text-decoration: none;">{{ $page }}</a>
+                        <a href="{{ $clusters->url($page) }}" class="page-number" style="min-width: 28px; height: 28px; font-size: 12.5px; color: #6B5B5D; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #ECE4E5; text-decoration: none;">{{ $page }}</a>
                     @endif
                 @endforeach
 
                 @if($clusters->hasMorePages())
-                    <a href="{{ $clusters->nextPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #647874; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #E2E9E6; text-decoration: none;">&rsaquo;</a>
+                    <a href="{{ $clusters->nextPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #6B5B5D; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #ECE4E5; text-decoration: none;">&rsaquo;</a>
                 @else
-                    <span class="page-nav disabled" style="min-width: 28px; height: 28px; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #E2E9E6; color: #CBD5E1; cursor: not-allowed;">&rsaquo;</span>
+                    <span class="page-nav disabled" style="min-width: 28px; height: 28px; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #ECE4E5; color: #CBD5E1; cursor: not-allowed;">&rsaquo;</span>
                 @endif
             </div>
         </div>
@@ -506,9 +506,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     display: false
                 },
                 tooltip: {
-                    backgroundColor: '#16322F',
+                    backgroundColor: '#1F1415',
                     titleColor: '#FFFFFF',
-                    bodyColor: '#8ED8C3',
+                    bodyColor: '#E5A032',
                     padding: 10,
                     cornerRadius: 8,
                     callbacks: {
@@ -524,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         display: false
                     },
                     ticks: {
-                        color: '#647874',
+                        color: '#6B5B5D',
                         font: {
                             family: 'Inter, sans-serif',
                             size: 12
@@ -535,14 +535,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     beginAtZero: true,
                     ticks: {
                         stepSize: 1,
-                        color: '#647874',
+                        color: '#6B5B5D',
                         font: {
                             family: 'Inter, sans-serif',
                             size: 12
                         }
                     },
                     grid: {
-                        color: '#EDF2F0'
+                        color: '#F3ECEC'
                     }
                 }
             }

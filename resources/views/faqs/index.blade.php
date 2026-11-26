@@ -19,7 +19,7 @@
         </div>
         <div>
             @if(Auth::check() && Auth::user()->role === 'validator')
-                <a href="{{ route('validator.antrian') }}" class="btn-secondary" style="font-weight: 600; color: #16322F;">
+                <a href="{{ route('validator.antrian') }}" class="btn-secondary" style="font-weight: 600; color: #1F1415;">
                     <span>Lihat antrean</span>
                     <span>&rarr;</span>
                 </a>
@@ -57,12 +57,12 @@
         <!-- Card Top Header -->
         <div style="padding: 20px 24px 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <h2 style="font-size: 16px; font-weight: 700; color: #16322F; margin: 0;">Daftar informasi</h2>
-                <span style="background: #E8F5F1; color: #0D7F74; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 9999px;">
+                <h2 style="font-size: 16px; font-weight: 700; color: #1F1415; margin: 0;">Daftar informasi</h2>
+                <span style="background: #FDF2F3; color: #8B0D18; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 9999px;">
                     {{ $faqs->total() }} informasi
                 </span>
             </div>
-            <div style="font-size: 12.5px; color: #8FA19D;">
+            <div style="font-size: 12.5px; color: #948486;">
                 @if($lastUpdatedFaq)
                     Terakhir diperbarui {{ $lastUpdatedFaq->updated_at->format('d M Y') }}
                 @endif
@@ -75,7 +75,7 @@
                 <input type="hidden" name="per_page" id="perPageInput" value="{{ $perPage ?? 10 }}">
 
                 <div class="faq-search-wrapper" style="flex: 1; min-width: 240px;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FA19D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#948486" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
@@ -97,12 +97,12 @@
                             </option>
                         @endforeach
                     </select>
-                    <svg class="chevron-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#647874" stroke-width="2">
+                    <svg class="chevron-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6B5B5D" stroke-width="2">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </div>
 
-                <a href="{{ route('faqs.index') }}" class="btn-secondary" style="padding: 10px 16px; font-size: 13px; font-weight: 600; color: #16322F;">
+                <a href="{{ route('faqs.index') }}" class="btn-secondary" style="padding: 10px 16px; font-size: 13px; font-weight: 600; color: #1F1415;">
                     Atur ulang
                 </a>
             </form>
@@ -112,18 +112,18 @@
         <table class="faq-custom-table">
             <thead>
                 <tr>
-                    <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 24px;">PERTANYAAN</th>
-                    <th style="width: 240px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 20px;">KATEGORI</th>
-                    <th style="width: 110px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 16px; text-align: center;">DILIHAT</th>
-                    <th style="width: 115px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 16px; text-align: center;">MEMBANTU</th>
-                    <th style="width: 100px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 24px; text-align: right;">AKSI</th>
+                    <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #6B5B5D; padding: 12px 24px;">PERTANYAAN</th>
+                    <th style="width: 240px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #6B5B5D; padding: 12px 20px;">KATEGORI</th>
+                    <th style="width: 110px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #6B5B5D; padding: 12px 16px; text-align: center;">DILIHAT</th>
+                    <th style="width: 115px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #6B5B5D; padding: 12px 16px; text-align: center;">MEMBANTU</th>
+                    <th style="width: 100px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #6B5B5D; padding: 12px 24px; text-align: right;">AKSI</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($faqs as $item)
                     <tr>
                         <td class="col-pertanyaan" style="padding: 16px 24px;">
-                            <a href="{{ route('faqs.show', ['faq' => $item->id, 'from' => 'index']) }}" class="faq-title-text" style="text-decoration: none; font-weight: 600; color: #16322F;">
+                            <a href="{{ route('faqs.show', ['faq' => $item->id, 'from' => 'index']) }}" class="faq-title-text" style="text-decoration: none; font-weight: 600; color: #1F1415;">
                                 {{ Str::limit($item->pertanyaan, 110) }}
                             </a>
                         </td>
@@ -136,10 +136,10 @@
                                 @endforelse
                             </div>
                         </td>
-                        <td style="padding: 16px 16px; text-align: center; font-size: 13px; font-weight: 600; color: #3D524E; white-space: nowrap;">
+                        <td style="padding: 16px 16px; text-align: center; font-size: 13px; font-weight: 600; color: #3E2F30; white-space: nowrap;">
                             {{ number_format($item->views ?? 0) }}
                         </td>
-                        <td style="padding: 16px 16px; text-align: center; font-size: 13px; font-weight: 600; color: #0D7F74; white-space: nowrap;">
+                        <td style="padding: 16px 16px; text-align: center; font-size: 13px; font-weight: 600; color: #8B0D18; white-space: nowrap;">
                             {{ number_format($item->helpful ?? 0) }}
                         </td>
                         <td style="padding: 16px 24px; text-align: right; white-space: nowrap;">
@@ -151,7 +151,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" style="text-align: center; padding: 44px 24px; color: #8FA19D;">
+                        <td colspan="5" style="text-align: center; padding: 44px 24px; color: #948486;">
                             Tidak ada informasi ditemukan untuk kata kunci atau kategori yang dipilih.
                         </td>
                     </tr>
@@ -160,7 +160,7 @@
         </table>
 
         <!-- Card Footer: Summary & Pagination -->
-        <div style="padding: 14px 24px; border-top: 1px solid #EDF2F0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: #8FA19D;">
+        <div style="padding: 14px 24px; border-top: 1px solid #F3ECEC; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: #948486;">
             <div>
                 @if($faqs->total() > 0)
                     Menampilkan {{ $faqs->firstItem() }}–{{ $faqs->lastItem() }} dari {{ $faqs->total() }} informasi
@@ -173,7 +173,7 @@
                 @if($faqs->onFirstPage())
                     <span class="page-nav disabled" style="min-width: 28px; height: 28px; font-size: 14px;">&lsaquo;</span>
                 @else
-                    <a href="{{ $faqs->previousPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #647874;">&lsaquo;</a>
+                    <a href="{{ $faqs->previousPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #6B5B5D;">&lsaquo;</a>
                 @endif
 
                 @foreach(range(1, max(1, $faqs->lastPage())) as $page)
@@ -185,7 +185,7 @@
                 @endforeach
 
                 @if($faqs->hasMorePages())
-                    <a href="{{ $faqs->nextPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #647874;">&rsaquo;</a>
+                    <a href="{{ $faqs->nextPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #6B5B5D;">&rsaquo;</a>
                 @else
                     <span class="page-nav disabled" style="min-width: 28px; height: 28px; font-size: 14px;">&rsaquo;</span>
                 @endif

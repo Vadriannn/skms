@@ -6,13 +6,13 @@
 <div>
     <!-- Back Link & Title Header (Sesuai Gambar 4) -->
     <div style="margin-bottom: 20px;">
-        <a href="{{ route('validator.antrian') }}" style="display: inline-flex; align-items: center; gap: 6px; color: #0D7F74; font-size: 13px; font-weight: 600; text-decoration: none; margin-bottom: 10px;">
+        <a href="{{ route('validator.antrian') }}" style="display: inline-flex; align-items: center; gap: 6px; color: #8B0D18; font-size: 13px; font-weight: 600; text-decoration: none; margin-bottom: 10px;">
             <span>&larr;</span>
             <span>Kembali ke antrean</span>
         </a>
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
             <h1 class="skmk-page-main-title" style="margin: 0;">Detail informasi</h1>
-            <span style="background: #F0F4F2; color: #3D524E; border: 1px solid #E2E9E6; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 9999px;">
+            <span style="background: #F6F0F0; color: #3E2F30; border: 1px solid #ECE4E5; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 9999px;">
                 FAQ #{{ $faq->id }}
             </span>
         </div>
@@ -53,17 +53,17 @@
                     @if($simFaq)
                         <div style="background: #FFFFFF; border: 1px solid #F3DEC0; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;">
                             <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px;">
-                                <span style="font-size: 11px; font-weight: 700; color: #8FA19D; text-transform: uppercase; letter-spacing: 0.4px;">
+                                <span style="font-size: 11px; font-weight: 700; color: #948486; text-transform: uppercase; letter-spacing: 0.4px;">
                                     FAQ PEMBANDING #{{ $simFaq->id }}
                                 </span>
-                                <a href="{{ route('validator.faq.show', $simFaq->id) }}" style="font-size: 12.5px; font-weight: 600; color: #0D7F74; text-decoration: none;">
+                                <a href="{{ route('validator.faq.show', $simFaq->id) }}" style="font-size: 12.5px; font-weight: 600; color: #8B0D18; text-decoration: none;">
                                     Lihat pembanding &#8599;
                                 </a>
                             </div>
-                            <div style="font-weight: 700; color: #16322F; font-size: 14px; margin-bottom: 6px;">
+                            <div style="font-weight: 700; color: #1F1415; font-size: 14px; margin-bottom: 6px;">
                                 &ldquo;{{ $simFaq->pertanyaan }}&rdquo;
                             </div>
-                            <div style="font-size: 13px; color: #647874; line-height: 1.5;">
+                            <div style="font-size: 13px; color: #6B5B5D; line-height: 1.5;">
                                 {{ Str::limit(strip_tags($simFaq->jawaban), 180) }}
                             </div>
                         </div>
@@ -101,8 +101,8 @@
             {{-- 3. Kartu Konten FAQ (Sesuai Gambar 4) --}}
             <div class="vd-detail-card">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap;">
-                    <div style="font-size: 12.5px; color: #647874;">
-                        Diajukan oleh <strong style="color: #3D524E;">{{ $faq->user?->name ?? 'Tidak diketahui' }}</strong>
+                    <div style="font-size: 12.5px; color: #6B5B5D;">
+                        Diajukan oleh <strong style="color: #3E2F30;">{{ $faq->user?->name ?? 'Tidak diketahui' }}</strong>
                         &bull; {{ $faq->created_at->format('d F Y, H:i') }}
                     </div>
                     <div>
@@ -113,7 +113,7 @@
                         @elseif($faq->status === 'rejected')
                             <span class="status-pill status-rejected">Ditolak</span>
                         @elseif($faq->status === 'inactive')
-                            <span class="status-pill" style="background-color: #F0F4F2; color: #4D6661; border: 1px solid #E2E9E6;">Nonaktif</span>
+                            <span class="status-pill" style="background-color: #F6F0F0; color: #6B5B5D; border: 1px solid #ECE4E5;">Nonaktif</span>
                         @else
                             <span class="status-pill status-draft">Draft</span>
                         @endif
@@ -124,7 +124,7 @@
 
                 {{-- Kategori --}}
                 @if($faq->categories->count() > 0)
-                    <div class="vd-detail-categories" style="padding-bottom: 18px; border-bottom: 1px solid #EDF2F0; margin-bottom: 18px;">
+                    <div class="vd-detail-categories" style="padding-bottom: 18px; border-bottom: 1px solid #F3ECEC; margin-bottom: 18px;">
                         @foreach($faq->categories as $cat)
                             <span class="category-pill">{{ $cat->nama }}</span>
                         @endforeach
@@ -137,8 +137,8 @@
 
                 {{-- Media Video (Jika ada) --}}
                 @if($faq->link_video)
-                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #EDF2F0;">
-                        <div style="font-size: 11.5px; font-weight: 700; color: #8FA19D; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #F3ECEC;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: #948486; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
                             VIDEO PANDUAN / TUTORIAL
                         </div>
                         @if($faq->youtube_embed_url)
@@ -147,7 +147,7 @@
                             </div>
                         @else
                             <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                <span style="font-size: 13px; color: #16322F; word-break: break-all;">{{ $faq->link_video }}</span>
+                                <span style="font-size: 13px; color: #1F1415; word-break: break-all;">{{ $faq->link_video }}</span>
                                 <a href="{{ $faq->link_video }}" target="_blank" rel="noopener noreferrer" style="font-size: 12.5px; font-weight: 600; color: #DC2626; text-decoration: none; white-space: nowrap;">
                                     Buka Video &#8599;
                                 </a>
@@ -158,20 +158,20 @@
 
                 {{-- Berkas Lampiran (Jika ada) --}}
                 @if($faq->file_lampiran)
-                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #EDF2F0;">
-                        <div style="font-size: 11.5px; font-weight: 700; color: #8FA19D; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #F3ECEC;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: #948486; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
                             BERKAS LAMPIRAN
                         </div>
-                        <div style="background: #FFFFFF; border: 1px solid #C7E6DC; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                        <div style="background: #FFFFFF; border: 1px solid #F1CFD3; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                             <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
-                                <span style="width: 32px; height: 32px; border-radius: 6px; background: #E8F5F1; color: #0D7F74; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-transform: uppercase; flex-shrink: 0;">
+                                <span style="width: 32px; height: 32px; border-radius: 6px; background: #FDF2F3; color: #8B0D18; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-transform: uppercase; flex-shrink: 0;">
                                     {{ $faq->file_extension ?: 'FILE' }}
                                 </span>
-                                <span style="font-size: 13px; font-weight: 600; color: #16322F; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $faq->file_nama_asli ?: basename($faq->file_lampiran) }}">
+                                <span style="font-size: 13px; font-weight: 600; color: #1F1415; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $faq->file_nama_asli ?: basename($faq->file_lampiran) }}">
                                     {{ $faq->file_nama_asli ?: basename($faq->file_lampiran) }}
                                 </span>
                             </div>
-                            <a href="{{ route('faqs.download', $faq->id) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: #0D7F74; color: #FFFFFF; font-size: 12px; font-weight: 600; border-radius: 6px; text-decoration: none; white-space: nowrap;">
+                            <a href="{{ route('faqs.download', $faq->id) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: #8B0D18; color: #FFFFFF; font-size: 12px; font-weight: 600; border-radius: 6px; text-decoration: none; white-space: nowrap;">
                                 Unduh
                             </a>
                         </div>
@@ -190,9 +190,9 @@
 
             @if($faq->status === 'pending')
                 {{-- Form Setujui --}}
-                <div class="vd-action-card approve-card" style="border-top-color: #0D7F74;">
+                <div class="vd-action-card approve-card" style="border-top-color: #8B0D18;">
                     <div class="vd-action-card-title">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D7F74" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B0D18" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                         </svg>
@@ -205,7 +205,7 @@
                             <label class="form-label" for="approve_catatan">Catatan (opsional)</label>
                             <textarea id="approve_catatan" name="catatan" rows="2" class="form-control vd-textarea" placeholder="Tambahkan catatan persetujuan..."></textarea>
                         </div>
-                        <button type="button" class="btn-vd-approve" style="background: #0D7F74;" onclick="confirmAction('approve', {{ $faq->id }})">
+                        <button type="button" class="btn-vd-approve" style="background: #8B0D18;" onclick="confirmAction('approve', {{ $faq->id }})">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
@@ -303,27 +303,27 @@
                 <div class="vd-action-card">
                     <div style="margin-bottom: 12px;">
                         @if($faq->status === 'published')
-                            <span style="background: #E8F5F1; color: #0D7F74; padding: 4px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">&bull; Disetujui</span>
+                            <span style="background: #FDF2F3; color: #8B0D18; padding: 4px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">&bull; Disetujui</span>
                         @elseif($faq->status === 'inactive')
-                            <span style="background: #F0F4F2; color: #4D6661; padding: 4px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">&bull; Nonaktif</span>
+                            <span style="background: #F6F0F0; color: #6B5B5D; padding: 4px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">&bull; Nonaktif</span>
                         @elseif($faq->status === 'rejected')
                             <span style="background: #FDF2F2; color: #C93535; padding: 4px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">&bull; Ditolak (Tidak dapat direvisi)</span>
                         @endif
                     </div>
 
-                    <div style="font-size: 16px; font-weight: 700; color: #16322F; margin-bottom: 6px;">FAQ telah diproses</div>
+                    <div style="font-size: 16px; font-weight: 700; color: #1F1415; margin-bottom: 6px;">FAQ telah diproses</div>
                     <p class="vd-action-card-desc">
                         Informasi ini sudah berstatus <strong>{{ $faq->status === 'inactive' ? 'nonaktif' : ($faq->status === 'published' ? 'disetujui' : 'ditolak') }}</strong>. Keputusan validasi tidak dapat diubah melalui panel ini.
                     </p>
 
                     @if($faq->status === 'inactive' && $faq->deactivated_at)
-                        <div style="display: flex; justify-content: space-between; font-size: 12.5px; padding: 10px 0; border-top: 1px solid #EDF2F0; margin-bottom: 10px;">
-                            <span style="color: #647874;">Dinonaktifkan</span>
-                            <strong style="color: #16322F;">{{ $faq->deactivated_at->format('d M Y') }}</strong>
+                        <div style="display: flex; justify-content: space-between; font-size: 12.5px; padding: 10px 0; border-top: 1px solid #F3ECEC; margin-bottom: 10px;">
+                            <span style="color: #6B5B5D;">Dinonaktifkan</span>
+                            <strong style="color: #1F1415;">{{ $faq->deactivated_at->format('d M Y') }}</strong>
                         </div>
                     @endif
 
-                    <a href="{{ route('validator.antrian') }}" class="btn-secondary" style="font-size: 13px; font-weight: 600; color: #16322F;">
+                    <a href="{{ route('validator.antrian') }}" class="btn-secondary" style="font-size: 13px; font-weight: 600; color: #1F1415;">
                         Kembali ke antrean
                     </a>
                 </div>
@@ -333,18 +333,18 @@
             @if($faq->reviews->count() > 0)
                 <div class="vd-action-card">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
-                        <span style="font-size: 15px; font-weight: 700; color: #16322F;">Riwayat review</span>
-                        <span style="background: #E8F5F1; color: #0D7F74; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 9999px;">
+                        <span style="font-size: 15px; font-weight: 700; color: #1F1415;">Riwayat review</span>
+                        <span style="background: #FDF2F3; color: #8B0D18; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 9999px;">
                             {{ $faq->reviews->count() }}
                         </span>
                     </div>
 
                     <div style="display: flex; flex-direction: column; gap: 14px;">
                         @foreach($faq->reviews->sortByDesc('created_at') as $review)
-                            <div style="padding-bottom: 14px; border-bottom: 1px solid #EDF2F0;">
+                            <div style="padding-bottom: 14px; border-bottom: 1px solid #F3ECEC;">
                                 <div style="margin-bottom: 6px;">
                                     @if($review->keputusan === 'approved')
-                                        <span style="background: #E8F5F1; color: #0D7F74; padding: 3px 9px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">
+                                        <span style="background: #FDF2F3; color: #8B0D18; padding: 3px 9px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;">
                                             &#10003; Disetujui
                                         </span>
                                     @elseif($review->keputusan === 'revision')
@@ -357,16 +357,16 @@
                                         </span>
                                     @endif
                                 </div>
-                                <div style="font-size: 13px; font-weight: 600; color: #16322F;">
+                                <div style="font-size: 13px; font-weight: 600; color: #1F1415;">
                                     oleh {{ $review->user?->name ?? 'Validator' }}
                                 </div>
-                                <div style="font-size: 11.5px; color: #8FA19D; margin-top: 2px;">
+                                <div style="font-size: 11.5px; color: #948486; margin-top: 2px;">
                                     {{ $review->created_at->format('d M Y, H:i') }}
                                 </div>
 
                                 @if($review->catatan)
-                                    <div style="margin-top: 8px; padding: 10px 12px; background: #F6F8F7; border-radius: 8px; font-size: 12.5px; color: #3D524E;">
-                                        <div style="font-size: 11px; color: #8FA19D; margin-bottom: 2px;">
+                                    <div style="margin-top: 8px; padding: 10px 12px; background: #FAF8F7; border-radius: 8px; font-size: 12.5px; color: #3E2F30;">
+                                        <div style="font-size: 11px; color: #948486; margin-bottom: 2px;">
                                             {{ $review->keputusan === 'revision' ? 'Deskripsi Revisi' : 'Catatan' }}
                                         </div>
                                         <div>{{ $review->catatan }}</div>
@@ -419,7 +419,7 @@
             desc.textContent  = 'FAQ akan dipublikasikan dan dapat dilihat oleh semua pengguna sistem.';
             btn.textContent   = 'Ya, Setujui';
             btn.className     = 'btn-modal-submit';
-            btn.style.backgroundColor = '#0D7F74';
+            btn.style.backgroundColor = '#8B0D18';
         } else if (action === 'revision') {
             const catatan = document.getElementById('revision_catatan') ? document.getElementById('revision_catatan').value.trim() : '';
             if (!catatan || catatan.length < 5) {

@@ -29,11 +29,11 @@
     <!-- Mint Callout Banner (Sesuai Gambar 3) -->
     <div class="skmk-hero-banner" style="padding: 18px 24px;">
         <div>
-            <div style="font-size: 15px; font-weight: 700; color: #16322F; margin-bottom: 2px;">Mulai dari informasi yang paling membutuhkan Anda.</div>
-            <div style="font-size: 13px; color: #4D6661;">Periksa indikasi duplikasi dan pembaruan konten sebelum mengambil keputusan.</div>
+            <div style="font-size: 15px; font-weight: 700; color: #1F1415; margin-bottom: 2px;">Mulai dari informasi yang paling membutuhkan Anda.</div>
+            <div style="font-size: 13px; color: #6B5B5D;">Periksa indikasi duplikasi dan pembaruan konten sebelum mengambil keputusan.</div>
         </div>
         <div>
-            <a href="{{ route('validator.semua_faq') }}" class="btn-secondary" style="font-size: 12.5px; font-weight: 600; color: #16322F; padding: 8px 14px;">
+            <a href="{{ route('validator.semua_faq') }}" class="btn-secondary" style="font-size: 12.5px; font-weight: 600; color: #1F1415; padding: 8px 14px;">
                 <span>Riwayat validasi</span>
                 <span>&#8599;</span>
             </a>
@@ -44,21 +44,21 @@
     <div class="faq-table-container" style="padding: 0; overflow: visible;">
 
         <!-- Top Inline Tabs (Semua antrean, Pengajuan baru, Pembaruan informasi) -->
-        <div style="padding: 16px 24px 0 24px; border-bottom: 1px solid #EDF2F0; display: flex; align-items: center; gap: 22px; flex-wrap: wrap;">
+        <div style="padding: 16px 24px 0 24px; border-bottom: 1px solid #F3ECEC; display: flex; align-items: center; gap: 22px; flex-wrap: wrap;">
             <a href="{{ route('validator.antrian', array_merge(request()->except('type', 'page'), [])) }}"
-               style="padding-bottom: 12px; text-decoration: none; font-size: 13.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; border-bottom: 2px solid {{ $tabType === 'all' ? '#0D7F74' : 'transparent' }}; color: {{ $tabType === 'all' ? '#0D7F74' : '#647874' }};">
+               style="padding-bottom: 12px; text-decoration: none; font-size: 13.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; border-bottom: 2px solid {{ $tabType === 'all' ? '#8B0D18' : 'transparent' }}; color: {{ $tabType === 'all' ? '#8B0D18' : '#6B5B5D' }};">
                 <span>Semua antrean</span>
-                <span style="background: {{ $tabType === 'all' ? '#E8F5F1' : '#F0F4F2' }}; color: {{ $tabType === 'all' ? '#0D7F74' : '#647874' }}; font-size: 11.5px; padding: 1px 8px; border-radius: 9999px;">{{ $countAllPending }}</span>
+                <span style="background: {{ $tabType === 'all' ? '#FDF2F3' : '#F6F0F0' }}; color: {{ $tabType === 'all' ? '#8B0D18' : '#6B5B5D' }}; font-size: 11.5px; padding: 1px 8px; border-radius: 9999px;">{{ $countAllPending }}</span>
             </a>
             <a href="{{ route('validator.antrian', array_merge(request()->except('page'), ['type' => 'new'])) }}"
-               style="padding-bottom: 12px; text-decoration: none; font-size: 13.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; border-bottom: 2px solid {{ $tabType === 'new' ? '#0D7F74' : 'transparent' }}; color: {{ $tabType === 'new' ? '#0D7F74' : '#647874' }};">
+               style="padding-bottom: 12px; text-decoration: none; font-size: 13.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; border-bottom: 2px solid {{ $tabType === 'new' ? '#8B0D18' : 'transparent' }}; color: {{ $tabType === 'new' ? '#8B0D18' : '#6B5B5D' }};">
                 <span>Pengajuan baru</span>
-                <span style="background: #F0F4F2; color: #647874; font-size: 11.5px; padding: 1px 8px; border-radius: 9999px;">{{ $countNewPending }}</span>
+                <span style="background: #F6F0F0; color: #6B5B5D; font-size: 11.5px; padding: 1px 8px; border-radius: 9999px;">{{ $countNewPending }}</span>
             </a>
             <a href="{{ route('validator.antrian', array_merge(request()->except('page'), ['type' => 'update'])) }}"
-               style="padding-bottom: 12px; text-decoration: none; font-size: 13.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; border-bottom: 2px solid {{ $tabType === 'update' ? '#0D7F74' : 'transparent' }}; color: {{ $tabType === 'update' ? '#0D7F74' : '#647874' }};">
+               style="padding-bottom: 12px; text-decoration: none; font-size: 13.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; border-bottom: 2px solid {{ $tabType === 'update' ? '#8B0D18' : 'transparent' }}; color: {{ $tabType === 'update' ? '#8B0D18' : '#6B5B5D' }};">
                 <span>Pembaruan / revisi</span>
-                <span style="background: #F0F4F2; color: #647874; font-size: 11.5px; padding: 1px 8px; border-radius: 9999px;">{{ $countUpdatePending }}</span>
+                <span style="background: #F6F0F0; color: #6B5B5D; font-size: 11.5px; padding: 1px 8px; border-radius: 9999px;">{{ $countUpdatePending }}</span>
             </a>
         </div>
 
@@ -69,7 +69,7 @@
                     <input type="hidden" name="type" value="{{ request('type') }}">
                 @endif
                 <div class="faq-search-wrapper" style="flex: 1; min-width: 240px;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FA19D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#948486" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
@@ -89,7 +89,7 @@
                             </option>
                         @endforeach
                     </select>
-                    <svg class="chevron-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#647874" stroke-width="2">
+                    <svg class="chevron-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6B5B5D" stroke-width="2">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </div>
@@ -101,11 +101,11 @@
         <table class="faq-custom-table">
             <thead>
                 <tr>
-                    <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 24px;">PERTANYAAN</th>
-                    <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 20px;">KATEGORI</th>
-                    <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 20px;">PENGAJU</th>
-                    <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 20px;">PERHATIAN</th>
-                    <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #647874; padding: 12px 24px; text-align: right;">AKSI</th>
+                    <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #6B5B5D; padding: 12px 24px;">PERTANYAAN</th>
+                    <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #6B5B5D; padding: 12px 20px;">KATEGORI</th>
+                    <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #6B5B5D; padding: 12px 20px;">PENGAJU</th>
+                    <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #6B5B5D; padding: 12px 20px;">PERHATIAN</th>
+                    <th style="font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: #6B5B5D; padding: 12px 24px; text-align: right;">AKSI</th>
                 </tr>
             </thead>
             <tbody>
@@ -119,10 +119,10 @@
                 @forelse($filteredFaqs as $faq)
                     <tr>
                         <td class="col-pertanyaan" style="padding: 16px 24px;">
-                            <a href="{{ route('validator.faq.show', $faq->id) }}" class="validator-faq-link" style="font-weight: 600; font-size: 14px; color: #16322F; display: block; margin-bottom: 3px;">
+                            <a href="{{ route('validator.faq.show', $faq->id) }}" class="validator-faq-link" style="font-weight: 600; font-size: 14px; color: #1F1415; display: block; margin-bottom: 3px;">
                                 {{ Str::limit($faq->pertanyaan, 85) }}
                             </a>
-                            <div style="font-size: 11.5px; color: #8FA19D;">
+                            <div style="font-size: 11.5px; color: #948486;">
                                 FAQ #{{ $faq->id }}
                                 @if($faq->submission_type !== 'new')
                                     &bull; Pembaruan
@@ -139,7 +139,7 @@
                                 @endforelse
                             </div>
                         </td>
-                        <td style="padding: 16px 20px; font-size: 13px; color: #3D524E;">
+                        <td style="padding: 16px 20px; font-size: 13px; color: #3E2F30;">
                             {{ $faq->user?->name ?? '-' }}
                         </td>
                         <td style="padding: 16px 20px;">
@@ -164,7 +164,7 @@
                                         Revisi {{ $faq->reviews->where('keputusan', 'revision')->count() }}/2
                                     </span>
                                 @elseif(!$faq->latestDuplicateLog)
-                                    <span style="background-color: #F0F4F2; color: #4D6661; border: 1px solid #E2E9E6; font-size: 11.5px; padding: 3px 10px; border-radius: 6px; font-weight: 500;">
+                                    <span style="background-color: #F6F0F0; color: #6B5B5D; border: 1px solid #ECE4E5; font-size: 11.5px; padding: 3px 10px; border-radius: 6px; font-weight: 500;">
                                         Pengajuan baru
                                     </span>
                                 @endif
@@ -180,7 +180,7 @@
                 @empty
                     <tr>
                         <td colspan="5" class="validator-empty-row">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#8FA19D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#948486" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
                             </svg>
@@ -192,7 +192,7 @@
         </table>
 
         <!-- Footer Summary & Pagination -->
-        <div style="padding: 14px 24px; border-top: 1px solid #EDF2F0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: #8FA19D;">
+        <div style="padding: 14px 24px; border-top: 1px solid #F3ECEC; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: #948486;">
             <div>
                 @if($faqs->total() > 0)
                     Menampilkan {{ $faqs->firstItem() }}–{{ $faqs->lastItem() }} dari {{ $faqs->total() }} pengajuan
@@ -204,7 +204,7 @@
                 @if($faqs->onFirstPage())
                     <span class="page-nav disabled" style="min-width: 28px; height: 28px; font-size: 14px;">&lsaquo;</span>
                 @else
-                    <a href="{{ $faqs->previousPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #647874;">&lsaquo;</a>
+                    <a href="{{ $faqs->previousPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #6B5B5D;">&lsaquo;</a>
                 @endif
                 @foreach(range(1, max(1, $faqs->lastPage())) as $page)
                     @if($page == $faqs->currentPage())
@@ -214,7 +214,7 @@
                     @endif
                 @endforeach
                 @if($faqs->hasMorePages())
-                    <a href="{{ $faqs->nextPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #647874;">&rsaquo;</a>
+                    <a href="{{ $faqs->nextPageUrl() }}" class="page-nav" style="min-width: 28px; height: 28px; font-size: 14px; color: #6B5B5D;">&rsaquo;</a>
                 @else
                     <span class="page-nav disabled" style="min-width: 28px; height: 28px; font-size: 14px;">&rsaquo;</span>
                 @endif

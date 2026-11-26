@@ -8,17 +8,17 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         :root {
-            --skms-teal: #0D7F74;
-            --skms-teal-hover: #0A665D;
-            --skms-mint: #8ED8C3;
-            --skms-mint-soft: #E6F4EF;
-            --skms-mint-card: #E8F5F1;
-            --skms-mint-border: #C7E6DC;
-            --skms-forest: #16322F;
-            --skms-text: #2C4642;
-            --skms-muted: #647874;
-            --skms-cloud: #F6F8F7;
-            --skms-border: #E2E9E6;
+            --skms-teal: #8B0D18;
+            --skms-teal-hover: #6B0810;
+            --skms-mint: #E5A032;
+            --skms-mint-soft: #FDF2F3;
+            --skms-mint-card: #FDF2F3;
+            --skms-mint-border: #F1CFD3;
+            --skms-forest: #1F1415;
+            --skms-text: #3E2F30;
+            --skms-muted: #6B5B5D;
+            --skms-cloud: #FAF8F7;
+            --skms-border: #ECE4E5;
         }
 
         * {
@@ -158,7 +158,7 @@
 
         .skms-tanya-sub {
             font-size: 13.5px;
-            color: #4D6762;
+            color: #6B5B5D;
             margin: 0;
             max-width: 720px;
             line-height: 1.55;
@@ -218,7 +218,7 @@
             gap: 16px;
             padding-bottom: 18px;
             margin-bottom: 22px;
-            border-bottom: 1px solid #EEF3F1;
+            border-bottom: 1px solid #F3ECEC;
             flex-wrap: wrap;
         }
 
@@ -290,7 +290,7 @@
         .skms-select:focus,
         .skms-textarea:focus {
             border-color: var(--skms-teal);
-            box-shadow: 0 0 0 3px rgba(13, 127, 116, 0.12);
+            box-shadow: 0 0 0 3px rgba(139, 13, 24, 0.12);
         }
 
         .skms-input[readonly] {
@@ -321,7 +321,7 @@
             gap: 14px;
             padding-top: 18px;
             margin-top: 8px;
-            border-top: 1px solid #EEF3F1;
+            border-top: 1px solid #F3ECEC;
             flex-wrap: wrap;
         }
 
@@ -611,8 +611,8 @@
         <div class="skms-navbar-inner">
             <a href="{{ route('skms.beranda') }}" class="skms-logo-link">
                 <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#0D7F74"/>
-                    <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#8ED8C3"/>
+                    <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#8B0D18"/>
+                    <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#E5A032"/>
                 </svg>
                 <div class="skms-logo-text">
                     <span class="skms-logo-title">SKMS UBAYA</span>
@@ -664,7 +664,7 @@
 
         @if(session('submitted_ticket'))
             @php $ticket = session('submitted_ticket'); @endphp
-            <div style="max-width: 680px; margin: 18px auto 36px; background: #FFFFFF; border: 1px solid var(--skms-mint-border); border-radius: 18px; padding: 38px 32px; text-align: center; box-shadow: 0 12px 32px -12px rgba(13, 127, 116, 0.14);">
+            <div style="max-width: 680px; margin: 18px auto 36px; background: #FFFFFF; border: 1px solid var(--skms-mint-border); border-radius: 18px; padding: 38px 32px; text-align: center; box-shadow: 0 12px 32px -12px rgba(139, 13, 24, 0.14);">
                 <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--skms-mint-soft); color: var(--skms-teal); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 18px;">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -693,7 +693,7 @@
                         <span>{{ $ticket['email'] }}</span>
                     </div>
                 @else
-                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 999px; background: #F1F5F4; color: #4D6762; font-size: 12px; font-weight: 700; margin-bottom: 14px;">
+                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 999px; background: #F1F5F4; color: #6B5B5D; font-size: 12px; font-weight: 700; margin-bottom: 14px;">
                         Tiket #{{ $ticket['id'] }} &bull; Pengajuan Tanpa Email Notifikasi
                     </div>
 
@@ -746,7 +746,7 @@
             </script>
         @else
             @if(session('success'))
-                <div style="margin-bottom: 22px; padding: 14px 18px; border-radius: 12px; background: #E6F4EF; border: 1px solid #8ED8C3; color: #0D7F74; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+                <div style="margin-bottom: 22px; padding: 14px 18px; border-radius: 12px; background: #FDF2F3; border: 1px solid #E5A032; color: #8B0D18; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
@@ -756,7 +756,7 @@
             @endif
 
             @if(!empty($prefillQuestion))
-                <div style="margin-bottom: 22px; padding: 14px 18px; border-radius: 12px; background: #E6F4EF; border: 1px solid #8ED8C3; color: #0D7F74; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+                <div style="margin-bottom: 22px; padding: 14px 18px; border-radius: 12px; background: #FDF2F3; border: 1px solid #E5A032; color: #8B0D18; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -801,7 +801,7 @@
                                 @if($studentNrp)
                                     <label class="skms-field-label" for="nrp">
                                         NRP Mahasiswa <span class="req">*</span>
-                                        <span style="font-size: 11px; font-weight: 700; color: #0D7F74; background: #E8F5F1; border: 1px solid #C7E6DC; padding: 2px 8px; border-radius: 999px; margin-left: 6px;">
+                                        <span style="font-size: 11px; font-weight: 700; color: #8B0D18; background: #FDF2F3; border: 1px solid #F1CFD3; padding: 2px 8px; border-radius: 999px; margin-left: 6px;">
                                             ✓ Terverifikasi dari Login
                                         </span>
                                     </label>
@@ -811,7 +811,7 @@
                                            class="skms-input"
                                            value="{{ $studentNrp }}"
                                            readonly>
-                                    <div class="skms-field-hint" style="color: #0D7F74; font-weight: 600;">
+                                    <div class="skms-field-hint" style="color: #8B0D18; font-weight: 600;">
                                         ✓ Terisi otomatis dari sesi masuk Anda (tidak perlu mengetik ulang).
                                     </div>
                                 @else
@@ -845,7 +845,7 @@
                                        readonly>
                                 <div class="skms-field-hint">
                                     @if($studentNrp)
-                                        <span style="color: #0D7F74; font-weight: 600;">✓ Notifikasi jawaban resmi staf akan otomatis dikirimkan ke email ini.</span>
+                                        <span style="color: #8B0D18; font-weight: 600;">✓ Notifikasi jawaban resmi staf akan otomatis dikirimkan ke email ini.</span>
                                     @else
                                         Format otomatis: <code style="color: var(--skms-teal); font-weight: 700;">s{nrp}@student.ubaya.ac.id</code>
                                     @endif
@@ -1005,7 +1005,7 @@
 
                 <div class="skms-mint-tips-card">
                     <h3 class="skms-side-title" style="margin-bottom: 10px;">Tips Pengajuan</h3>
-                    <ul style="margin: 0; padding-left: 18px; font-size: 12.5px; color: #4D6762; line-height: 1.65;">
+                    <ul style="margin: 0; padding-left: 18px; font-size: 12.5px; color: #6B5B5D; line-height: 1.65;">
                         <li style="margin-bottom: 6px;">Gunakan kalimat pertanyaan yang jelas dan spesifik.</li>
                         <li style="margin-bottom: 6px;">Cantumkan NRP jika Anda ingin mendapatkan notifikasi email saat pertanyaan selesai dijawab.</li>
                         <li>Jawaban juga dapat diakses secara publik pada menu Pencarian FAQ setelah dipublikasikan.</li>

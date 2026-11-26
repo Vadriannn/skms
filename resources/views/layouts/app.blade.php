@@ -16,16 +16,16 @@
                 <!-- Brand Header (SKMK Dual-Tone Book Logo) -->
                 <div class="sidebar-header" style="padding: 22px 20px 18px 20px;">
                     <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;">
-                        <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#0D7F74"/>
-                        <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#8ED8C3"/>
+                        <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#8B0D18"/>
+                        <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#E5A032"/>
                     </svg>
                     <div style="display: flex; flex-direction: column; line-height: 1.15;">
-                        <span class="brand-title" style="font-size: 19px; font-weight: 800; color: #16322F; letter-spacing: -0.4px;">SKMS</span>
-                        <span style="font-size: 11px; color: #647874; font-weight: 500; margin-top: 2px;">Knowledge, connected.</span>
+                        <span class="brand-title" style="font-size: 19px; font-weight: 800; color: #1F1415; letter-spacing: -0.4px;">SKMS</span>
+                        <span style="font-size: 11px; color: #6B5B5D; font-weight: 500; margin-top: 2px;">Knowledge, connected.</span>
                     </div>
                 </div>
 
-                <div style="padding: 4px 24px 6px 24px; font-size: 10.5px; font-weight: 700; color: #8FA19D; letter-spacing: 0.8px; text-transform: uppercase;">
+                <div style="padding: 4px 24px 6px 24px; font-size: 10.5px; font-weight: 700; color: #948486; letter-spacing: 0.8px; text-transform: uppercase;">
                     RUANG KERJA
                 </div>
 
@@ -172,7 +172,7 @@
 
             <!-- Footer: Tagline, Pengaturan akun & Keluar akun -->
             <div>
-                <div style="padding: 0 20px 14px 20px; font-size: 11.5px; color: #8FA19D; line-height: 1.45;">
+                <div style="padding: 0 20px 14px 20px; font-size: 11.5px; color: #948486; line-height: 1.45;">
                     Pengetahuan yang lebih baik,<br>dimulai dari informasi tepercaya.
                 </div>
                 <div class="sidebar-footer" style="display: flex; flex-direction: column; gap: 4px;">
@@ -245,7 +245,7 @@
                                 <div class="user-info-name" style="font-size: 13px; font-weight: 700; color: var(--text-heading);">{{ $user->name }}</div>
                                 <div class="user-info-role" style="font-size: 11.5px; color: var(--text-muted);">{{ $roleLabels[$user->role] ?? ucfirst($user->role) }}</div>
                             </div>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8FA19D" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#948486" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
                         </a>
                     @endauth
                 </div>

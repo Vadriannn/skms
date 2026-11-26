@@ -8,17 +8,17 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         :root {
-            --skms-teal: #0D7F74;
-            --skms-teal-hover: #0A665D;
-            --skms-mint: #8ED8C3;
-            --skms-mint-soft: #E6F4EF;
-            --skms-mint-card: #E8F5F1;
-            --skms-mint-border: #C7E6DC;
-            --skms-forest: #16322F;
-            --skms-text: #2C4642;
-            --skms-muted: #647874;
-            --skms-cloud: #F6F8F7;
-            --skms-border: #E2E9E6;
+            --skms-teal: #8B0D18;
+            --skms-teal-hover: #6B0810;
+            --skms-mint: #E5A032;
+            --skms-mint-soft: #FDF2F3;
+            --skms-mint-card: #FDF2F3;
+            --skms-mint-border: #F1CFD3;
+            --skms-forest: #1F1415;
+            --skms-text: #3E2F30;
+            --skms-muted: #6B5B5D;
+            --skms-cloud: #FAF8F7;
+            --skms-border: #ECE4E5;
         }
 
         * {
@@ -228,7 +228,7 @@
             flex-wrap: wrap;
             padding-bottom: 18px;
             margin-bottom: 22px;
-            border-bottom: 1px solid #EEF3F1;
+            border-bottom: 1px solid #F3ECEC;
         }
 
         .skms-cat-pill {
@@ -318,7 +318,7 @@
 
         .skms-note-text {
             font-size: 12.5px;
-            color: #4D6762;
+            color: #6B5B5D;
             line-height: 1.55;
             margin: 0;
         }
@@ -327,7 +327,7 @@
         .skms-feedback-bar {
             margin-top: 26px;
             padding-top: 20px;
-            border-top: 1px solid #EEF3F1;
+            border-top: 1px solid #F3ECEC;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -410,7 +410,7 @@
             justify-content: space-between;
             gap: 12px;
             padding: 12px 0;
-            border-top: 1px solid #EEF3F1;
+            border-top: 1px solid #F3ECEC;
             text-decoration: none;
         }
 
@@ -462,7 +462,7 @@
 
         .skms-still-help-desc {
             font-size: 12.5px;
-            color: #4D6762;
+            color: #6B5B5D;
             line-height: 1.6;
             margin: 0 0 16px;
         }
@@ -546,8 +546,8 @@
         <div class="skms-navbar-inner">
             <a href="{{ route('skms.beranda') }}" class="skms-logo-link">
                 <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#0D7F74"/>
-                    <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#8ED8C3"/>
+                    <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#8B0D18"/>
+                    <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#E5A032"/>
                 </svg>
                 <div class="skms-logo-text">
                     <span class="skms-logo-title">SKMS UBAYA</span>
@@ -700,16 +700,16 @@
                 @if($faq->file_lampiran)
                     <div class="skms-media-file-section" style="margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--skms-border);">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D7F74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B0D18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                                 <polyline points="14 2 14 8 20 8"></polyline>
                             </svg>
                             <span style="font-size: 14px; font-weight: 700; color: var(--skms-forest);">Berkas Lampiran / Unduhan</span>
                         </div>
 
-                        <div style="background: #FFFFFF; border: 1.5px solid #E2E9E6; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+                        <div style="background: #FFFFFF; border: 1.5px solid #ECE4E5; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
                             <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
-                                <div style="width: 40px; height: 40px; border-radius: 10px; background: #E8F5F1; color: #0D7F74; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; text-transform: uppercase; flex-shrink: 0;">
+                                <div style="width: 40px; height: 40px; border-radius: 10px; background: #FDF2F3; color: #8B0D18; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; text-transform: uppercase; flex-shrink: 0;">
                                     {{ $faq->file_extension ?: 'DOC' }}
                                 </div>
                                 <div style="min-width: 0;">

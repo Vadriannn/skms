@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SKMS UBAYA — Student Knowledge Management System</title>
+    <title>SKMS UBAYA — Pusat Pengetahuan Mahasiswa</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         :root {
-            --skms-teal: #0D7F74;
-            --skms-teal-hover: #0A665D;
-            --skms-mint: #8ED8C3;
-            --skms-mint-soft: #E6F4EF;
-            --skms-mint-card: #E8F5F1;
-            --skms-mint-border: #C7E6DC;
-            --skms-forest: #16322F;
-            --skms-text: #2C4642;
-            --skms-muted: #647874;
-            --skms-cloud: #F6F8F7;
-            --skms-border: #E2E9E6;
+            --ubaya-maroon: #8B0D18;
+            --ubaya-maroon-dark: #6B0810;
+            --ubaya-maroon-deep: #4A070D;
+            --ubaya-gold: #E5A032;
+            --ubaya-gold-soft: #FEF6E6;
+            --ubaya-gold-text: #A8640C;
+            --ubaya-rose-soft: #FDF2F3;
+            --ubaya-rose-pill: #FBE7E9;
+            --ubaya-rose-border: #F1CFD3;
+            --ubaya-heading: #1F1415;
+            --ubaya-text: #3E2F30;
+            --ubaya-muted: #6B5B5D;
+            --ubaya-bg: #FAF8F7;
+            --ubaya-border: #ECE4E5;
         }
 
         * {
@@ -31,29 +34,38 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background-color: var(--skms-cloud);
-            color: var(--skms-text);
+            background-color: var(--ubaya-bg);
+            color: var(--ubaya-text);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── TOP NAVBAR ────────────────────────────────────────────────── */
-        .skms-navbar {
-            background: #FFFFFF;
-            border-bottom: 1px solid var(--skms-border);
+        /* ── FLOATING TOP NAVIGATION BAR (06E CRIMSON IMMERSIVE) ──────── */
+        .skms-navbar-shell {
+            max-width: 1320px;
+            width: 100%;
+            margin: 16px auto 0;
+            padding: 0 24px;
             position: sticky;
-            top: 0;
+            top: 12px;
             z-index: 50;
         }
 
+        .skms-navbar {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--ubaya-border);
+            border-radius: 18px;
+            box-shadow: 0 8px 24px -10px rgba(74, 7, 13, 0.08);
+        }
+
         .skms-navbar-inner {
-            max-width: 1220px;
-            margin: 0 auto;
-            padding: 14px 28px;
+            padding: 12px 22px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .skms-logo-link {
@@ -71,53 +83,73 @@
         .skms-logo-title {
             font-size: 17px;
             font-weight: 800;
-            color: var(--skms-forest);
+            color: var(--ubaya-heading);
             letter-spacing: -0.02em;
             line-height: 1.15;
         }
 
         .skms-logo-sub {
-            font-size: 11px;
+            font-size: 11.5px;
             font-weight: 500;
-            color: var(--skms-muted);
+            color: var(--ubaya-muted);
             margin-top: 1px;
+        }
+
+        /* Segmented Center Toggle */
+        .skms-nav-segment {
+            display: inline-flex;
+            align-items: center;
+            background: #F6EFEF;
+            padding: 4px;
+            border-radius: 14px;
+            gap: 4px;
+        }
+
+        .skms-seg-link {
+            padding: 10px 22px;
+            border-radius: 11px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--ubaya-text);
+            text-decoration: none;
+            transition: all 0.18s ease;
+            white-space: nowrap;
+        }
+
+        .skms-seg-link:hover {
+            color: var(--ubaya-maroon);
+        }
+
+        .skms-seg-link.active {
+            background: var(--ubaya-maroon);
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px -2px rgba(139, 13, 24, 0.35);
         }
 
         .skms-nav-right {
             display: flex;
             align-items: center;
-            gap: 26px;
-        }
-
-        .skms-nav-link {
-            font-size: 13.5px;
-            font-weight: 600;
-            color: var(--skms-forest);
-            text-decoration: none;
-            transition: color 0.15s ease;
-        }
-
-        .skms-nav-link:hover,
-        .skms-nav-link.active {
-            color: var(--skms-teal);
+            gap: 12px;
         }
 
         .skms-btn-nrp {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 10px 18px;
-            background-color: var(--skms-teal);
+            padding: 12px 20px;
+            background-color: var(--ubaya-maroon);
             color: #FFFFFF;
-            font-size: 13px;
-            font-weight: 600;
-            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 700;
+            border-radius: 12px;
             text-decoration: none;
+            box-shadow: 0 6px 16px -6px rgba(139, 13, 24, 0.4);
             transition: background-color 0.15s ease, transform 0.15s ease;
+            white-space: nowrap;
         }
 
         .skms-btn-nrp:hover {
-            background-color: var(--skms-teal-hover);
+            background-color: var(--ubaya-maroon-dark);
             color: #FFFFFF;
             transform: translateY(-1px);
         }
@@ -126,129 +158,132 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 7px 14px;
-            background: var(--skms-mint-card);
-            border: 1px solid var(--skms-mint-border);
-            border-radius: 10px;
+            padding: 8px 14px;
+            background: var(--ubaya-rose-soft);
+            border: 1px solid var(--ubaya-rose-border);
+            border-radius: 12px;
             font-size: 13px;
-            font-weight: 600;
-            color: var(--skms-forest);
+            font-weight: 700;
+            color: var(--ubaya-maroon);
         }
 
         .skms-nrp-logout {
             background: #FFFFFF;
-            border: 1px solid var(--skms-border);
-            color: #DC2626;
-            font-size: 11.5px;
-            font-weight: 600;
-            padding: 4px 9px;
-            border-radius: 6px;
+            border: 1px solid var(--ubaya-rose-border);
+            color: var(--ubaya-maroon);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 8px;
             cursor: pointer;
             font-family: inherit;
             transition: all 0.15s ease;
         }
 
         .skms-nrp-logout:hover {
-            background: #FEF2F2;
-            border-color: #FECACA;
+            background: var(--ubaya-maroon);
+            color: #FFFFFF;
         }
 
-        /* ── HERO SECTION: LANDING PAGE (IMAGE 1) ──────────────────────── */
-        .skms-landing-hero {
+        /* ── MODE 1: CRIMSON IMMERSIVE PHOTO HERO + FLOATING SEARCH ────── */
+        .skms-kiosk-container {
+            max-width: 1320px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px 24px 36px;
+            flex: 1;
+        }
+
+        .skms-hero-stage {
             position: relative;
-            background-color: var(--skms-mint-soft);
-            border-bottom: 1px solid var(--skms-mint-border);
+            margin-bottom: 52px;
+        }
+
+        .skms-photo-hero-card {
+            position: relative;
+            border-radius: 26px;
             overflow: hidden;
-            min-height: 410px;
+            min-height: 315px;
             display: flex;
             align-items: center;
+            background-color: var(--ubaya-maroon-deep);
+            box-shadow: 0 22px 44px -18px rgba(74, 7, 13, 0.35);
         }
 
-        .skms-landing-hero-photo {
+        .skms-photo-hero-bg {
             position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 56%;
+            inset: 0;
             background-image: url('{{ asset("images/ubaya-campus.jpg") }}');
             background-size: cover;
-            background-position: center center;
+            background-position: center 42%;
             z-index: 1;
         }
 
-        .skms-landing-hero-gradient {
+        .skms-photo-hero-scrim {
             position: absolute;
             inset: 0;
             background: linear-gradient(
-                90deg,
-                #E6F4EF 0%,
-                #E6F4EF 44%,
-                rgba(230, 244, 239, 0.94) 52%,
-                rgba(230, 244, 239, 0.55) 66%,
-                rgba(230, 244, 239, 0.12) 82%,
-                rgba(230, 244, 239, 0.0) 100%
+                96deg,
+                rgba(68, 6, 12, 0.94) 0%,
+                rgba(116, 11, 22, 0.86) 36%,
+                rgba(139, 13, 24, 0.42) 64%,
+                rgba(74, 7, 13, 0.10) 100%
             );
             z-index: 2;
         }
 
-        .skms-landing-hero-inner {
+        .skms-photo-hero-content {
             position: relative;
             z-index: 3;
-            max-width: 1220px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 54px 28px 56px;
-        }
-
-        .skms-landing-hero-copy {
-            max-width: 570px;
-        }
-
-        .skms-hero-kicker {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--skms-teal);
-            margin-bottom: 14px;
+            padding: 46px 52px 68px;
+            max-width: 650px;
         }
 
         .skms-hero-h1 {
-            font-size: 38px;
+            font-size: 40px;
             font-weight: 800;
-            color: var(--skms-forest);
+            color: #FFFFFF;
             letter-spacing: -0.03em;
-            line-height: 1.18;
+            line-height: 1.15;
             margin: 0 0 14px;
+            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.25);
         }
 
         .skms-hero-desc {
-            font-size: 14.5px;
-            color: #4D6762;
-            line-height: 1.65;
-            margin: 0 0 26px;
-            max-width: 490px;
+            font-size: 15px;
+            color: rgba(255, 244, 244, 0.92);
+            line-height: 1.6;
+            margin: 0;
+            max-width: 500px;
         }
 
-        /* Search Bar Box */
+        /* Floating Overlapping Search Bar (Bridging Hero Bottom Edge) */
+        .skms-floating-search-wrap {
+            position: relative;
+            z-index: 10;
+            max-width: 860px;
+            margin: -34px auto 0;
+            padding: 0 16px;
+        }
+
         .skms-search-bar {
             display: flex;
             align-items: center;
             background: #FFFFFF;
-            border: 1px solid #D5E4DF;
-            border-radius: 12px;
-            padding: 6px 6px 6px 16px;
-            box-shadow: 0 8px 24px -8px rgba(13, 127, 116, 0.12);
+            border: 1.5px solid #EAE0E1;
+            border-radius: 18px;
+            padding: 8px 8px 8px 22px;
+            box-shadow: 0 18px 38px -12px rgba(74, 7, 13, 0.2), 0 4px 12px rgba(0, 0, 0, 0.04);
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .skms-search-bar:focus-within {
-            border-color: var(--skms-teal);
-            box-shadow: 0 10px 28px -8px rgba(13, 127, 116, 0.2), 0 0 0 3px rgba(13, 127, 116, 0.1);
+            border-color: var(--ubaya-maroon);
+            box-shadow: 0 20px 42px -12px rgba(139, 13, 24, 0.28), 0 0 0 4px rgba(139, 13, 24, 0.1);
         }
 
         .skms-search-bar svg {
-            color: #829894;
+            color: var(--ubaya-maroon);
             flex-shrink: 0;
         }
 
@@ -256,339 +291,343 @@
             flex: 1;
             border: none;
             outline: none;
-            padding: 11px 14px;
-            font-size: 14px;
-            color: var(--skms-forest);
+            padding: 14px 16px;
+            font-size: 15.5px;
+            color: var(--ubaya-heading);
             background: transparent;
             font-family: inherit;
         }
 
         .skms-search-bar input::placeholder {
-            color: #8FA39F;
+            color: #9A8A8C;
         }
 
         .skms-search-submit {
-            padding: 11px 24px;
-            background-color: var(--skms-teal);
+            padding: 15px 34px;
+            background-color: var(--ubaya-maroon);
             color: #FFFFFF;
             border: none;
-            border-radius: 9px;
-            font-size: 13.5px;
-            font-weight: 600;
+            border-radius: 13px;
+            font-size: 14.5px;
+            font-weight: 700;
             cursor: pointer;
             font-family: inherit;
-            transition: background-color 0.15s ease;
+            transition: background-color 0.15s ease, transform 0.15s ease;
             white-space: nowrap;
         }
 
         .skms-search-submit:hover {
-            background-color: var(--skms-teal-hover);
+            background-color: var(--ubaya-maroon-dark);
+            transform: translateY(-1px);
         }
 
-        .skms-popular-tags {
-            margin-top: 18px;
+        /* ── BENTO GRID BELOW SEARCH (JELAJAHI TOPIK + SERING DITANYAKAN) ─ */
+        .skms-bento-grid {
+            display: grid;
+            grid-template-columns: 42% 1fr;
+            gap: 28px;
+            align-items: start;
         }
 
-        .skms-popular-tags-label {
-            font-size: 12px;
-            color: var(--skms-muted);
-            margin-bottom: 6px;
-        }
-
-        .skms-popular-tags-list {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            font-size: 12.5px;
-            font-weight: 600;
-        }
-
-        .skms-popular-tags-list a {
-            color: var(--skms-teal);
-            text-decoration: none;
-            transition: color 0.15s ease;
-        }
-
-        .skms-popular-tags-list a:hover {
-            color: var(--skms-forest);
-            text-decoration: underline;
-        }
-
-        .skms-popular-tags-dot {
-            color: #9BB2AE;
-        }
-
-        /* ── LANDING MAIN CONTENT (IMAGE 1) ────────────────────────────── */
-        .skms-main-container {
-            max-width: 1220px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 36px 28px 56px;
-            flex: 1;
-        }
-
-        .skms-section-head {
+        .skms-bento-head {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 16px;
-            max-width: 760px;
+            min-height: 36px;
         }
 
-        .skms-section-title {
+        .skms-bento-title {
             font-size: 20px;
-            font-weight: 700;
-            color: var(--skms-forest);
+            font-weight: 800;
+            color: var(--ubaya-heading);
             letter-spacing: -0.02em;
             margin: 0;
         }
 
-        .skms-section-link {
-            font-size: 12.5px;
-            font-weight: 600;
-            color: var(--skms-teal);
-            text-decoration: none;
-        }
-
-        .skms-section-link:hover {
-            text-decoration: underline;
-        }
-
-        .skms-landing-grid {
-            display: grid;
-            grid-template-columns: 1fr 370px;
-            gap: 28px;
-            align-items: stretch;
-            margin-bottom: 26px;
-        }
-
-        .skms-freq-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .skms-freq-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            background: #FFFFFF;
-            border: 1px solid var(--skms-border);
-            border-radius: 12px;
-            padding: 14px 18px;
-            text-decoration: none;
-            transition: all 0.18s ease;
-        }
-
-        .skms-freq-card:hover {
-            border-color: var(--skms-teal);
-            box-shadow: 0 6px 18px -6px rgba(13, 127, 116, 0.12);
-            transform: translateY(-1px);
-        }
-
-        .skms-freq-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            min-width: 0;
-        }
-
-        .skms-freq-num {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            background: var(--skms-cloud);
-            border: 1px solid var(--skms-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12.5px;
-            font-weight: 700;
-            color: var(--skms-muted);
-            flex-shrink: 0;
-        }
-
-        .skms-freq-info {
-            min-width: 0;
-        }
-
-        .skms-freq-q {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--skms-forest);
-            margin-bottom: 3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .skms-freq-cat {
-            font-size: 12px;
-            color: var(--skms-muted);
-        }
-
-        .skms-freq-arrow {
-            color: var(--skms-muted);
-            flex-shrink: 0;
-            transition: transform 0.15s ease, color 0.15s ease;
-        }
-
-        .skms-freq-card:hover .skms-freq-arrow {
-            color: var(--skms-teal);
-            transform: translateX(3px);
-        }
-
-        /* Right Feature Card on Landing */
-        .skms-feature-card {
-            background: var(--skms-mint-soft);
-            border: 1px solid var(--skms-mint-border);
-            border-radius: 14px;
-            padding: 26px 26px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .skms-feature-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: #FFFFFF;
-            color: var(--skms-teal);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 6px rgba(13, 127, 116, 0.08);
-        }
-
-        .skms-feature-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--skms-forest);
-            line-height: 1.35;
-            margin: 0 0 10px;
-        }
-
-        .skms-feature-desc {
-            font-size: 13px;
-            color: #4D6762;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* Bottom Help Banner on Landing */
-        .skms-help-banner {
-            background: var(--skms-mint-soft);
-            border: 1px solid var(--skms-mint-border);
-            border-radius: 14px;
-            padding: 20px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .skms-help-banner-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .skms-help-banner-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 11px;
-            background: #D4EDE4;
-            color: var(--skms-teal);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .skms-help-banner-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--skms-forest);
-            margin: 0 0 3px;
-        }
-
-        .skms-help-banner-sub {
-            font-size: 13px;
-            color: #4D6762;
-            margin: 0;
-        }
-
-        .skms-btn-white-cta {
+        .skms-btn-see-all {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            padding: 11px 20px;
-            background: #FFFFFF;
-            border: 1px solid var(--skms-mint-border);
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--ubaya-rose-pill);
+            color: var(--ubaya-maroon);
             border-radius: 10px;
             font-size: 13px;
             font-weight: 700;
-            color: var(--skms-teal);
             text-decoration: none;
             transition: all 0.15s ease;
         }
 
-        .skms-btn-white-cta:hover {
-            border-color: var(--skms-teal);
-            box-shadow: 0 4px 12px rgba(13, 127, 116, 0.1);
-            transform: translateY(-1px);
+        .skms-btn-see-all:hover {
+            background: var(--ubaya-maroon);
+            color: #FFFFFF;
         }
 
-        /* ── SEARCH PAGE HEADER & 3-COLUMN LAYOUT (IMAGE 2) ────────────── */
+        /* 2x2 Touchscreen Topic Tiles */
+        .skms-topics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .skms-topic-tile {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #FFFFFF;
+            border: 1px solid var(--ubaya-border);
+            border-radius: 18px;
+            padding: 20px 18px;
+            min-height: 104px;
+            text-decoration: none;
+            box-shadow: 0 6px 18px -10px rgba(31, 20, 21, 0.08);
+            transition: all 0.18s ease;
+        }
+
+        .skms-topic-tile:hover {
+            border-color: var(--ubaya-maroon);
+            box-shadow: 0 12px 24px -10px rgba(139, 13, 24, 0.16);
+            transform: translateY(-2px);
+        }
+
+        .skms-topic-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .skms-topic-icon.rose {
+            background: var(--ubaya-rose-soft);
+            color: var(--ubaya-maroon);
+        }
+
+        .skms-topic-icon.gold {
+            background: var(--ubaya-gold-soft);
+            color: var(--ubaya-gold-text);
+        }
+
+        .skms-topic-name {
+            font-size: 14.5px;
+            font-weight: 800;
+            color: var(--ubaya-heading);
+            margin-bottom: 3px;
+            line-height: 1.25;
+            padding-right: 16px;
+        }
+
+        .skms-topic-sub {
+            font-size: 12px;
+            color: var(--ubaya-muted);
+            line-height: 1.35;
+        }
+
+        .skms-topic-arrow {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            color: var(--ubaya-maroon);
+            opacity: 0.7;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .skms-topic-tile:hover .skms-topic-arrow {
+            opacity: 1;
+            transform: translateX(2px);
+        }
+
+        /* Popular FAQs Hierarchy (Featured #1 + 2 Side-by-Side) */
+        .skms-featured-faq {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            background: linear-gradient(105deg, #FFFDFD 0%, #FDF4F5 100%);
+            border: 1px solid var(--ubaya-rose-border);
+            border-left: 4px solid var(--ubaya-gold);
+            border-radius: 18px;
+            padding: 20px 22px;
+            margin-bottom: 14px;
+            text-decoration: none;
+            box-shadow: 0 8px 22px -12px rgba(139, 13, 24, 0.12);
+            transition: all 0.18s ease;
+        }
+
+        .skms-featured-faq:hover {
+            border-color: var(--ubaya-maroon);
+            border-left-color: var(--ubaya-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px -12px rgba(139, 13, 24, 0.2);
+        }
+
+        .skms-featured-badges {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .skms-pill-gold {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 11px;
+            background: var(--ubaya-gold-soft);
+            color: var(--ubaya-gold-text);
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 700;
+        }
+
+        .skms-pill-rose {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 11px;
+            background: var(--ubaya-rose-pill);
+            color: var(--ubaya-maroon);
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 700;
+        }
+
+        .skms-featured-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--ubaya-heading);
+            line-height: 1.35;
+            margin: 0;
+        }
+
+        .skms-circle-arrow {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--ubaya-maroon);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.18s ease, background-color 0.18s ease;
+        }
+
+        .skms-featured-faq:hover .skms-circle-arrow {
+            background: var(--ubaya-maroon-dark);
+            transform: translateX(3px);
+        }
+
+        .skms-sub-faqs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .skms-sub-faq-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: #FFFFFF;
+            border: 1px solid var(--ubaya-border);
+            border-radius: 16px;
+            padding: 18px 20px;
+            min-height: 122px;
+            text-decoration: none;
+            box-shadow: 0 6px 18px -10px rgba(31, 20, 21, 0.08);
+            transition: all 0.18s ease;
+        }
+
+        .skms-sub-faq-card:hover {
+            border-color: var(--ubaya-maroon);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -10px rgba(139, 13, 24, 0.15);
+        }
+
+        .skms-sub-faq-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--ubaya-heading);
+            line-height: 1.4;
+            margin: 10px 0 12px;
+        }
+
+        .skms-sub-faq-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ubaya-muted);
+        }
+
+        .skms-sub-faq-foot svg {
+            color: var(--ubaya-maroon);
+            transition: transform 0.15s ease;
+        }
+
+        .skms-sub-faq-card:hover .skms-sub-faq-foot svg {
+            transform: translateX(3px);
+        }
+
+        /* ── MODE 2: PENCARIAN INFORMASI & FAQ (CRIMSON MAROON THEME) ──── */
         .skms-search-hero {
-            background-color: var(--skms-mint-soft);
-            border-bottom: 1px solid var(--skms-mint-border);
-            padding: 32px 28px 34px;
+            background: linear-gradient(135deg, #FDF2F3 0%, #FAF3F0 100%);
+            border-bottom: 1px solid var(--ubaya-rose-border);
+            padding: 28px 24px 32px;
+            margin-top: 14px;
         }
 
         .skms-search-hero-inner {
-            max-width: 1220px;
+            max-width: 1280px;
             margin: 0 auto;
         }
 
         .skms-search-hero-title {
             font-size: 28px;
             font-weight: 800;
-            color: var(--skms-forest);
+            color: var(--ubaya-heading);
             letter-spacing: -0.025em;
             margin: 0 0 6px;
         }
 
         .skms-search-hero-sub {
-            font-size: 13.5px;
-            color: #4D6762;
+            font-size: 14px;
+            color: var(--ubaya-muted);
             margin: 0 0 20px;
+        }
+
+        .skms-main-container {
+            max-width: 1280px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 28px 24px 56px;
+            flex: 1;
         }
 
         .skms-breadcrumb {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 12px;
-            color: var(--skms-muted);
+            font-size: 12.5px;
+            color: var(--ubaya-muted);
             margin-bottom: 12px;
         }
 
         .skms-breadcrumb a {
-            color: var(--skms-muted);
+            color: var(--ubaya-muted);
             text-decoration: none;
         }
 
         .skms-breadcrumb a:hover {
-            color: var(--skms-teal);
+            color: var(--ubaya-maroon);
         }
 
-        /* ── SEARCH INVALID WARNING ALERT (UI AWAM & ELEGAN) ─────────────── */
+        /* ── SEARCH INVALID WARNING ALERT ─────────────────────────────── */
         .skms-search-alert-card {
             background: #FFFBEB;
             border: 1px solid #FDE68A;
@@ -613,62 +652,15 @@
             flex-shrink: 0;
         }
 
-        .skms-search-alert-content {
-            flex: 1;
-        }
+        .skms-search-alert-content { flex: 1; }
+        .skms-search-alert-title { font-size: 15.5px; font-weight: 700; color: #92400E; margin-bottom: 4px; }
+        .skms-search-alert-desc { font-size: 13.5px; color: #78350F; line-height: 1.55; margin-bottom: 12px; }
+        .skms-search-alert-desc code { background: #FEF3C7; padding: 2px 7px; border-radius: 6px; font-weight: 700; color: #B45309; font-family: inherit; }
+        .skms-search-alert-tips { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12.5px; color: #92400E; }
+        .skms-search-alert-tips a { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 999px; background: #FFFFFF; border: 1px solid #FCD34D; color: #92400E; text-decoration: none; font-weight: 600; transition: all 0.15s ease; }
+        .skms-search-alert-tips a:hover { background: #FEF3C7; border-color: #B45309; color: #78350F; }
 
-        .skms-search-alert-title {
-            font-size: 15.5px;
-            font-weight: 700;
-            color: #92400E;
-            margin-bottom: 4px;
-        }
-
-        .skms-search-alert-desc {
-            font-size: 13.5px;
-            color: #78350F;
-            line-height: 1.55;
-            margin-bottom: 12px;
-        }
-
-        .skms-search-alert-desc code {
-            background: #FEF3C7;
-            padding: 2px 7px;
-            border-radius: 6px;
-            font-weight: 700;
-            color: #B45309;
-            font-family: inherit;
-        }
-
-        .skms-search-alert-tips {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            font-size: 12.5px;
-            color: #92400E;
-        }
-
-        .skms-search-alert-tips a {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 11px;
-            border-radius: 999px;
-            background: #FFFFFF;
-            border: 1px solid #FCD34D;
-            color: #92400E;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.15s ease;
-        }
-
-        .skms-search-alert-tips a:hover {
-            background: #FEF3C7;
-            border-color: #B45309;
-            color: #78350F;
-        }
-
-        /* ── CLIENT-SIDE SEARCH TOAST (FLOATING POPUP NOTIFIKASI AWAM) ──── */
+        /* ── CLIENT-SIDE SEARCH TOAST ──────────────────────────────────── */
         .skms-search-toast {
             position: fixed;
             top: 24px;
@@ -697,63 +689,13 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        .skms-search-toast-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 9px;
-            background: #FEF3C7;
-            color: #D97706;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .skms-search-toast-body {
-            flex: 1;
-        }
-
-        .skms-search-toast-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #1A302B;
-            margin-bottom: 2px;
-        }
-
-        .skms-search-toast-msg {
-            font-size: 12.5px;
-            color: #556B66;
-            line-height: 1.45;
-        }
-
-        .skms-search-toast-close {
-            background: none;
-            border: none;
-            color: #8FA39F;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 4px 6px;
-            line-height: 1;
-            border-radius: 6px;
-            transition: all 0.15s ease;
-        }
-
-        .skms-search-toast-close:hover {
-            color: #1A302B;
-            background: #F0F4F2;
-        }
-
-        .skms-input-invalid {
-            border-color: #EF4444 !important;
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
-            animation: skmsShake 0.3s ease;
-        }
-
-        @keyframes skmsShake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-4px); }
-            40%, 80% { transform: translateX(4px); }
-        }
+        .skms-search-toast-icon { width: 36px; height: 36px; border-radius: 9px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .skms-search-toast-body { flex: 1; }
+        .skms-search-toast-title { font-size: 14px; font-weight: 700; color: var(--ubaya-heading); margin-bottom: 2px; }
+        .skms-search-toast-msg { font-size: 12.5px; color: var(--ubaya-muted); line-height: 1.45; }
+        .skms-search-toast-close { background: none; border: none; color: #9A8A8C; font-size: 20px; cursor: pointer; padding: 0 4px; }
+        .skms-input-invalid { animation: skmsShake 0.35s ease; }
+        @keyframes skmsShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
         .skms-results-head {
             display: flex;
@@ -762,34 +704,18 @@
             gap: 16px;
             padding-bottom: 16px;
             margin-bottom: 22px;
-            border-bottom: 1px solid var(--skms-border);
+            border-bottom: 1px solid var(--ubaya-border);
             flex-wrap: wrap;
         }
 
-        .skms-results-head-left {
-            display: flex;
-            align-items: baseline;
-            gap: 18px;
-            flex-wrap: wrap;
-        }
-
-        .skms-results-h2 {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--skms-forest);
-            letter-spacing: -0.02em;
-            margin: 0;
-        }
-
-        .skms-results-count {
-            font-size: 13px;
-            color: var(--skms-muted);
-        }
+        .skms-results-head-left { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+        .skms-results-h2 { font-size: 22px; font-weight: 800; color: var(--ubaya-heading); letter-spacing: -0.02em; margin: 0; }
+        .skms-results-count { font-size: 13px; color: var(--ubaya-muted); }
 
         /* 3-Column Search Grid */
         .skms-three-col {
             display: grid;
-            grid-template-columns: 270px 1fr 310px;
+            grid-template-columns: 275px 1fr 315px;
             gap: 24px;
             align-items: start;
         }
@@ -797,73 +723,30 @@
         /* ── COLUMN 1: SEARCHABLE COMBOBOX + CHIP TAG FILTER CARD ──────── */
         .skms-filter-card {
             background: #FFFFFF;
-            border: 1px solid var(--skms-border);
-            border-radius: 14px;
+            border: 1px solid var(--ubaya-border);
+            border-radius: 16px;
             padding: 20px;
             position: sticky;
-            top: 84px;
+            top: 98px;
         }
 
-        .skms-filter-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 4px;
-        }
+        .skms-filter-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+        .skms-filter-title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: var(--ubaya-heading); margin: 0; }
+        .skms-filter-badge-count { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--ubaya-rose-pill); color: var(--ubaya-maroon); }
+        .skms-filter-sub { font-size: 12px; color: var(--ubaya-muted); margin: 0 0 14px; }
 
-        .skms-filter-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--skms-forest);
-            margin: 0;
-        }
-
-        .skms-filter-badge-count {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 999px;
-            background: var(--skms-mint-card);
-            color: var(--skms-teal);
-        }
-
-        .skms-filter-sub {
-            font-size: 12px;
-            color: var(--skms-muted);
-            margin: 0 0 14px;
-        }
-
-        /* Combobox Wrapper */
-        .skms-combobox-wrap {
-            position: relative;
-            margin-bottom: 12px;
-        }
-
-        .skms-cat-search-box {
-            position: relative;
-        }
-
-        .skms-cat-search-box svg.search-ic {
-            position: absolute;
-            left: 11px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #8FA39F;
-            pointer-events: none;
-        }
+        .skms-combobox-wrap { position: relative; margin-bottom: 12px; }
+        .skms-cat-search-box { position: relative; }
+        .skms-cat-search-box svg.search-ic { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: #9A8A8C; pointer-events: none; }
 
         .skms-cat-search-input {
             width: 100%;
             padding: 10px 34px 10px 33px;
-            background: var(--skms-cloud);
-            border: 1px solid var(--skms-border);
-            border-radius: 9px;
+            background: var(--ubaya-bg);
+            border: 1px solid var(--ubaya-border);
+            border-radius: 10px;
             font-size: 12.5px;
-            color: var(--skms-forest);
+            color: var(--ubaya-heading);
             font-family: inherit;
             outline: none;
             cursor: pointer;
@@ -873,594 +756,131 @@
         .skms-cat-search-input:focus,
         .skms-combobox-wrap.is-open .skms-cat-search-input {
             background: #FFFFFF;
-            border-color: var(--skms-teal);
-            box-shadow: 0 0 0 3px rgba(13, 127, 116, 0.1);
+            border-color: var(--ubaya-maroon);
+            box-shadow: 0 0 0 3px rgba(139, 13, 24, 0.1);
             cursor: text;
         }
 
-        .skms-combobox-chevron {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--skms-muted);
-            pointer-events: none;
-            transition: transform 0.2s ease, color 0.2s ease;
-        }
+        .skms-combobox-chevron { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--ubaya-muted); pointer-events: none; transition: transform 0.2s ease, color 0.2s ease; }
+        .skms-combobox-wrap.is-open .skms-combobox-chevron { transform: translateY(-50%) rotate(180deg); color: var(--ubaya-maroon); }
+        .skms-cat-search-clear { position: absolute; right: 28px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--ubaya-muted); cursor: pointer; padding: 2px 5px; font-size: 14px; line-height: 1; display: none; }
 
-        .skms-combobox-wrap.is-open .skms-combobox-chevron {
-            transform: translateY(-50%) rotate(180deg);
-            color: var(--skms-teal);
-        }
-
-        .skms-cat-search-clear {
-            position: absolute;
-            right: 28px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--skms-muted);
-            cursor: pointer;
-            padding: 2px 5px;
-            font-size: 14px;
-            line-height: 1;
-            display: none;
-        }
-
-        /* Floating Dropdown Panel (Hidden until Combobox is clicked/typed) */
         .skms-combobox-dropdown {
             position: absolute;
             top: calc(100% + 6px);
             left: 0;
             right: 0;
             background: #FFFFFF;
-            border: 1px solid var(--skms-mint-border);
+            border: 1px solid var(--ubaya-rose-border);
             border-radius: 12px;
-            box-shadow: 0 14px 32px -8px rgba(22, 50, 47, 0.16);
+            box-shadow: 0 14px 32px -8px rgba(31, 20, 21, 0.16);
             padding: 6px;
             z-index: 60;
             display: none;
         }
 
-        .skms-combobox-wrap.is-open .skms-combobox-dropdown {
-            display: block;
-        }
+        .skms-combobox-wrap.is-open .skms-combobox-dropdown { display: block; }
+        .skms-cat-list-scroll { max-height: 215px; overflow-y: auto; padding-right: 2px; display: flex; flex-direction: column; gap: 3px; }
+        .skms-cat-list-scroll::-webkit-scrollbar { width: 5px; }
+        .skms-cat-list-scroll::-webkit-scrollbar-track { background: #F6F1F1; border-radius: 99px; }
+        .skms-cat-list-scroll::-webkit-scrollbar-thumb { background: #DFC7CA; border-radius: 99px; }
+        .skms-cat-list-scroll::-webkit-scrollbar-thumb:hover { background: var(--ubaya-maroon); }
 
-        .skms-cat-list-scroll {
-            max-height: 215px;
-            overflow-y: auto;
-            padding-right: 2px;
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
+        .skms-cat-option { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 9px; border-radius: 8px; cursor: pointer; user-select: none; transition: background 0.15s ease; font-size: 12.5px; color: var(--ubaya-text); }
+        .skms-cat-option:hover { background: var(--ubaya-bg); }
+        .skms-cat-option.is-checked { background: var(--ubaya-rose-soft); color: var(--ubaya-maroon); font-weight: 600; }
+        .skms-cat-option-left { display: flex; align-items: center; gap: 9px; min-width: 0; }
+        .skms-cat-option input[type="checkbox"] { accent-color: var(--ubaya-maroon); width: 15px; height: 15px; margin: 0; cursor: pointer; flex-shrink: 0; }
+        .skms-cat-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .skms-cat-count-pill { font-size: 11px; font-weight: 600; color: var(--ubaya-muted); background: var(--ubaya-bg); padding: 1px 7px; border-radius: 999px; flex-shrink: 0; }
+        .skms-cat-option.is-checked .skms-cat-count-pill { background: var(--ubaya-rose-pill); color: var(--ubaya-maroon); }
+        .skms-cat-empty { display: none; text-align: center; padding: 14px 8px; font-size: 12px; color: var(--ubaya-muted); }
+        .skms-dropdown-footer { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--ubaya-muted); margin-top: 6px; padding: 6px 8px 2px; border-top: 1px solid #F3ECEC; }
+        .skms-dropdown-close-btn { background: none; border: none; padding: 0; font-size: 11.5px; font-weight: 700; color: var(--ubaya-maroon); cursor: pointer; font-family: inherit; }
 
-        .skms-cat-list-scroll::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        .skms-cat-list-scroll::-webkit-scrollbar-track {
-            background: #F1F5F3;
-            border-radius: 99px;
-        }
-
-        .skms-cat-list-scroll::-webkit-scrollbar-thumb {
-            background: #C4D6D1;
-            border-radius: 99px;
-        }
-
-        .skms-cat-list-scroll::-webkit-scrollbar-thumb:hover {
-            background: var(--skms-teal);
-        }
-
-        .skms-cat-option {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            padding: 7px 9px;
-            border-radius: 8px;
-            cursor: pointer;
-            user-select: none;
-            transition: background 0.15s ease;
-            font-size: 12.5px;
-            color: var(--skms-text);
-        }
-
-        .skms-cat-option:hover {
-            background: var(--skms-cloud);
-        }
-
-        .skms-cat-option.is-checked {
-            background: var(--skms-mint-soft);
-            color: var(--skms-teal);
-            font-weight: 600;
-        }
-
-        .skms-cat-option-left {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            min-width: 0;
-        }
-
-        .skms-cat-option input[type="checkbox"] {
-            accent-color: var(--skms-teal);
-            width: 15px;
-            height: 15px;
-            margin: 0;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .skms-cat-name {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .skms-cat-count-pill {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--skms-muted);
-            background: var(--skms-cloud);
-            padding: 1px 7px;
-            border-radius: 999px;
-            flex-shrink: 0;
-        }
-
-        .skms-cat-option.is-checked .skms-cat-count-pill {
-            background: #D2ECE3;
-            color: var(--skms-teal);
-        }
-
-        .skms-cat-empty {
-            display: none;
-            text-align: center;
-            padding: 14px 8px;
-            font-size: 12px;
-            color: var(--skms-muted);
-        }
-
-        .skms-dropdown-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 11px;
-            color: var(--skms-muted);
-            margin-top: 6px;
-            padding: 6px 8px 2px;
-            border-top: 1px solid #F0F4F2;
-        }
-
-        .skms-dropdown-close-btn {
-            background: none;
-            border: none;
-            padding: 0;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--skms-teal);
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        /* Default "Semua kategori" status pill when no chip is selected */
-        .skms-all-active-pill {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 11px;
-            background: var(--skms-mint-soft);
-            border: 1px solid var(--skms-mint-border);
-            border-radius: 9px;
-            font-size: 12.5px;
-            font-weight: 600;
-            color: var(--skms-teal);
-            margin-bottom: 4px;
-        }
-
-        /* Active Selected Chips Bar */
-        .skms-active-chips-wrap {
-            margin-bottom: 4px;
-        }
-
-        .skms-active-chips-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--skms-muted);
-            margin-bottom: 7px;
-        }
-
-        .skms-clear-all-cats {
-            background: none;
-            border: none;
-            padding: 0;
-            font-size: 11px;
-            font-weight: 600;
-            color: #DC2626;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .skms-clear-all-cats:hover {
-            text-decoration: underline;
-        }
-
-        .skms-active-chips-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .skms-active-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            background: var(--skms-mint-card);
-            border: 1px solid var(--skms-mint-border);
-            border-radius: 7px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--skms-teal);
-        }
-
-        .skms-active-chip button {
-            background: none;
-            border: none;
-            padding: 0;
-            color: var(--skms-teal);
-            cursor: pointer;
-            font-size: 14px;
-            line-height: 1;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .skms-active-chip button:hover {
-            color: #DC2626;
-        }
+        .skms-all-active-pill { display: flex; align-items: center; justify-content: space-between; padding: 8px 11px; background: var(--ubaya-rose-soft); border: 1px solid var(--ubaya-rose-border); border-radius: 9px; font-size: 12.5px; font-weight: 600; color: var(--ubaya-maroon); margin-bottom: 4px; }
+        .skms-active-chips-wrap { margin-bottom: 4px; }
+        .skms-active-chips-header { display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 600; color: var(--ubaya-muted); margin-bottom: 7px; }
+        .skms-clear-all-cats { background: none; border: none; padding: 0; font-size: 11px; font-weight: 600; color: var(--ubaya-maroon); cursor: pointer; font-family: inherit; }
+        .skms-active-chips-list { display: flex; flex-wrap: wrap; gap: 6px; }
+        .skms-active-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: var(--ubaya-rose-soft); border: 1px solid var(--ubaya-rose-border); border-radius: 7px; font-size: 12px; font-weight: 600; color: var(--ubaya-maroon); }
+        .skms-active-chip button { background: none; border: none; padding: 0; color: var(--ubaya-maroon); cursor: pointer; font-size: 14px; line-height: 1; display: inline-flex; align-items: center; }
 
         .skms-btn-apply-filter {
             width: 100%;
             margin-top: 12px;
-            padding: 10px 16px;
-            background: var(--skms-teal);
+            padding: 11px 16px;
+            background: var(--ubaya-maroon);
             color: #FFFFFF;
             border: none;
-            border-radius: 9px;
+            border-radius: 10px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             font-family: inherit;
             transition: background 0.15s ease;
         }
 
-        .skms-btn-apply-filter:hover {
-            background: var(--skms-teal-hover);
-        }
+        .skms-btn-apply-filter:hover { background: var(--ubaya-maroon-dark); }
 
         /* ── COLUMN 2: SEARCH RESULT CARDS ─────────────────────────────── */
-        .skms-results-col {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+        .skms-results-col { display: flex; flex-direction: column; gap: 16px; }
 
         .skms-result-card {
             background: #FFFFFF;
-            border: 1px solid var(--skms-border);
-            border-radius: 14px;
+            border: 1px solid var(--ubaya-border);
+            border-radius: 16px;
             padding: 22px 24px 18px;
             transition: border-color 0.18s ease, box-shadow 0.18s ease;
         }
 
         .skms-result-card:hover {
-            border-color: #B8DDD1;
-            box-shadow: 0 8px 24px -10px rgba(13, 127, 116, 0.12);
+            border-color: var(--ubaya-rose-border);
+            box-shadow: 0 10px 24px -10px rgba(139, 13, 24, 0.14);
         }
 
-        .skms-result-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-        }
-
-        .skms-result-badges {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .skms-result-doc-ic {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: var(--skms-mint-card);
-            color: var(--skms-teal);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .skms-cat-pill {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 11px;
-            background: var(--skms-mint-card);
-            color: var(--skms-teal);
-            border-radius: 999px;
-            font-size: 11.5px;
-            font-weight: 600;
-        }
-
-        .skms-relevance-pill {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 11px;
-            background: var(--skms-mint-card);
-            color: var(--skms-teal);
-            border-radius: 999px;
-            font-size: 11.5px;
-            font-weight: 700;
-        }
-
-        .skms-result-title {
-            font-size: 19px;
-            font-weight: 800;
-            color: var(--skms-forest);
-            margin: 0 0 8px;
-            line-height: 1.35;
-            letter-spacing: -0.015em;
-        }
-
-        .skms-result-title a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .skms-result-title a:hover {
-            color: var(--skms-teal);
-        }
-
-        .skms-result-excerpt {
-            font-size: 13.5px;
-            color: var(--skms-muted);
-            line-height: 1.6;
-            margin: 0 0 16px;
-        }
-
-        .skms-result-meta {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 12px;
-            color: var(--skms-muted);
-            margin-bottom: 14px;
-        }
-
-        .skms-result-meta span {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .skms-result-footer {
-            padding-top: 13px;
-            border-top: 1px solid #EEF3F1;
-        }
-
-        .skms-result-link {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--skms-teal);
-        }
-
-        .skms-result-link:hover {
-            color: var(--skms-teal-hover);
-        }
-
-        .skms-search-tip-box {
-            background: var(--skms-mint-soft);
-            border: 1px solid var(--skms-mint-border);
-            border-radius: 14px;
-            padding: 18px 20px;
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-        }
-
-        .skms-search-tip-box svg {
-            color: var(--skms-teal);
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .skms-search-tip-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--skms-forest);
-            margin: 0 0 4px;
-        }
-
-        .skms-search-tip-desc {
-            font-size: 12.5px;
-            color: #4D6762;
-            margin: 0;
-            line-height: 1.55;
-        }
+        .skms-result-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+        .skms-result-badges { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .skms-result-doc-ic { width: 32px; height: 32px; border-radius: 8px; background: var(--ubaya-rose-soft); color: var(--ubaya-maroon); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .skms-cat-pill { display: inline-flex; align-items: center; padding: 4px 11px; background: var(--ubaya-rose-pill); color: var(--ubaya-maroon); border-radius: 999px; font-size: 11.5px; font-weight: 600; }
+        .skms-relevance-pill { display: inline-flex; align-items: center; padding: 4px 11px; background: var(--ubaya-gold-soft); color: var(--ubaya-gold-text); border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+        .skms-result-title { font-size: 19px; font-weight: 800; color: var(--ubaya-heading); margin: 0 0 8px; line-height: 1.35; letter-spacing: -0.015em; }
+        .skms-result-title a { color: inherit; text-decoration: none; }
+        .skms-result-title a:hover { color: var(--ubaya-maroon); }
+        .skms-result-excerpt { font-size: 13.5px; color: var(--ubaya-muted); line-height: 1.6; margin: 0 0 16px; }
+        .skms-result-meta { display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--ubaya-muted); margin-bottom: 14px; }
+        .skms-result-meta span { display: inline-flex; align-items: center; gap: 5px; }
+        .skms-result-footer { padding-top: 13px; border-top: 1px solid #F3ECEC; }
+        .skms-result-link { display: flex; align-items: center; justify-content: space-between; text-decoration: none; font-size: 13.5px; font-weight: 700; color: var(--ubaya-maroon); }
+        .skms-result-link:hover { color: var(--ubaya-maroon-dark); }
 
         /* ── COLUMN 3: TOP FAQ TERPOPULER ──────────────────────────────── */
-        .skms-top-card {
-            background: #FFFFFF;
-            border: 1px solid var(--skms-border);
-            border-radius: 14px;
-            padding: 20px;
-            position: sticky;
-            top: 84px;
-        }
-
-        .skms-top-head {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .skms-top-star {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: #FEF3C7;
-            color: #D97706;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .skms-top-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--skms-forest);
-            margin: 0 0 2px;
-        }
-
-        .skms-top-sub {
-            font-size: 11.5px;
-            color: var(--skms-muted);
-            margin: 0;
-        }
-
-        .skms-top-list {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .skms-top-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 12px 0;
-            border-top: 1px solid #EEF3F1;
-            text-decoration: none;
-        }
-
-        .skms-top-item:first-child {
-            border-top: none;
-            padding-top: 4px;
-        }
-
-        .skms-top-item:last-child {
-            padding-bottom: 2px;
-        }
-
-        .skms-top-rank {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            background: var(--skms-cloud);
-            color: var(--skms-muted);
-            font-size: 11.5px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            margin-top: 1px;
-        }
-
-        .skms-top-item:first-child .skms-top-rank {
-            background: #FEF3C7;
-            color: #B45309;
-        }
-
-        .skms-top-item-q {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--skms-forest);
-            line-height: 1.4;
-            margin-bottom: 4px;
-            transition: color 0.15s ease;
-        }
-
-        .skms-top-item:hover .skms-top-item-q {
-            color: var(--skms-teal);
-        }
-
-        .skms-top-item-meta {
-            font-size: 11px;
-            color: var(--skms-muted);
-        }
-
-        /* Bottom Bar on Search Page */
-        .skms-search-bottom-bar {
-            margin-top: 28px;
-            background: #FFFFFF;
-            border: 1px solid var(--skms-border);
-            border-radius: 12px;
-            padding: 16px 22px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .skms-search-bottom-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-            font-size: 13px;
-        }
-
-        .skms-search-bottom-left strong {
-            color: var(--skms-forest);
-        }
-
-        .skms-search-bottom-left span {
-            color: var(--skms-muted);
-        }
-
-        .skms-search-bottom-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--skms-teal);
-            text-decoration: none;
-        }
-
-        .skms-search-bottom-link:hover {
-            text-decoration: underline;
-        }
+        .skms-top-card { background: #FFFFFF; border: 1px solid var(--ubaya-border); border-radius: 16px; padding: 20px; position: sticky; top: 98px; }
+        .skms-top-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .skms-top-star { width: 36px; height: 36px; border-radius: 10px; background: var(--ubaya-gold-soft); color: var(--ubaya-gold-text); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .skms-top-title { font-size: 15px; font-weight: 700; color: var(--ubaya-heading); margin: 0 0 2px; }
+        .skms-top-sub { font-size: 11.5px; color: var(--ubaya-muted); margin: 0; }
+        .skms-top-list { display: flex; flex-direction: column; }
+        .skms-top-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-top: 1px solid #F3ECEC; text-decoration: none; }
+        .skms-top-item:first-child { border-top: none; padding-top: 4px; }
+        .skms-top-item:last-child { padding-bottom: 2px; }
+        .skms-top-rank { width: 24px; height: 24px; border-radius: 6px; background: var(--ubaya-bg); color: var(--ubaya-muted); font-size: 11.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+        .skms-top-item:first-child .skms-top-rank { background: var(--ubaya-gold-soft); color: var(--ubaya-gold-text); }
+        .skms-top-item-q { font-size: 13px; font-weight: 700; color: var(--ubaya-heading); line-height: 1.4; margin-bottom: 4px; transition: color 0.15s ease; }
+        .skms-top-item:hover .skms-top-item-q { color: var(--ubaya-maroon); }
+        .skms-top-item-meta { font-size: 11px; color: var(--ubaya-muted); }
 
         /* ── FOOTER ────────────────────────────────────────────────────── */
         .skms-footer {
             background: #FFFFFF;
-            border-top: 1px solid var(--skms-border);
+            border-top: 1px solid var(--ubaya-border);
             margin-top: auto;
         }
 
         .skms-footer-inner {
-            max-width: 1220px;
+            max-width: 1320px;
             margin: 0 auto;
-            padding: 20px 28px;
+            padding: 16px 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -1468,209 +888,239 @@
             flex-wrap: wrap;
         }
 
-        .skms-footer-brand {
-            font-size: 13px;
-            font-weight: 800;
-            color: var(--skms-teal);
-            margin-bottom: 3px;
-        }
+        .skms-footer-brand { font-size: 13px; font-weight: 800; color: var(--ubaya-maroon); }
+        .skms-footer-right { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 500; color: var(--ubaya-muted); }
 
-        .skms-footer-copy {
-            font-size: 11.5px;
-            color: var(--skms-muted);
-        }
-
-        .skms-footer-right {
-            font-size: 12.5px;
-            font-weight: 500;
-            color: var(--skms-muted);
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .skms-three-col {
-                grid-template-columns: 250px 1fr;
-            }
-            .skms-top-card {
-                grid-column: 1 / -1;
-                position: static;
-            }
-            .skms-landing-grid {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 1080px) {
+            .skms-bento-grid { grid-template-columns: 1fr; }
+            .skms-three-col { grid-template-columns: 250px 1fr; }
+            .skms-top-card { grid-column: 1 / -1; position: static; }
         }
 
         @media (max-width: 768px) {
-            .skms-three-col {
-                grid-template-columns: 1fr;
-            }
-            .skms-filter-card {
-                position: static;
-            }
-            .skms-landing-hero-photo {
-                width: 100%;
-                opacity: 0.2;
-            }
-            .skms-landing-hero-gradient {
-                background: rgba(230, 244, 239, 0.88);
-            }
-            .skms-hero-h1 {
-                font-size: 28px;
-            }
+            .skms-three-col { grid-template-columns: 1fr; }
+            .skms-filter-card { position: static; }
+            .skms-topics-grid, .skms-sub-faqs-grid { grid-template-columns: 1fr; }
+            .skms-hero-h1 { font-size: 28px; }
+            .skms-photo-hero-content { padding: 34px 24px 56px; }
+            .skms-navbar-shell { margin-top: 10px; padding: 0 14px; }
         }
     </style>
 </head>
 <body class="skms-student-body">
 
-    <!-- ─── TOP NAVBAR ─────────────────────────────────────────────────────── -->
-    <header class="skms-navbar">
-        <div class="skms-navbar-inner">
-            <a href="{{ route('skms.beranda') }}" class="skms-logo-link">
-                <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#0D7F74"/>
-                    <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#8ED8C3"/>
-                </svg>
-                <div class="skms-logo-text">
-                    <span class="skms-logo-title">SKMS UBAYA</span>
-                    <span class="skms-logo-sub">Student Knowledge Management System</span>
-                </div>
-            </a>
-
-            <div class="skms-nav-right">
-                <a href="{{ route('skms.beranda') }}" class="skms-nav-link {{ !$searched ? 'active' : '' }}">Beranda</a>
-                <a href="{{ route('skms.beranda', ['all' => 1]) }}" class="skms-nav-link {{ $searched ? 'active' : '' }}">Informasi</a>
-                @if($studentNrp)
-                    <div class="skms-nrp-pill">
-                        <span>NRP: {{ $studentNrp }}</span>
-                        <form action="{{ route('skms.logout') }}" method="POST" style="margin: 0; display: inline;">
-                            @csrf
-                            <button type="submit" class="skms-nrp-logout">Keluar</button>
-                        </form>
+    <!-- ─── FLOATING TOP NAVBAR ────────────────────────────────────────────── -->
+    <div class="skms-navbar-shell">
+        <header class="skms-navbar">
+            <div class="skms-navbar-inner">
+                <a href="{{ route('skms.beranda') }}" class="skms-logo-link">
+                    <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 7.5C4 6.11929 5.11929 5 6.5 5C10.5 5 14.5 6.5 17.5 9V14.5L21 17.5L17.5 20.5V29.5C14.5 27 10.5 25.5 6.5 25.5C5.11929 25.5 4 24.3807 4 23V7.5Z" fill="#8B0D18"/>
+                        <path d="M32 7.5C32 6.11929 30.8807 5 29.5 5C25.5 5 21.5 6.5 18.5 9V14L22 17.5L18.5 21V29.5C21.5 27 25.5 25.5 29.5 25.5C30.8807 25.5 32 24.3807 32 23V7.5Z" fill="#E5A032"/>
+                    </svg>
+                    <div class="skms-logo-text">
+                        <span class="skms-logo-title">SKMS UBAYA</span>
+                        <span class="skms-logo-sub">Pusat Pengetahuan Mahasiswa</span>
                     </div>
-                @else
-                    <a href="{{ route('skms.login') }}" class="skms-btn-nrp">
-                        <span>Masuk Mahasiswa (NRP)</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-                            <polyline points="10 17 15 12 10 7"></polyline>
-                            <line x1="15" y1="12" x2="3" y2="12"></line>
-                        </svg>
-                    </a>
-                @endif
+                </a>
+
+                <nav class="skms-nav-segment" aria-label="Navigasi Portal Mahasiswa">
+                    <a href="{{ route('skms.beranda') }}" class="skms-seg-link {{ !$searched ? 'active' : '' }}">Beranda</a>
+                    <a href="{{ route('skms.beranda', ['all' => 1]) }}" class="skms-seg-link {{ $searched ? 'active' : '' }}">Semua Informasi</a>
+                </nav>
+
+                <div class="skms-nav-right">
+                    @if($studentNrp)
+                        <div class="skms-nrp-pill">
+                            <span>NRP: {{ $studentNrp }}</span>
+                            <form action="{{ route('skms.logout') }}" method="POST" style="margin: 0; display: inline;">
+                                @csrf
+                                <button type="submit" class="skms-nrp-logout">Keluar</button>
+                            </form>
+                        </div>
+                    @else
+                        <a href="{{ route('skms.login') }}" class="skms-btn-nrp">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                <polyline points="10 17 15 12 10 7"></polyline>
+                                <line x1="15" y1="12" x2="3" y2="12"></line>
+                            </svg>
+                            <span>Masuk Mahasiswa (NRP)</span>
+                        </a>
+                    @endif
+                </div>
             </div>
-        </div>
-    </header>
+        </header>
+    </div>
 
     @if(!$searched)
         <!-- ===================================================================
-             MODE 1: BERANDA UTAMA MAHASISWA (IMAGE 1)
+             MODE 1: BERANDA CRIMSON IMMERSIVE (TOUCHSCREEN KIOSK)
         ==================================================================== -->
-        <section class="skms-landing-hero">
-            <div class="skms-landing-hero-photo"></div>
-            <div class="skms-landing-hero-gradient"></div>
-
-            <div class="skms-landing-hero-inner">
-                <div class="skms-landing-hero-copy">
-                    <div class="skms-hero-kicker">PUSAT BANTUAN AKADEMIK &amp; KEMAHASISWAAN</div>
-                    <h1 class="skms-hero-h1">Satu tempat untuk setiap pertanyaan kuliahmu.</h1>
-                    <p class="skms-hero-desc">
-                        Temukan solusi resmi dan informasi seputar kegiatan hingga layanan kemahasiswaan Universitas Surabaya.
-                    </p>
-
-                    <form action="{{ route('skms.beranda') }}" method="GET" class="skms-search-bar">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <input type="text" name="search" placeholder="Apa yang ingin kamu ketahui?" autocomplete="off" autofocus>
-                        <button type="submit" class="skms-search-submit">Cari FAQ</button>
-                    </form>
-
-                    <div class="skms-popular-tags">
-                        <div class="skms-popular-tags-label">Sering dicari:</div>
-                        <div class="skms-popular-tags-list">
-                            <a href="{{ route('skms.beranda', ['search' => 'Cuti akademik']) }}">Cuti akademik</a>
-                            <span class="skms-popular-tags-dot">&bull;</span>
-                            <a href="{{ route('skms.beranda', ['search' => 'KRS']) }}">KRS</a>
-                            <span class="skms-popular-tags-dot">&bull;</span>
-                            <a href="{{ route('skms.beranda', ['search' => 'Pembayaran SPP']) }}">Pembayaran SPP</a>
-                            <span class="skms-popular-tags-dot">&bull;</span>
-                            <a href="{{ route('skms.beranda', ['search' => 'Wisuda']) }}">Wisuda</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <main class="skms-main-container">
-            @if(session('success') || session('info') || session('warning'))
-                <div style="margin-bottom: 22px; padding: 14px 18px; border-radius: 12px; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px; {{ session('warning') ? 'background: #FFF4EB; border: 1px solid #F5DFB0; color: #B4690E;' : 'background: #E6F4EF; border: 1px solid #C7E6DC; color: #0D7F74;' }}">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
-                        @if(session('warning'))
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                        @else
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                        @endif
-                    </svg>
-                    <span>{{ session('warning') ?? (session('success') ?? session('info')) }}</span>
+        <main class="skms-kiosk-container">
+            @if(session('success') || session('info'))
+                <div style="margin-bottom: 18px; padding: 13px 18px; border-radius: 12px; background: var(--ubaya-rose-soft); border: 1px solid var(--ubaya-rose-border); color: var(--ubaya-maroon); font-size: 13.5px; font-weight: 600;">
+                    {{ session('success') ?? session('info') }}
                 </div>
             @endif
 
-            <div class="skms-section-head">
-                <h2 class="skms-section-title">Pertanyaan yang sering dicari</h2>
-                <a href="{{ route('skms.beranda', ['all' => 1]) }}" class="skms-section-link">Lihat semua FAQ</a>
-            </div>
+            <!-- Photographic Rounded Hero + Overlapping White Search Bar -->
+            <section class="skms-hero-stage">
+                <div class="skms-photo-hero-card">
+                    <div class="skms-photo-hero-bg"></div>
+                    <div class="skms-photo-hero-scrim"></div>
+                    <div class="skms-photo-hero-content">
+                        <h1 class="skms-hero-h1">Temukan jawaban kuliahmu dalam hitungan detik.</h1>
+                        <p class="skms-hero-desc">
+                            Panduan resmi akademik, keuangan, hingga kemahasiswaan Universitas Surabaya.
+                        </p>
+                    </div>
+                </div>
 
-            <div class="skms-landing-grid">
-                <div class="skms-freq-list">
-                    @forelse($topFaqs->take(3) as $idx => $faq)
-                        <a href="{{ route('skms.faq.show', $faq->id) }}" class="skms-freq-card">
-                            <div class="skms-freq-left">
-                                <div class="skms-freq-num">{{ str_pad($idx + 1, 2, '0', STR_PAD_LEFT) }}</div>
-                                <div class="skms-freq-info">
-                                    <div class="skms-freq-q">{{ $faq->pertanyaan }}</div>
-                                    <div class="skms-freq-cat">{{ $faq->categories->pluck('nama')->join(', ') ?: 'Umum' }}</div>
+                <div class="skms-floating-search-wrap">
+                    <form action="{{ route('skms.beranda') }}" method="GET" class="skms-search-bar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" name="search" placeholder="Ketik pertanyaanmu di sini (misal: cuti, KRS, SPP, wisuda)..." autocomplete="off" autofocus>
+                        <button type="submit" class="skms-search-submit">Cari FAQ</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 2-Column Tactile Bento Section -->
+            <section class="skms-bento-grid">
+                <!-- Left Column: 2x2 Jelajahi Topik -->
+                <div>
+                    <div class="skms-bento-head">
+                        <h2 class="skms-bento-title">Jelajahi Topik</h2>
+                    </div>
+
+                    @php
+                        $topCategories = $categories->sortByDesc('faqs_count')->take(4)->values();
+                    @endphp
+
+                    <div class="skms-topics-grid">
+                        @forelse($topCategories as $idx => $cat)
+                            <a href="{{ route('skms.beranda', ['categories' => [$cat->id]]) }}" class="skms-topic-tile">
+                                <div class="skms-topic-icon {{ $idx === 1 ? 'gold' : 'rose' }}">
+                                    @if($idx === 0)
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                        </svg>
+                                    @elseif($idx === 1)
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                            <line x1="2" y1="10" x2="22" y2="10"></line>
+                                        </svg>
+                                    @elseif($idx === 2)
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                                        </svg>
+                                    @else
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        </svg>
+                                    @endif
                                 </div>
+                                <div style="min-width: 0;">
+                                    <div class="skms-topic-name">{{ $cat->nama }}</div>
+                                    <div class="skms-topic-sub">{{ $cat->faqs_count }} informasi resmi</div>
+                                </div>
+                                <svg class="skms-topic-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </a>
+                        @empty
+                            <div style="grid-column: 1 / -1; background: #FFFFFF; border: 1px solid var(--ubaya-border); border-radius: 16px; padding: 24px; text-align: center; color: var(--ubaya-muted); font-size: 13.5px;">
+                                Belum ada kategori topik tersedia.
                             </div>
-                            <svg class="skms-freq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- Right Column: Sering ditanyakan mahasiswa -->
+                <div>
+                    <div class="skms-bento-head">
+                        <h2 class="skms-bento-title">Sering ditanyakan mahasiswa</h2>
+                        <a href="{{ route('skms.beranda', ['all' => 1]) }}" class="skms-btn-see-all">
+                            <span>Lihat semua</span>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                                 <polyline points="12 5 19 12 12 19"></polyline>
                             </svg>
                         </a>
-                    @empty
-                        <div style="background: #FFFFFF; border: 1px solid var(--skms-border); border-radius: 12px; padding: 24px; text-align: center; color: var(--skms-muted); font-size: 13.5px;">
+                    </div>
+
+                    @php
+                        $featuredFaq = $topFaqs->first();
+                        $secondaryFaqs = $topFaqs->slice(1, 2);
+                    @endphp
+
+                    @if($featuredFaq)
+                        <a href="{{ route('skms.faq.show', $featuredFaq->id) }}" class="skms-featured-faq">
+                            <div style="min-width: 0;">
+                                <div class="skms-featured-badges">
+                                    <span class="skms-pill-gold">★ Paling Populer &bull; {{ number_format($featuredFaq->views) }} Dilihat</span>
+                                    <span class="skms-pill-rose">{{ $featuredFaq->categories->first()?->nama ?? 'Umum' }}</span>
+                                </div>
+                                <h3 class="skms-featured-title">{{ $featuredFaq->pertanyaan }}</h3>
+                            </div>
+                            <span class="skms-circle-arrow">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </span>
+                        </a>
+
+                        @if($secondaryFaqs->isNotEmpty())
+                            <div class="skms-sub-faqs-grid">
+                                @foreach($secondaryFaqs as $sIdx => $sFaq)
+                                    <a href="{{ route('skms.faq.show', $sFaq->id) }}" class="skms-sub-faq-card">
+                                        <div>
+                                            <span class="{{ $sIdx === 1 ? 'skms-pill-gold' : 'skms-pill-rose' }}">
+                                                {{ $sFaq->categories->first()?->nama ?? 'Umum' }}
+                                            </span>
+                                            <div class="skms-sub-faq-title">{{ $sFaq->pertanyaan }}</div>
+                                        </div>
+                                        <div class="skms-sub-faq-foot">
+                                            <span>{{ number_format($sFaq->views) }} Dilihat</span>
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                <polyline points="12 5 19 12 12 19"></polyline>
+                                            </svg>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endif
+                    @else
+                        <div style="background: #FFFFFF; border: 1px solid var(--ubaya-border); border-radius: 16px; padding: 32px; text-align: center; color: var(--ubaya-muted); font-size: 13.5px;">
                             Belum ada informasi FAQ yang diterbitkan.
                         </div>
-                    @endforelse
+                    @endif
                 </div>
-
-                <div class="skms-feature-card">
-                    <div class="skms-feature-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="skms-feature-title">Informasi resmi,<br>lebih mudah ditemukan.</h3>
-                    <p class="skms-feature-desc">
-                        Panduan akademik dan kemahasiswaan dalam satu pusat pengetahuan UBAYA.
-                    </p>
-                </div>
-            </div>
+            </section>
         </main>
+
     @else
         <!-- ===================================================================
-             MODE 2: PENCARIAN INFORMASI & FAQ (IMAGE 2)
+             MODE 2: PENCARIAN INFORMASI & FAQ
         ==================================================================== -->
         <section class="skms-search-hero">
             <div class="skms-search-hero-inner">
                 <h1 class="skms-search-hero-title">Pencarian Informasi &amp; FAQ</h1>
                 <p class="skms-search-hero-sub">Cari pertanyaan atau persempit pencarian menggunakan filter kategori.</p>
 
-                <form action="{{ route('skms.beranda') }}" method="GET" class="skms-search-bar">
+                <form action="{{ route('skms.beranda') }}" method="GET" class="skms-search-bar" style="box-shadow: 0 8px 24px -10px rgba(74, 7, 13, 0.12);">
                     @foreach($selectedCategories as $catId)
                         <input type="hidden" name="categories[]" value="{{ $catId }}" class="hidden-search-cat">
                     @endforeach
@@ -1682,7 +1132,7 @@
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                     <input type="text" name="search" value="{{ $keyword }}" placeholder="Cari topik, kata kunci, atau layanan kampus..." autocomplete="off">
-                    <button type="submit" class="skms-search-submit">Cari FAQ</button>
+                    <button type="submit" class="skms-search-submit" style="padding: 12px 26px;">Cari FAQ</button>
                 </form>
             </div>
         </section>
@@ -1691,7 +1141,7 @@
             <div class="skms-breadcrumb">
                 <a href="{{ route('skms.beranda') }}">Beranda</a>
                 <span>/</span>
-                <span style="color: var(--skms-forest); font-weight: 600;">Pencarian FAQ</span>
+                <span style="color: var(--ubaya-heading); font-weight: 600;">Pencarian FAQ</span>
             </div>
 
             @if(!empty($searchWarning))
@@ -1719,22 +1169,6 @@
                 </div>
             @endif
 
-            @if(session('success') || session('info') || session('warning'))
-                <div style="margin-bottom: 22px; padding: 14px 18px; border-radius: 12px; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px; {{ session('warning') ? 'background: #FFF4EB; border: 1px solid #F5DFB0; color: #B4690E;' : 'background: #E6F4EF; border: 1px solid #C7E6DC; color: #0D7F74;' }}">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
-                        @if(session('warning'))
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                        @else
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                        @endif
-                    </svg>
-                    <span>{{ session('warning') ?? (session('success') ?? session('info')) }}</span>
-                </div>
-            @endif
-
             <div class="skms-results-head">
                 <div class="skms-results-head-left">
                     <h2 class="skms-results-h2">Hasil pencarian</h2>
@@ -1750,7 +1184,7 @@
                 </div>
 
                 @if($keyword !== '' || !empty($selectedCategories))
-                    <a href="{{ route('skms.beranda', ['all' => 1]) }}" style="font-size: 12.5px; font-weight: 600; color: var(--skms-teal); text-decoration: none;">
+                    <a href="{{ route('skms.beranda', ['all' => 1]) }}" style="font-size: 12.5px; font-weight: 700; color: var(--ubaya-maroon); text-decoration: none;">
                         Atur ulang pencarian
                     </a>
                 @endif
@@ -1768,7 +1202,7 @@
 
                         <div class="skms-filter-head">
                             <h3 class="skms-filter-title">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--skms-teal)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ubaya-maroon)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                                 </svg>
                                 <span>Filter kategori</span>
@@ -1779,7 +1213,6 @@
                         </div>
                         <p class="skms-filter-sub">Persempit pencarianmu.</p>
 
-                        <!-- Searchable Combobox (Daftar baru muncul saat diklik / diketik) -->
                         <div class="skms-combobox-wrap" id="catComboboxWrap">
                             <div class="skms-cat-search-box">
                                 <svg class="search-ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -1797,10 +1230,8 @@
                                 </svg>
                             </div>
 
-                            <!-- Floating Dropdown Menu -->
                             <div class="skms-combobox-dropdown" id="catComboboxDropdown">
-                                <!-- Opsi "Semua kategori" -->
-                                <label class="skms-cat-option {{ empty($selectedCategories) ? 'is-checked' : '' }}" id="allCategoriesOption" style="margin-bottom: 4px; border-bottom: 1px solid #F0F4F2; border-radius: 8px 8px 0 0;">
+                                <label class="skms-cat-option {{ empty($selectedCategories) ? 'is-checked' : '' }}" id="allCategoriesOption" style="margin-bottom: 4px; border-bottom: 1px solid #F3ECEC; border-radius: 8px 8px 0 0;">
                                     <div class="skms-cat-option-left">
                                         <input type="checkbox" id="checkAllCategories" {{ empty($selectedCategories) ? 'checked' : '' }}>
                                         <span class="skms-cat-name">Semua kategori</span>
@@ -1845,7 +1276,6 @@
                             </div>
                         </div>
 
-                        <!-- Status Default jika belum ada kategori spesifik yang dipilih -->
                         <div id="allActiveStatusPill" class="skms-all-active-pill" style="{{ !empty($selectedCategories) ? 'display:none;' : '' }}">
                             <span style="display: inline-flex; align-items: center; gap: 6px;">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1853,10 +1283,9 @@
                                 </svg>
                                 Semua kategori
                             </span>
-                            <span style="font-size: 11px; background: #D2ECE3; padding: 1px 7px; border-radius: 999px;">{{ $categories->sum('faqs_count') }}</span>
+                            <span style="font-size: 11px; background: var(--ubaya-rose-pill); padding: 1px 7px; border-radius: 999px;">{{ $categories->sum('faqs_count') }}</span>
                         </div>
 
-                        <!-- Area Chip Tag Kategori Terpilih -->
                         <div id="activeChipsContainer" class="skms-active-chips-wrap" style="{{ empty($selectedCategories) ? 'display:none;' : '' }}">
                             <div class="skms-active-chips-header">
                                 <span>Kategori terpilih:</span>
@@ -1929,26 +1358,26 @@
                             </div>
                         </article>
                     @empty
-                        <div style="background: #FFFFFF; border: 1px solid var(--skms-border); border-radius: 14px; padding: 36px 24px; text-align: center;">
-                            <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--skms-mint-soft); color: var(--skms-teal); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+                        <div style="background: #FFFFFF; border: 1px solid var(--ubaya-border); border-radius: 16px; padding: 36px 24px; text-align: center;">
+                            <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--ubaya-rose-soft); color: var(--ubaya-maroon); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
                             </div>
-                            <h3 style="font-size: 16px; font-weight: 700; color: var(--skms-forest); margin: 0 0 6px;">Tidak ada FAQ yang cocok</h3>
-                            <p style="font-size: 13px; color: var(--skms-muted); margin: 0 auto 20px; max-width: 440px; line-height: 1.55;">
+                            <h3 style="font-size: 16px; font-weight: 700; color: var(--ubaya-heading); margin: 0 0 6px;">Tidak ada FAQ yang cocok</h3>
+                            <p style="font-size: 13px; color: var(--ubaya-muted); margin: 0 auto 20px; max-width: 440px; line-height: 1.55;">
                                 Kami tidak menemukan pertanyaan yang sesuai dengan filter atau kata kunci Anda. Anda dapat mengajukan pertanyaan ini langsung kepada staf kami.
                             </p>
                             <div style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
-                                <a href="{{ route('skms.tanya', array_filter(['q' => $keyword])) }}" style="display: inline-flex; align-items: center; gap: 7px; padding: 10px 18px; background: var(--skms-teal); color: #FFFFFF; border-radius: 9px; font-size: 13px; font-weight: 700; text-decoration: none;">
+                                <a href="{{ route('skms.tanya', array_filter(['q' => $keyword])) }}" style="display: inline-flex; align-items: center; gap: 7px; padding: 11px 18px; background: var(--ubaya-maroon); color: #FFFFFF; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none;">
                                     <span>Ajukan pertanyaan baru ke staf</span>
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                         <line x1="5" y1="12" x2="19" y2="12"></line>
                                         <polyline points="12 5 19 12 12 19"></polyline>
                                     </svg>
                                 </a>
-                                <a href="{{ route('skms.beranda', ['all' => 1]) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; background: #FFFFFF; border: 1px solid var(--skms-border); color: var(--skms-forest); border-radius: 9px; font-size: 13px; font-weight: 600; text-decoration: none;">
+                                <a href="{{ route('skms.beranda', ['all' => 1]) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 11px 16px; background: #FFFFFF; border: 1px solid var(--ubaya-border); color: var(--ubaya-heading); border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none;">
                                     Tampilkan semua FAQ
                                 </a>
                             </div>
@@ -1982,7 +1411,7 @@
                                 </div>
                             </a>
                         @empty
-                            <div style="font-size: 12.5px; color: var(--skms-muted); padding: 8px 0;">
+                            <div style="font-size: 12.5px; color: var(--ubaya-muted); padding: 8px 0;">
                                 Belum ada data FAQ populer.
                             </div>
                         @endforelse
@@ -1992,14 +1421,14 @@
         </main>
     @endif
 
-    <!-- ─── FOOTER ─────────────────────────────────────────────────────────── -->
+    <!-- ─── MINIMAL KIOSK FOOTER ───────────────────────────────────────────── -->
     <footer class="skms-footer">
         <div class="skms-footer-inner">
-            <div>
-                <div class="skms-footer-brand">SKMS UBAYA</div>
-                <div class="skms-footer-copy">&copy; 2026 SKMS UBAYA &mdash; Student Knowledge Management System.</div>
+            <div class="skms-footer-brand">SKMS UBAYA &mdash; Universitas Surabaya</div>
+            <div class="skms-footer-right">
+                <span style="width: 7px; height: 7px; border-radius: 50%; background: var(--ubaya-gold); display: inline-block;"></span>
+                <span>Layar sentuh otomatis reset setelah 3 menit tidak aktif.</span>
             </div>
-            <div class="skms-footer-right">Universitas Surabaya</div>
         </div>
     </footer>
 
@@ -2023,23 +1452,13 @@
             const clearAllCatsBtn = document.getElementById('clearAllCatsBtn');
             const totalCategories = items.length;
 
-            function openDropdown() {
-                if (comboboxWrap) {
-                    comboboxWrap.classList.add('is-open');
-                }
-            }
-
-            function closeDropdown() {
-                if (comboboxWrap) {
-                    comboboxWrap.classList.remove('is-open');
-                }
-            }
+            function openDropdown() { if (comboboxWrap) comboboxWrap.classList.add('is-open'); }
+            function closeDropdown() { if (comboboxWrap) comboboxWrap.classList.remove('is-open'); }
 
             function syncCategoryState() {
                 const checkedBoxes = checkboxes.filter(cb => cb.checked);
                 const checkedCount = checkedBoxes.length;
 
-                // Update "Semua kategori" & active chips visibility
                 if (checkedCount === 0) {
                     checkAll.checked = true;
                     allOptionLabel.classList.add('is-checked');
@@ -2055,7 +1474,6 @@
                     if (allActiveStatusPill) allActiveStatusPill.style.display = 'none';
                 }
 
-                // Highlight checked rows & build active chips
                 chipsList.innerHTML = '';
                 items.forEach(item => {
                     const cb = item.querySelector('.cat-checkbox-input');
@@ -2076,7 +1494,6 @@
                 });
             }
 
-            // Live search filter across categories
             function filterCategories() {
                 openDropdown();
                 const q = (searchInput.value || '').trim().toLowerCase();
@@ -2117,27 +1534,19 @@
                 });
             }
 
-            // Tutup dropdown saat klik di luar combobox atau tekan Escape
             document.addEventListener('click', function (e) {
-                if (comboboxWrap && !comboboxWrap.contains(e.target)) {
-                    closeDropdown();
-                }
+                if (comboboxWrap && !comboboxWrap.contains(e.target)) closeDropdown();
             });
 
             document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
-                    closeDropdown();
-                }
+                if (e.key === 'Escape') closeDropdown();
             });
-            checkboxes.forEach(cb => {
-                cb.addEventListener('change', syncCategoryState);
-            });
+
+            checkboxes.forEach(cb => cb.addEventListener('change', syncCategoryState));
 
             if (checkAll) {
                 checkAll.addEventListener('change', function () {
-                    if (this.checked) {
-                        checkboxes.forEach(cb => { cb.checked = false; });
-                    }
+                    if (this.checked) checkboxes.forEach(cb => { cb.checked = false; });
                     syncCategoryState();
                 });
             }
@@ -2157,27 +1566,24 @@
     <script>
         /* ── Auto-Reset Sesi Setelah 3 Menit Tidak Ada Aktivitas ────────── */
         (function () {
-            const IDLE_TIMEOUT_MS = 180000; // 3 menit
+            const IDLE_TIMEOUT_MS = 180000;
             let idleTimer = null;
 
             function resetIdleTimer() {
                 if (idleTimer) clearTimeout(idleTimer);
                 idleTimer = setTimeout(function () {
-                    // Refresh halaman ketika diam 3 menit agar middleware meregenerasi sesi
                     window.location.reload();
                 }, IDLE_TIMEOUT_MS);
             }
 
-            // Event-event yang menandakan aktivitas pengguna
             ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(function (evt) {
                 document.addEventListener(evt, resetIdleTimer, { passive: true });
             });
 
-            // Mulai timer saat halaman dimuat
             resetIdleTimer();
         })();
 
-        /* ── Validasi Input Pencarian FAQ (UI Awam & Mencegah Angka/Simbol Murni) ── */
+        /* ── Validasi Input Pencarian FAQ (Mencegah Angka/Simbol Murni) ─── */
         (function () {
             const toast = document.getElementById('searchWarningToast');
             const toastClose = document.getElementById('searchToastClose');
@@ -2194,9 +1600,7 @@
                 if (toast) {
                     toast.classList.add('is-show');
                     if (toastTimer) clearTimeout(toastTimer);
-                    toastTimer = setTimeout(() => {
-                        toast.classList.remove('is-show');
-                    }, 5000);
+                    toastTimer = setTimeout(() => toast.classList.remove('is-show'), 5000);
                 }
             }
 
@@ -2206,21 +1610,17 @@
                 });
             }
 
-            const searchForms = document.querySelectorAll('form.skms-search-bar');
-            searchForms.forEach(function (form) {
+            document.querySelectorAll('form.skms-search-bar').forEach(function (form) {
                 form.addEventListener('submit', function (e) {
                     const input = form.querySelector('input[name="search"]');
                     if (!input) return;
                     const val = input.value.trim();
-                    if (val === '') return; // Form bisa disubmit kosong jika ada filter kategori
+                    if (val === '') return;
 
-                    // Cek jika hanya angka dan spasi murni
                     const isOnlyNumbers = /^[0-9\s]+$/.test(val);
-                    // Cek huruf alfabet
                     const letterMatches = val.match(/[\p{L}]/gu);
                     const letterCount = letterMatches ? letterMatches.length : 0;
 
-                    // Jika hanya angka atau tanda baca/simbol murni (huruf < 2)
                     if (isOnlyNumbers || letterCount < 2) {
                         e.preventDefault();
                         showSearchWarning(input);

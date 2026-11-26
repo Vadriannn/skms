@@ -8,7 +8,7 @@
     .ajax-faq-modal-backdrop {
         position: fixed;
         inset: 0;
-        background: rgba(22, 50, 47, 0.55);
+        background: rgba(31, 20, 21, 0.55);
         backdrop-filter: blur(3px);
         z-index: 999;
         display: none;
@@ -23,20 +23,20 @@
 
     .ajax-faq-modal-dialog {
         background: #FFFFFF;
-        border: 1px solid #E2E9E6;
+        border: 1px solid #ECE4E5;
         border-radius: 16px;
         width: 100%;
         max-width: 820px;
         max-height: 86vh;
         display: flex;
         flex-direction: column;
-        box-shadow: 0 24px 48px -12px rgba(22, 50, 47, 0.25);
+        box-shadow: 0 24px 48px -12px rgba(31, 20, 21, 0.25);
         overflow: hidden;
     }
 
     .ajax-faq-modal-header {
         padding: 20px 24px 16px;
-        border-bottom: 1px solid #EDF2F0;
+        border-bottom: 1px solid #F3ECEC;
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
@@ -45,8 +45,8 @@
 
     .ajax-faq-modal-search-bar {
         padding: 14px 24px;
-        background: #F6F8F7;
-        border-bottom: 1px solid #EDF2F0;
+        background: #FAF8F7;
+        border-bottom: 1px solid #F3ECEC;
     }
 
     .ajax-faq-modal-body {
@@ -59,7 +59,7 @@
     }
 
     .ajax-faq-item {
-        border: 1.5px solid #E2E9E6;
+        border: 1.5px solid #ECE4E5;
         border-radius: 12px;
         padding: 14px 18px;
         background: #FFFFFF;
@@ -68,19 +68,19 @@
     }
 
     .ajax-faq-item:hover {
-        border-color: #8ED8C3;
+        border-color: #E5A032;
         background: #FAFDFC;
     }
 
     .ajax-faq-item.is-selected {
-        border-color: #0D7F74;
-        background: #E8F5F1;
-        box-shadow: 0 0 0 3px rgba(13, 127, 116, 0.12);
+        border-color: #8B0D18;
+        background: #FDF2F3;
+        box-shadow: 0 0 0 3px rgba(139, 13, 24, 0.12);
     }
 
     .ajax-faq-modal-footer {
         padding: 14px 24px;
-        border-top: 1px solid #EDF2F0;
+        border-top: 1px solid #F3ECEC;
         background: #FFFFFF;
         display: flex;
         align-items: center;
@@ -94,8 +94,8 @@
         padding: 2px 6px;
         font-size: 11px;
         font-weight: 700;
-        color: #16322F;
-        background: #F0F4F2;
+        color: #1F1415;
+        background: #F6F0F0;
         border: 1px solid #D5E0DC;
         border-radius: 4px;
     }
@@ -111,13 +111,13 @@
 
     <!-- Back Link & Page Header -->
     <div style="margin-bottom: 20px;">
-        <a href="{{ route('questions.index') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #0D7F74; text-decoration: none; margin-bottom: 10px;">
+        <a href="{{ route('questions.index') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #8B0D18; text-decoration: none; margin-bottom: 10px;">
             <span>&larr;</span>
             <span>Kembali ke antrean tiket pertanyaan</span>
         </a>
         <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
             <h1 class="skmk-page-main-title" style="margin: 0;">Penanganan tiket pertanyaan</h1>
-            <span style="background: #F0F4F2; color: #4D6661; border: 1px solid #E2E9E6; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 6px;">
+            <span style="background: #F6F0F0; color: #6B5B5D; border: 1px solid #ECE4E5; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 6px;">
                 Tiket #{{ $ticket->id }}
             </span>
         </div>
@@ -133,14 +133,14 @@
 
             <!-- Kartu Pertanyaan Mahasiswa -->
             <div style="background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 24px 26px; margin-bottom: 20px;">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-bottom: 14px; margin-bottom: 16px; border-bottom: 1px solid #EDF2F0;">
-                    <div style="font-size: 12.5px; color: #647874;">
-                        Diajukan oleh <strong style="color: #16322F;">{{ $ticket->nrp ? 'NRP ' . $ticket->nrp : 'Anonim (Tanpa NRP)' }}</strong>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-bottom: 14px; margin-bottom: 16px; border-bottom: 1px solid #F3ECEC;">
+                    <div style="font-size: 12.5px; color: #6B5B5D;">
+                        Diajukan oleh <strong style="color: #1F1415;">{{ $ticket->nrp ? 'NRP ' . $ticket->nrp : 'Anonim (Tanpa NRP)' }}</strong>
                         &bull; {{ $ticket->created_at->format('d F Y, H:i') }}
                     </div>
                     <div>
                         @if($ticket->status === 'answered')
-                            <span style="background: #E8F5F1; color: #0D7F74; border: 1px solid #BCE3D8; font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px;">
+                            <span style="background: #FDF2F3; color: #8B0D18; border: 1px solid #F1CFD3; font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px;">
                                 &bull; Sudah dijawab
                             </span>
                         @else
@@ -151,55 +151,55 @@
                     </div>
                 </div>
 
-                <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #8FA19D; margin-bottom: 6px;">
+                <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #948486; margin-bottom: 6px;">
                     PERTANYAAN MAHASISWA
                 </div>
-                <div style="font-size: 18px; font-weight: 700; color: #16322F; line-height: 1.45; margin-bottom: 18px; overflow-wrap: anywhere; word-break: break-word;">
+                <div style="font-size: 18px; font-weight: 700; color: #1F1415; line-height: 1.45; margin-bottom: 18px; overflow-wrap: anywhere; word-break: break-word;">
                     {{ $ticket->pertanyaan }}
                 </div>
 
                 @if($ticket->nrp)
-                    <div style="background: #F6F8F7; border: 1px solid #E2E9E6; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 12.5px;">
+                    <div style="background: #FAF8F7; border: 1px solid #ECE4E5; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 12.5px;">
                         <div>
-                            <span style="color: #647874;">Email Kampus Tujuan Notifikasi:</span>
-                            <strong style="color: #0D7F74; margin-left: 4px;">{{ $ticket->student_email }}</strong>
+                            <span style="color: #6B5B5D;">Email Kampus Tujuan Notifikasi:</span>
+                            <strong style="color: #8B0D18; margin-left: 4px;">{{ $ticket->student_email }}</strong>
                         </div>
-                        <span style="color: #8FA19D; font-size: 11.5px;">Otomatis dari 9 digit NRP &bull; Notifikasi Email Aktif</span>
+                        <span style="color: #948486; font-size: 11.5px;">Otomatis dari 9 digit NRP &bull; Notifikasi Email Aktif</span>
                     </div>
                 @else
-                    <div style="background: #F6F8F7; border: 1px solid #E2E9E6; border-radius: 10px; padding: 12px 16px; font-size: 12.5px; color: #647874;">
-                        <span style="font-weight: 700; color: #4D6762;">Pengajuan Tanpa NRP (Anonim):</span> Mahasiswa tidak mencantumkan NRP sehingga sistem tidak akan mengirimkan notifikasi email.
+                    <div style="background: #FAF8F7; border: 1px solid #ECE4E5; border-radius: 10px; padding: 12px 16px; font-size: 12.5px; color: #6B5B5D;">
+                        <span style="font-weight: 700; color: #6B5B5D;">Pengajuan Tanpa NRP (Anonim):</span> Mahasiswa tidak mencantumkan NRP sehingga sistem tidak akan mengirimkan notifikasi email.
                     </div>
                 @endif
             </div>
 
             @if($ticket->note || $ticket->faq)
                 <!-- Kartu Riwayat Tanggapan Staf (Jika Sudah Pernah Ditangani) -->
-                <div style="background: #E8F5F1; border: 1px solid #BCE3D8; border-radius: 14px; padding: 20px 24px; margin-bottom: 20px;">
+                <div style="background: #FDF2F3; border: 1px solid #F1CFD3; border-radius: 14px; padding: 20px 24px; margin-bottom: 20px;">
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 8px;">
-                        <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #0D7F74;">
+                        <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #8B0D18;">
                             HASIL PENANGANAN TIKET
                         </span>
                         @if($ticket->user)
-                            <span style="font-size: 12px; color: #4D6661;">
+                            <span style="font-size: 12px; color: #6B5B5D;">
                                 Ditangani oleh <strong>{{ $ticket->user->name }}</strong>
                             </span>
                         @endif
                     </div>
 
                     @if($ticket->note)
-                        <div style="font-size: 13.5px; color: #16322F; line-height: 1.6; margin-bottom: 12px; overflow-wrap: anywhere; word-break: break-word;">
+                        <div style="font-size: 13.5px; color: #1F1415; line-height: 1.6; margin-bottom: 12px; overflow-wrap: anywhere; word-break: break-word;">
                             {!! nl2br(e($ticket->note)) !!}
                         </div>
                     @endif
 
                     @if($ticket->faq)
-                        <div style="background: #FFFFFF; border: 1px solid #BCE3D8; border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+                        <div style="background: #FFFFFF; border: 1px solid #F1CFD3; border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
                             <div>
-                                <div style="font-size: 11px; font-weight: 700; color: #0D7F74; text-transform: uppercase;">
+                                <div style="font-size: 11px; font-weight: 700; color: #8B0D18; text-transform: uppercase;">
                                     FAQ Tertaut (#{{ $ticket->faq->id }} &bull; {{ ucfirst($ticket->faq->status) }})
                                 </div>
-                                <div style="font-size: 13.5px; font-weight: 700; color: #16322F; margin-top: 2px;">
+                                <div style="font-size: 13.5px; font-weight: 700; color: #1F1415; margin-top: 2px;">
                                     &ldquo;{{ $ticket->faq->pertanyaan }}&rdquo;
                                 </div>
                             </div>
@@ -215,14 +215,14 @@
             <!-- Kartu Rekomendasi Kemiripan TF-IDF -->
             <div style="background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 22px 26px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; flex-wrap: wrap;">
-                    <h3 style="font-size: 15px; font-weight: 700; color: #16322F; margin: 0;">
+                    <h3 style="font-size: 15px; font-weight: 700; color: #1F1415; margin: 0;">
                         Rekomendasi FAQ Serupa di Repositori (TF-IDF)
                     </h3>
-                    <span style="font-size: 11.5px; font-weight: 600; color: #0D7F74; background: #E8F5F1; padding: 2px 10px; border-radius: 999px;">
+                    <span style="font-size: 11.5px; font-weight: 600; color: #8B0D18; background: #FDF2F3; padding: 2px 10px; border-radius: 999px;">
                         {{ $similarCandidates->count() }} kandidat ditemukan
                     </span>
                 </div>
-                <p style="font-size: 12.5px; color: #647874; margin: 0 0 16px;">
+                <p style="font-size: 12.5px; color: #6B5B5D; margin: 0 0 16px;">
                     Hasil deteksi kemiripan otomatis terhadap pertanyaan mahasiswa ini:
                 </p>
 
@@ -232,11 +232,11 @@
                         $candPct = $cand['percentage'] ?? (round(($cand['score'] ?? 0) * 100, 1) . '%');
                         $candCats = $candFaq->categories->pluck('nama')->join(', ') ?: 'Umum';
                     @endphp
-                    <div style="border: 1px solid #E2E9E6; border-radius: 11px; padding: 14px 16px; margin-bottom: 12px; background: #FAFBFB;">
+                    <div style="border: 1px solid #ECE4E5; border-radius: 11px; padding: 14px 16px; margin-bottom: 12px; background: #FAFBFB;">
                         <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;">
                             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                <span style="font-size: 12px; font-weight: 700; color: #0D7F74;">FAQ #{{ $candFaq->id }}</span>
-                                <span style="font-size: 11px; padding: 2px 8px; border-radius: 999px; background: #E8F5F1; color: #0D7F74; font-weight: 600;">
+                                <span style="font-size: 12px; font-weight: 700; color: #8B0D18;">FAQ #{{ $candFaq->id }}</span>
+                                <span style="font-size: 11px; padding: 2px 8px; border-radius: 999px; background: #FDF2F3; color: #8B0D18; font-weight: 600;">
                                     {{ $candCats }}
                                 </span>
                                 <span style="background: #FFF4EB; color: #B4690E; border: 1px solid #F5DFB0; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px;">
@@ -250,20 +250,20 @@
                                     data-question="{{ $candFaq->pertanyaan }}"
                                     data-answer="{{ $candFaq->jawaban }}"
                                     data-cats="{{ $candCats }}"
-                                    style="padding: 5px 12px; background: #E8F5F1; color: #0D7F74; border: 1px solid #BCE3D8; border-radius: 7px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;">
+                                    style="padding: 5px 12px; background: #FDF2F3; color: #8B0D18; border: 1px solid #F1CFD3; border-radius: 7px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;">
                                 Pilih FAQ Ini
                             </button>
                         </div>
 
-                        <div style="font-size: 14px; font-weight: 700; color: #16322F; margin-bottom: 6px;">
+                        <div style="font-size: 14px; font-weight: 700; color: #1F1415; margin-bottom: 6px;">
                             &ldquo;{{ $candFaq->pertanyaan }}&rdquo;
                         </div>
-                        <div style="font-size: 12.5px; color: #4D6661; line-height: 1.55; background: #FFFFFF; border: 1px solid #E6ECEA; border-radius: 8px; padding: 10px 12px;">
+                        <div style="font-size: 12.5px; color: #6B5B5D; line-height: 1.55; background: #FFFFFF; border: 1px solid #E6ECEA; border-radius: 8px; padding: 10px 12px;">
                             {!! nl2br(e($candFaq->jawaban)) !!}
                         </div>
                     </div>
                 @empty
-                    <div style="background: #F6F8F7; border: 1px dashed #D5E0DC; border-radius: 10px; padding: 20px; text-align: center; font-size: 13px; color: #647874;">
+                    <div style="background: #FAF8F7; border: 1px dashed #D5E0DC; border-radius: 10px; padding: 20px; text-align: center; font-size: 13px; color: #6B5B5D;">
                         Tidak ditemukan rekomendasi TF-IDF otomatis. Anda tetap dapat mencari manual lewat tombol <strong>Kaitkan dengan FAQ Lama</strong> atau <strong>Buat Draf FAQ Baru</strong> di sebelah kanan.
                     </div>
                 @endforelse
@@ -277,19 +277,19 @@
             <!-- KARTU 1: KAITKAN DENGAN FAQ LAMA (POPUP AJAX) -->
             <div style="background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 22px; margin-bottom: 16px;">
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                    <span style="width: 24px; height: 24px; border-radius: 6px; background: #E8F5F1; color: #0D7F74; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center;">1</span>
-                    <h3 style="font-size: 15px; font-weight: 700; color: #16322F; margin: 0;">
+                    <span style="width: 24px; height: 24px; border-radius: 6px; background: #FDF2F3; color: #8B0D18; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center;">1</span>
+                    <h3 style="font-size: 15px; font-weight: 700; color: #1F1415; margin: 0;">
                         Kaitkan dengan FAQ Lama
                     </h3>
                 </div>
-                <p style="font-size: 12.5px; color: #647874; line-height: 1.5; margin: 0 0 14px;">
+                <p style="font-size: 12.5px; color: #6B5B5D; line-height: 1.5; margin: 0 0 14px;">
                     Cari dan pilih dari daftar FAQ yang sudah terbit, lihat jawabannya, lalu tekan <strong>Enter</strong> untuk mengaitkannya.
                 </p>
 
                 <!-- Tombol Pemicu Popup AJAX Daftar FAQ Lama -->
                 <button type="button"
                         id="btnOpenAjaxFaqModal"
-                        style="width: 100%; padding: 10px 14px; background: #E8F5F1; color: #0D7F74; border: 1.5px solid #8ED8C3; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 14px; transition: all 0.15s ease;">
+                        style="width: 100%; padding: 10px 14px; background: #FDF2F3; color: #8B0D18; border: 1.5px solid #E5A032; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 14px; transition: all 0.15s ease;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -302,17 +302,17 @@
                     <input type="hidden" name="faq_id" id="selectedFaqIdInput" value="{{ $initialSelectedFaq?->id ?? '' }}">
 
                     <!-- Kotak Preview FAQ yang Dipilih dari Modal AJAX -->
-                    <div id="selectedFaqCardBox" style="display: {{ $initialSelectedFaq ? 'block' : 'none' }}; background: #F2FAF7; border: 1.5px solid #0D7F74; border-radius: 10px; padding: 12px 14px; margin-bottom: 14px;">
+                    <div id="selectedFaqCardBox" style="display: {{ $initialSelectedFaq ? 'block' : 'none' }}; background: #FFF7F7; border: 1.5px solid #8B0D18; border-radius: 10px; padding: 12px 14px; margin-bottom: 14px;">
                         <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px;">
-                            <span id="selectedFaqBadgeText" style="font-size: 11px; font-weight: 800; color: #0D7F74; text-transform: uppercase;">
+                            <span id="selectedFaqBadgeText" style="font-size: 11px; font-weight: 800; color: #8B0D18; text-transform: uppercase;">
                                 {{ $initialSelectedFaq ? 'FAQ #' . $initialSelectedFaq->id . ' • ' . ($initialSelectedFaq->categories->pluck('nama')->join(', ') ?: 'Umum') : '' }}
                             </span>
-                            <span style="font-size: 11px; font-weight: 700; color: #0D7F74;">✓ Terpilih</span>
+                            <span style="font-size: 11px; font-weight: 700; color: #8B0D18;">✓ Terpilih</span>
                         </div>
-                        <div id="selectedFaqQuestionText" style="font-size: 13.5px; font-weight: 700; color: #16322F; line-height: 1.4; margin-bottom: 6px;">
+                        <div id="selectedFaqQuestionText" style="font-size: 13.5px; font-weight: 700; color: #1F1415; line-height: 1.4; margin-bottom: 6px;">
                             {{ $initialSelectedFaq?->pertanyaan ?? '' }}
                         </div>
-                        <div id="selectedFaqAnswerText" style="font-size: 12px; color: #4D6661; line-height: 1.5; max-height: 115px; overflow-y: auto; border-top: 1px dashed #BCE3D8; padding-top: 6px; white-space: pre-line;">{{ $initialSelectedFaq?->jawaban ?? '' }}</div>
+                        <div id="selectedFaqAnswerText" style="font-size: 12px; color: #6B5B5D; line-height: 1.5; max-height: 115px; overflow-y: auto; border-top: 1px dashed #F1CFD3; padding-top: 6px; white-space: pre-line;">{{ $initialSelectedFaq?->jawaban ?? '' }}</div>
                     </div>
 
                     @error('faq_id')
@@ -336,19 +336,19 @@
             </div>
 
             <!-- KARTU 2: BUAT DRAF FAQ BARU DARI TIKET -->
-            <div style="background: #E8F5F1; border: 1px solid #BCE3D8; border-radius: 14px; padding: 22px;">
+            <div style="background: #FDF2F3; border: 1px solid #F1CFD3; border-radius: 14px; padding: 22px;">
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                    <span style="width: 24px; height: 24px; border-radius: 6px; background: #0D7F74; color: #FFFFFF; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center;">2</span>
-                    <h3 style="font-size: 15px; font-weight: 700; color: #16322F; margin: 0;">
+                    <span style="width: 24px; height: 24px; border-radius: 6px; background: #8B0D18; color: #FFFFFF; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center;">2</span>
+                    <h3 style="font-size: 15px; font-weight: 700; color: #1F1415; margin: 0;">
                         Buat Draf FAQ Baru
                     </h3>
                 </div>
-                <p style="font-size: 12.5px; color: #3D524E; line-height: 1.55; margin: 0 0 14px;">
+                <p style="font-size: 12.5px; color: #3E2F30; line-height: 1.55; margin: 0 0 14px;">
                     Jika pertanyaan mahasiswa ini merupakan <strong>topik baru</strong> yang belum ada di repositori, buat draf FAQ baru yang otomatis terisi dari pertanyaan tiket ini.
                 </p>
 
                 <a href="{{ route('faqs.create', ['from_ticket' => $ticket->id]) }}"
-                   style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 11px 16px; background: #0D7F74; color: #FFFFFF; border-radius: 9px; font-size: 13px; font-weight: 700; text-decoration: none;">
+                   style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 11px 16px; background: #8B0D18; color: #FFFFFF; border-radius: 9px; font-size: 13px; font-weight: 700; text-decoration: none;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -367,18 +367,18 @@
     <div class="ajax-faq-modal-dialog" role="dialog" aria-modal="true">
         <div class="ajax-faq-modal-header">
             <div>
-                <h3 style="font-size: 17px; font-weight: 800; color: #16322F; margin: 0 0 4px;">
+                <h3 style="font-size: 17px; font-weight: 800; color: #1F1415; margin: 0 0 4px;">
                     Pilih FAQ Lama untuk Dikaitkan ke Tiket #{{ $ticket->id }}
                 </h3>
             </div>
-            <button type="button" id="btnCloseAjaxFaqModal" style="background: #F6F8F7; border: 1px solid #E2E9E6; width: 32px; height: 32px; border-radius: 8px; font-size: 18px; color: #647874; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;">
+            <button type="button" id="btnCloseAjaxFaqModal" style="background: #FAF8F7; border: 1px solid #ECE4E5; width: 32px; height: 32px; border-radius: 8px; font-size: 18px; color: #6B5B5D; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;">
                 &times;
             </button>
         </div>
 
         <div class="ajax-faq-modal-search-bar">
             <div class="faq-search-wrapper" style="background: #FFFFFF; width: 100%;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0D7F74" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B0D18" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
@@ -387,7 +387,7 @@
                        class="faq-search-field"
                        placeholder="Cari pertanyaan, isi jawaban lengkap, kategori, atau nomor #ID FAQ..."
                        autocomplete="off">
-                <span id="ajaxFaqLoadingText" style="font-size: 12px; color: #0D7F74; font-weight: 600; display: none; padding-right: 10px;">
+                <span id="ajaxFaqLoadingText" style="font-size: 12px; color: #8B0D18; font-weight: 600; display: none; padding-right: 10px;">
                     Memuat...
                 </span>
             </div>
@@ -492,7 +492,7 @@
             activeIndex = -1;
             btnConfirm.disabled = true;
             resultsList.innerHTML = `
-                <div style="padding: 36px 20px; text-align: center; color: #647874; font-size: 13.5px;">
+                <div style="padding: 36px 20px; text-align: center; color: #6B5B5D; font-size: 13.5px;">
                     Tidak ditemukan FAQ terbit yang cocok dengan kata kunci pencarian Anda.
                 </div>
             `;
@@ -516,16 +516,16 @@
             item.innerHTML = `
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; flex-wrap: wrap;">
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <span style="font-size: 12px; font-weight: 800; color: #0D7F74; background: #E8F5F1; padding: 2px 8px; border-radius: 6px;">
+                        <span style="font-size: 12px; font-weight: 800; color: #8B0D18; background: #FDF2F3; padding: 2px 8px; border-radius: 6px;">
                             FAQ #${faq.id}
                         </span>
                         ${catsHtml}
                     </div>
                 </div>
-                <div style="font-size: 14.5px; font-weight: 700; color: #16322F; margin-bottom: 8px; line-height: 1.4;">
+                <div style="font-size: 14.5px; font-weight: 700; color: #1F1415; margin-bottom: 8px; line-height: 1.4;">
                     ${escapeHtml(faq.pertanyaan)}
                 </div>
-                <div style="background: #F6F8F7; border: 1px solid #E2E9E6; border-radius: 8px; padding: 10px 12px; font-size: 12.5px; color: #2C4642; line-height: 1.6; max-height: 130px; overflow-y: auto; white-space: pre-line;">${escapeHtml(faq.jawaban)}</div>
+                <div style="background: #FAF8F7; border: 1px solid #ECE4E5; border-radius: 8px; padding: 10px 12px; font-size: 12.5px; color: #3E2F30; line-height: 1.6; max-height: 130px; overflow-y: auto; white-space: pre-line;">${escapeHtml(faq.jawaban)}</div>
             `;
 
             item.addEventListener('click', function () {
