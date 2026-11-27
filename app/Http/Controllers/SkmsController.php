@@ -245,22 +245,27 @@ class SkmsController extends Controller
             $relatedFaqs = $relatedFaqs->concat($fallbackFaqs);
         }
 
-        // Cek apakah mahasiswa/pengunjung sudah menandai FAQ ini membantu
+        // Cek apakah mahasiswa/pengunjung sudah menandai FAQ ini membantu atau tidak membantu
         $voterHash = $studentNrp
             ? hash('sha256', 'nrp_' . $studentNrp)
             : hash('sha256', 'session_' . session()->getId());
 
-        $hasVotedDb = FaqHelpfulVote::where('faq_id', $faq->id)
+        $userVote = FaqHelpfulVote::where('faq_id', $faq->id)
             ->where('voter_hash', $voterHash)
-            ->exists();
+            ->first();
+
         $sessionHelpful = session('helpful_faqs', []);
-        $isHelpful = $hasVotedDb || in_array($faq->id, $sessionHelpful);
+        $sessionNotHelpful = session('not_helpful_faqs', []);
+
+        $isHelpful = ($userVote && ($userVote->vote_type ?? 'helpful') === 'helpful') || in_array($faq->id, $sessionHelpful);
+        $isNotHelpful = ($userVote && ($userVote->vote_type ?? '') === 'not_helpful') || in_array($faq->id, $sessionNotHelpful);
 
         return view('skms.detail', compact(
             'faq',
             'relatedFaqs',
             'studentNrp',
-            'isHelpful'
+            'isHelpful',
+            'isNotHelpful'
         ));
     }
 
@@ -290,50 +295,147 @@ class SkmsController extends Controller
             ? hash('sha256', 'nrp_' . $nrp)
             : hash('sha256', 'session_' . session()->getId());
 
-        // Periksa apakah pemilih ini sudah pernah memberi tanda membantu pada FAQ ini
+        // Periksa apakah pemilih ini sudah pernah memberi suara pada FAQ ini
         $existingVote = FaqHelpfulVote::where('faq_id', $faq->id)
             ->where('voter_hash', $voterHash)
             ->first();
 
-        if ($existingVote) {
-            // Jika sudah ada, klik berikutnya berfungsi membatalkan (toggle off)
-            $existingVote->delete();
-            if ($faq->helpful > 0) {
-                $faq->decrement('helpful');
-            }
-            $isHelpful = false;
+        $sessionHelpful = session('helpful_faqs', []);
+        $sessionNotHelpful = session('not_helpful_faqs', []);
 
-            $sessionHelpful = session('helpful_faqs', []);
-            $sessionHelpful = array_values(array_diff($sessionHelpful, [$faq->id]));
-            session(['helpful_faqs' => $sessionHelpful]);
+        if ($existingVote) {
+            if (($existingVote->vote_type ?? 'helpful') === 'helpful') {
+                // Batalkan vote membantu (toggle off)
+                $existingVote->delete();
+                if ($faq->helpful > 0) {
+                    $faq->decrement('helpful');
+                }
+                $isHelpful = false;
+                $isNotHelpful = false;
+                $sessionHelpful = array_values(array_diff($sessionHelpful, [$faq->id]));
+            } else {
+                // Ubah pilihan dari not_helpful ke helpful
+                $existingVote->update(['vote_type' => 'helpful']);
+                if ($faq->not_helpful > 0) {
+                    $faq->decrement('not_helpful');
+                }
+                $faq->increment('helpful');
+                $isHelpful = true;
+                $isNotHelpful = false;
+                if (!in_array($faq->id, $sessionHelpful)) {
+                    $sessionHelpful[] = $faq->id;
+                }
+                $sessionNotHelpful = array_values(array_diff($sessionNotHelpful, [$faq->id]));
+            }
         } else {
-            // Jika belum ada, simpan vote baru dengan proteksi unique constraint
+            // Simpan vote baru "helpful"
             try {
                 FaqHelpfulVote::create([
                     'faq_id'      => $faq->id,
                     'student_nrp' => $nrp ?: null,
                     'ip_address'  => $ip,
                     'voter_hash'  => $voterHash,
+                    'vote_type'   => 'helpful',
                 ]);
                 $faq->increment('helpful');
                 $isHelpful = true;
+                $isNotHelpful = false;
 
-                $sessionHelpful = session('helpful_faqs', []);
                 if (!in_array($faq->id, $sessionHelpful)) {
                     $sessionHelpful[] = $faq->id;
-                    session(['helpful_faqs' => $sessionHelpful]);
                 }
             } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
                 $isHelpful = true;
+                $isNotHelpful = false;
             }
         }
 
+        session(['helpful_faqs' => $sessionHelpful, 'not_helpful_faqs' => $sessionNotHelpful]);
         $faq->refresh();
 
         return response()->json([
-            'success'    => true,
-            'helpful'    => (int) $faq->helpful,
-            'is_helpful' => $isHelpful,
+            'success'        => true,
+            'helpful'        => (int) $faq->helpful,
+            'not_helpful'    => (int) $faq->not_helpful,
+            'is_helpful'     => $isHelpful,
+            'is_not_helpful' => $isNotHelpful,
+        ]);
+    }
+
+    /**
+     * Endpoint interaktif untuk menandai / membatalkan tanda FAQ "Tidak Membantu 👎".
+     */
+    public function toggleNotHelpful(Request $request, Faq $faq)
+    {
+        $nrp = session('student_nrp', null);
+        $ip  = $request->ip();
+        $voterHash = $nrp 
+            ? hash('sha256', 'nrp_' . $nrp)
+            : hash('sha256', 'session_' . session()->getId());
+
+        $existingVote = FaqHelpfulVote::where('faq_id', $faq->id)
+            ->where('voter_hash', $voterHash)
+            ->first();
+
+        $sessionHelpful = session('helpful_faqs', []);
+        $sessionNotHelpful = session('not_helpful_faqs', []);
+
+        if ($existingVote) {
+            if (($existingVote->vote_type ?? 'helpful') === 'not_helpful') {
+                // Batalkan vote tidak membantu (toggle off)
+                $existingVote->delete();
+                if ($faq->not_helpful > 0) {
+                    $faq->decrement('not_helpful');
+                }
+                $isHelpful = false;
+                $isNotHelpful = false;
+                $sessionNotHelpful = array_values(array_diff($sessionNotHelpful, [$faq->id]));
+            } else {
+                // Ubah pilihan dari helpful ke not_helpful
+                $existingVote->update(['vote_type' => 'not_helpful']);
+                if ($faq->helpful > 0) {
+                    $faq->decrement('helpful');
+                }
+                $faq->increment('not_helpful');
+                $isHelpful = false;
+                $isNotHelpful = true;
+                if (!in_array($faq->id, $sessionNotHelpful)) {
+                    $sessionNotHelpful[] = $faq->id;
+                }
+                $sessionHelpful = array_values(array_diff($sessionHelpful, [$faq->id]));
+            }
+        } else {
+            // Simpan vote baru "not_helpful"
+            try {
+                FaqHelpfulVote::create([
+                    'faq_id'      => $faq->id,
+                    'student_nrp' => $nrp ?: null,
+                    'ip_address'  => $ip,
+                    'voter_hash'  => $voterHash,
+                    'vote_type'   => 'not_helpful',
+                ]);
+                $faq->increment('not_helpful');
+                $isHelpful = false;
+                $isNotHelpful = true;
+
+                if (!in_array($faq->id, $sessionNotHelpful)) {
+                    $sessionNotHelpful[] = $faq->id;
+                }
+            } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+                $isHelpful = false;
+                $isNotHelpful = true;
+            }
+        }
+
+        session(['helpful_faqs' => $sessionHelpful, 'not_helpful_faqs' => $sessionNotHelpful]);
+        $faq->refresh();
+
+        return response()->json([
+            'success'        => true,
+            'helpful'        => (int) $faq->helpful,
+            'not_helpful'    => (int) $faq->not_helpful,
+            'is_helpful'     => $isHelpful,
+            'is_not_helpful' => $isNotHelpful,
         ]);
     }
 

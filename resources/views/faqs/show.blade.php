@@ -232,6 +232,31 @@
                         <span style="color: #6B5B5D;">Tanggal dibuat</span>
                         <strong style="color: #1F1415;">{{ $faq->created_at->format('d M Y') }}</strong>
                     </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #6B5B5D;">Total dilihat</span>
+                        <strong style="color: #1F1415;">{{ number_format($faq->views ?? 0) }}x</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #6B5B5D;">Umpan balik</span>
+                        <strong style="color: #1F1415;">
+                            👍 {{ $faq->helpful ?? 0 }} &bull; 👎 {{ $faq->not_helpful ?? 0 }}
+                        </strong>
+                    </div>
+                    @if($faq->total_feedback > 0)
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #6B5B5D;">Kepuasan respon</span>
+                            <span style="font-weight: 700; font-size: 12px; color: {{ $faq->helpful_percentage >= 70 ? '#0D7F74' : '#C93535' }};">
+                                {{ $faq->helpful_percentage }}% Membantu
+                            </span>
+                        </div>
+                        @if($faq->is_unhelpful)
+                            <div style="margin-top: 2px;">
+                                <span class="badge" style="background: #FDF2F2; color: #C93535; border: 1px solid #F5C6C6; font-size: 10.5px; font-weight: 700; padding: 3px 8px; display: inline-block;">
+                                    &lt; 70% Membantu (Kurang Membantu)
+                                </span>
+                            </div>
+                        @endif
+                    @endif
                     @if($faq->status === 'inactive' && $faq->deactivated_at)
                         <div style="display: flex; justify-content: space-between;">
                             <span style="color: #C93535;">Dinonaktifkan oleh</span>

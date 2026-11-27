@@ -30,6 +30,7 @@ Route::middleware('skms.timeout')->group(function () {
     Route::get('/skms/faq/{faq}/download', [FaqController::class, 'downloadAttachment'])->name('skms.faq.download');
     Route::post('/skms/faq/{faq}/view', [SkmsController::class, 'incrementView'])->name('skms.faq.view');
     Route::post('/skms/faq/{faq}/helpful', [SkmsController::class, 'toggleHelpful'])->name('skms.faq.helpful');
+    Route::post('/skms/faq/{faq}/not-helpful', [SkmsController::class, 'toggleNotHelpful'])->name('skms.faq.not_helpful');
 });
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -41,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/data-entry', [DashboardController::class, 'dataEntry'])->name('dashboard.data_entry');
 
     Route::get('/faqs', [FaqController::class, 'index'])->name('faqs.index');
+    Route::get('/faqs/unhelpful', [FaqController::class, 'unhelpful'])->name('faqs.unhelpful');
     Route::get('/faqs/submissions', [FaqController::class, 'submissions'])->name('faqs.submissions');
     Route::get('/faqs/create', [FaqController::class, 'create'])->name('faqs.create');
     Route::post('/faqs', [FaqController::class, 'store'])->name('faqs.store');

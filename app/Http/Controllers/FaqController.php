@@ -51,6 +51,40 @@ class FaqController extends Controller
     }
 
     /**
+     * Tampilkan daftar FAQ yang dinilai Kurang / Tidak Membantu (< 70% respon Membantu).
+     */
+    public function unhelpful(Request $request)
+    {
+        $categoryId = $request->query('category_id');
+        $search = $request->query('search');
+        $perPage = (int) $request->query('per_page', 10);
+        if (!in_array($perPage, [10, 25, 50, 100])) {
+            $perPage = 10;
+        }
+
+        $query = Faq::with(['categories', 'user', 'reviews.user'])
+            ->unhelpful()
+            ->latest();
+
+        // Filter berdasarkan pencarian pertanyaan
+        if ($search) {
+            $query->where('pertanyaan', 'like', "%{$search}%");
+        }
+
+        // Filter berdasarkan kategori
+        if ($categoryId) {
+            $query->whereHas('categories', function ($q) use ($categoryId) {
+                $q->where('categories.id', $categoryId);
+            });
+        }
+
+        $faqs = $query->paginate($perPage)->withQueryString();
+        $categories = Category::orderBy('nama', 'asc')->get();
+
+        return view('faqs.unhelpful', compact('faqs', 'categories', 'categoryId', 'search', 'perPage'));
+    }
+
+    /**
      * Tampilkan halaman kelola pengajuan & draf FAQ (Semua Status: Draft, Pending, Rejected, Published)
      */
     public function submissions(Request $request)

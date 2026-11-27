@@ -19,6 +19,7 @@ class Faq extends Model
         'status',
         'views',
         'helpful',
+        'not_helpful',
         'deactivated_at',
         'deactivated_by',
     ];
@@ -26,6 +27,7 @@ class Faq extends Model
     protected $casts = [
         'views'          => 'integer',
         'helpful'        => 'integer',
+        'not_helpful'    => 'integer',
         'deactivated_at' => 'datetime',
     ];
 
@@ -77,6 +79,51 @@ class Faq extends Model
     public function helpfulVotes()
     {
         return $this->hasMany(FaqHelpfulVote::class, 'faq_id');
+    }
+
+    /**
+     * Total feedback respon mahasiswa (Membantu + Tidak Membantu).
+     */
+    public function getTotalFeedbackAttribute(): int
+    {
+        return (int) ($this->helpful ?? 0) + (int) ($this->not_helpful ?? 0);
+    }
+
+    /**
+     * Persentase respon Membantu (0 - 100%).
+     */
+    public function getHelpfulPercentageAttribute(): float
+    {
+        $total = $this->total_feedback;
+        return $total > 0 ? round((($this->helpful ?? 0) / $total) * 100, 1) : 0.0;
+    }
+
+    /**
+     * Persentase respon Tidak Membantu (0 - 100%).
+     */
+    public function getNotHelpfulPercentageAttribute(): float
+    {
+        $total = $this->total_feedback;
+        return $total > 0 ? round((($this->not_helpful ?? 0) / $total) * 100, 1) : 0.0;
+    }
+
+    /**
+     * Cek apakah FAQ memenuhi kriteria "Kurang / Tidak Membantu":
+     * Memiliki feedback (> 0) DAN persentase membantu < 70% (atau tidak membantu > 30%).
+     */
+    public function getIsUnhelpfulAttribute(): bool
+    {
+        return $this->total_feedback > 0 && $this->helpful_percentage < 70;
+    }
+
+    /**
+     * Scope untuk mengambil daftar FAQ yang kurang/tidak membantu (< 70% membantu).
+     */
+    public function scopeUnhelpful($query)
+    {
+        return $query->where('status', 'published')
+            ->whereRaw('(COALESCE(helpful, 0) + COALESCE(not_helpful, 0)) > 0')
+            ->whereRaw('((COALESCE(helpful, 0) * 100) / (COALESCE(helpful, 0) + COALESCE(not_helpful, 0))) < 70');
     }
 
     /**

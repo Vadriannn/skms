@@ -427,10 +427,15 @@
             color: #FFFFFF;
         }
 
-        .skms-btn-feedback.btn-no:hover,
-        .skms-btn-feedback.btn-no.active {
+        .skms-btn-feedback.btn-no:hover {
             background: var(--skms-cloud);
             border-color: #C9B9BB;
+        }
+
+        .skms-btn-feedback.btn-no.active {
+            background: #FDF2F2;
+            border-color: #F5C6C6;
+            color: #C93535;
         }
 
         /* Right Sidebar Cards */
@@ -816,14 +821,15 @@
                     <div class="skms-feedback-btns">
                         <button type="button"
                                 id="btnHelpfulYes"
-                                class="skms-btn-feedback btn-yes {{ $isHelpful ? 'active' : '' }}"
+                                class="skms-btn-feedback btn-yes {{ !empty($isHelpful) ? 'active' : '' }}"
                                 data-url="{{ route('skms.faq.helpful', $faq->id) }}">
-                            {{ $isHelpful ? '✓ Ya, membantu' : 'Ya, membantu' }}
+                            {{ !empty($isHelpful) ? '✓ Ya, membantu' : 'Ya, membantu' }}
                         </button>
                         <button type="button"
                                 id="btnHelpfulNo"
-                                class="skms-btn-feedback btn-no">
-                            Belum
+                                class="skms-btn-feedback btn-no {{ !empty($isNotHelpful) ? 'active' : '' }}"
+                                data-url="{{ route('skms.faq.not_helpful', $faq->id) }}">
+                            {{ !empty($isNotHelpful) ? '✓ Tidak membantu' : 'Tidak membantu' }}
                         </button>
                     </div>
                 </div>
@@ -900,6 +906,7 @@
                         if (data.success) {
                             countDisplay.textContent = data.helpful;
                             btnNo.classList.remove('active');
+                            btnNo.textContent = 'Tidak membantu';
                             if (data.is_helpful) {
                                 btnYes.classList.add('active');
                                 btnYes.textContent = '✓ Ya, membantu';
@@ -918,10 +925,36 @@
             }
 
             if (btnNo) {
-                btnNo.addEventListener('click', function () {
-                    btnNo.classList.add('active');
-                    notice.style.display = 'block';
-                    notice.textContent = 'Terima kasih atas masukannya. Silakan coba kata kunci lain atau cek FAQ terkait di sebelah kanan.';
+                btnNo.addEventListener('click', async function () {
+                    const url = this.dataset.url;
+                    try {
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            countDisplay.textContent = data.helpful;
+                            btnYes.classList.remove('active');
+                            btnYes.textContent = 'Ya, membantu';
+                            if (data.is_not_helpful) {
+                                btnNo.classList.add('active');
+                                btnNo.textContent = '✓ Tidak membantu';
+                                notice.style.display = 'block';
+                                notice.textContent = 'Terima kasih atas masukannya. Masukan Anda dicatat untuk perbaikan informasi FAQ ini.';
+                            } else {
+                                btnNo.classList.remove('active');
+                                btnNo.textContent = 'Tidak membantu';
+                                notice.style.display = 'none';
+                            }
+                        }
+                    } catch (err) {
+                        console.error(err);
+                    }
                 });
             }
         })();

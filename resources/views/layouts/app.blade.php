@@ -98,6 +98,18 @@
                             <span>Riwayat validasi</span>
                         </a>
                     </li>
+                    <li>
+                        @php $vUnhelpfulCount = \App\Models\Faq::unhelpful()->count(); @endphp
+                        <a href="{{ route('faqs.unhelpful') }}" class="sidebar-link {{ request()->routeIs('faqs.unhelpful') ? 'active' : '' }}">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
+                            </svg>
+                            <span>FAQ tidak membantu</span>
+                            @if($vUnhelpfulCount > 0)
+                                <span class="sidebar-badge" style="background-color: #FDF2F2; color: #C93535;">{{ $vUnhelpfulCount }}</span>
+                            @endif
+                        </a>
+                    </li>
                     @else
                     <li>
                         <a href="{{ route('faqs.index') }}" class="sidebar-link {{ request()->routeIs('faqs.index') ? 'active' : '' }}">
@@ -106,6 +118,20 @@
                                 <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                             </svg>
                             <span>Daftar informasi</span>
+                        </a>
+                    </li>
+                    <li>
+                        @php 
+                            $unhelpfulCount = \App\Models\Faq::unhelpful()->count(); 
+                        @endphp
+                        <a href="{{ route('faqs.unhelpful') }}" class="sidebar-link {{ request()->routeIs('faqs.unhelpful') ? 'active' : '' }}">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
+                            </svg>
+                            <span>FAQ tidak membantu</span>
+                            @if($unhelpfulCount > 0)
+                                <span class="sidebar-badge" style="background-color: #FDF2F2; color: #C93535;" title="{{ $unhelpfulCount }} FAQ dinilai kurang membantu (< 70%)">{{ $unhelpfulCount }}</span>
+                            @endif
                         </a>
                     </li>
                     @if(Auth::check() && in_array(Auth::user()->role, ['data_entry', 'super_admin']))
@@ -208,6 +234,7 @@
                         @php
                             $crumbTitle = 'Dashboard';
                             if (request()->routeIs('faqs.index')) $crumbTitle = 'Daftar informasi';
+                            elseif (request()->routeIs('faqs.unhelpful')) $crumbTitle = 'FAQ tidak membantu';
                             elseif (request()->routeIs('faqs.submissions')) $crumbTitle = 'Pengajuan & draf';
                             elseif (request()->routeIs('faqs.create')) $crumbTitle = 'Tambah informasi';
                             elseif (request()->routeIs('faqs.edit')) $crumbTitle = 'Edit informasi';

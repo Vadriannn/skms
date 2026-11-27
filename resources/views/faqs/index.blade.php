@@ -139,7 +139,19 @@
                             {{ number_format($item->views ?? 0) }}
                         </td>
                         <td style="padding: 16px 16px; text-align: center; font-size: 13px; font-weight: 600; color: #8B0D18; white-space: nowrap;">
-                            {{ number_format($item->helpful ?? 0) }}
+                            <div style="display: inline-flex; align-items: center; gap: 6px;">
+                                <span title="Ya, Membantu">👍 {{ number_format($item->helpful ?? 0) }}</span>
+                                @if(($item->not_helpful ?? 0) > 0)
+                                    <span style="color: #C93535; font-size: 12px;" title="Tidak Membantu">👎 {{ number_format($item->not_helpful) }}</span>
+                                @endif
+                            </div>
+                            @if($item->is_unhelpful)
+                                <div style="margin-top: 4px;">
+                                    <a href="{{ route('faqs.unhelpful') }}" class="badge" style="background: #FDF2F2; color: #C93535; border: 1px solid #F5C6C6; font-size: 10px; font-weight: 700; padding: 2px 6px; text-decoration: none;" title="Kurang membantu (< 70%). Klik untuk lihat daftar evaluasi.">
+                                        &lt; 70% Membantu
+                                    </a>
+                                </div>
+                            @endif
                         </td>
                         <td style="padding: 16px 24px; text-align: right; white-space: nowrap;">
                             <a href="{{ route('faqs.show', ['faq' => $item->id, 'from' => 'index']) }}" class="skmk-link-action">

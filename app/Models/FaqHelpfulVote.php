@@ -14,6 +14,7 @@ class FaqHelpfulVote extends Model
         'student_nrp',
         'ip_address',
         'voter_hash',
+        'vote_type',
     ];
 
     public function faq()
