@@ -6,6 +6,29 @@
     <title>SKMS UBAYA — Sentuh Layar untuk Memulai</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}?v=2">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    @php
+        /*
+        |----------------------------------------------------------------------
+        | SLIDESHOW IDLE SCREEN — Kustomisasi Foto
+        |----------------------------------------------------------------------
+        | Untuk mengganti atau menambah foto slideshow:
+        | 1. Taruh file gambar (jpg/png/webp) di folder: public/images/idle/
+        | 2. Daftarkan nama filenya di array $idleSlides di bawah ini.
+        | 3. Urutan array = urutan tampil. Minimal 1 foto.
+        |
+        | Jeda pergantian foto: ubah $slideDuration (dalam milidetik).
+        |   7000 = 7 detik per foto (default)
+        |----------------------------------------------------------------------
+        */
+        $idleSlides = [
+            '1.jpg',
+            '2.jpg',
+            '3.jpg',
+            // Tambahkan nama file foto lainnya di sini...
+        ];
+        $slideDuration = 7000; // milidetik per foto
+    @endphp
+
     <style>
         * {
             box-sizing: border-box;
@@ -44,16 +67,27 @@
             opacity: 0;
         }
 
-        /* Full-Bleed Campus Photo with Subtle Ken Burns Motion */
-        .idle-bg-photo {
+        /* Slideshow Background Layer */
+        .idle-bg-slideshow {
             position: absolute;
             inset: 0;
-            background-image: url('{{ asset('images/ubaya-campus.jpg') }}');
+            z-index: 1;
+        }
+
+        .idle-bg-slide {
+            position: absolute;
+            inset: 0;
             background-size: cover;
             background-position: center center;
+            opacity: 0;
             transform: scale(1.02);
             animation: idleKenBurns 24s ease-in-out infinite alternate;
-            z-index: 1;
+            transition: opacity 1.6s ease-in-out;
+            will-change: opacity;
+        }
+
+        .idle-bg-slide.is-active {
+            opacity: 1;
         }
 
         @keyframes idleKenBurns {
@@ -297,7 +331,11 @@
 </head>
 <body>
     <a href="{{ route('skms.beranda') }}" id="idleScreen" class="idle-screen" aria-label="Sentuh layar untuk memulai SKMS UBAYA">
-        <div class="idle-bg-photo" aria-hidden="true"></div>
+        <div class="idle-bg-slideshow" aria-hidden="true">
+            @foreach($idleSlides as $i => $slide)
+                <div class="idle-bg-slide{{ $i === 0 ? ' is-active' : '' }}" style="background-image: url('{{ asset('images/idle/' . $slide) }}');"></div>
+            @endforeach
+        </div>
         <div class="idle-scrim" aria-hidden="true"></div>
         <div class="idle-dots" aria-hidden="true"></div>
 
@@ -375,6 +413,17 @@
             document.addEventListener('keydown', function () {
                 wakeUp();
             });
+
+            /* ── Slideshow Background ── */
+            const slides = document.querySelectorAll('.idle-bg-slide');
+            if (slides.length > 1) {
+                let current = 0;
+                setInterval(function () {
+                    slides[current].classList.remove('is-active');
+                    current = (current + 1) % slides.length;
+                    slides[current].classList.add('is-active');
+                }, {{ $slideDuration }});
+            }
         })();
     </script>
 </body>
