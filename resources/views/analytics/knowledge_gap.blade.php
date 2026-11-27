@@ -154,7 +154,7 @@
                         @php
                             $barWidth = max(5, min(100, round(($topItem['total_searches'] / $maxChartVal) * 100)));
                         @endphp
-                        <div style="display: grid; grid-template-columns: minmax(180px, 260px) 1fr 80px; align-items: center; gap: 14px;">
+                        <div style="display: grid; grid-template-columns: minmax(160px, 240px) 1fr 75px auto; align-items: center; gap: 14px;">
                             <div style="font-size: 13px; font-weight: 600; color: #1F1415; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $topItem['display_keyword'] }}">
                                 {{ $topItem['display_keyword'] }}
                             </div>
@@ -163,6 +163,12 @@
                             </div>
                             <div style="text-align: right; font-size: 12.5px; font-weight: 700; color: #C93535;">
                                 {{ $topItem['total_searches'] }} kali
+                            </div>
+                            <div>
+                                <a href="{{ route('faqs.create', ['pertanyaan' => $topItem['display_keyword']]) }}" class="btn-primary" style="padding: 4px 10px; font-size: 11.5px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;" title="Buat FAQ baru dari kata kunci ini">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    <span>Buat FAQ</span>
+                                </a>
                             </div>
                         </div>
                     @endforeach
@@ -300,7 +306,7 @@
                         <th style="width: 170px;">Tanggal Terakhir</th>
                         <th style="width: 230px;">Status Keterjawaban</th>
                         <th style="width: 130px; text-align: center;">Tingkat Prioritas</th>
-                        <th style="width: 130px; text-align: center;">Aksi</th>
+                        <th style="width: 170px; text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -398,21 +404,18 @@
 
                             <!-- Aksi -->
                             <td style="text-align: center;">
-                                @if($item['status'] === 'unanswered')
-                                    <a href="{{ route('faqs.create', ['pertanyaan' => $item['display_keyword']]) }}" class="btn-primary" style="padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;" title="Buat FAQ baru dari kata kunci ini">
+                                <div style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap;">
+                                    <a href="{{ route('faqs.create', ['pertanyaan' => $item['display_keyword']]) }}" class="btn-primary" style="padding: 6px 10px; font-size: 12px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;" title="Buat FAQ baru dari kata kunci ini">
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                                         <span>Buat FAQ</span>
                                     </a>
-                                @else
-                                    @if($item['matched_faq'])
-                                        <a href="{{ route('faqs.show', $item['matched_faq']->id) }}" class="btn-secondary" style="padding: 6px 10px; font-size: 12px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--border-color); background: #FFFFFF; color: #1F1415;" title="Lihat FAQ terkait">
-                                            <span>Lihat FAQ</span>
+                                    @if($item['status'] !== 'unanswered' && $item['matched_faq'])
+                                        <a href="{{ route('faqs.show', $item['matched_faq']->id) }}" class="btn-secondary" style="padding: 6px 8px; font-size: 12px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--border-color); background: #FFFFFF; color: #1F1415;" title="Lihat FAQ terkait">
+                                            <span>Lihat</span>
                                             <span>&rarr;</span>
                                         </a>
-                                    @else
-                                        <span style="font-size: 12px; color: var(--text-muted);">&mdash;</span>
                                     @endif
-                                @endif
+                                </div>
                             </td>
                         </tr>
                     @empty

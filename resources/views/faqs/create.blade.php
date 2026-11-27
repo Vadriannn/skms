@@ -47,6 +47,22 @@
                 </div>
             @endif
 
+            @if(request()->filled('pertanyaan') && empty($fromTicket) && empty($prefillFaq))
+                <div style="background-color: #E8F5F1; border: 1px solid #BCE3D8; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: #16322F;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D7F74" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <strong style="color: #0D7F74;">Penyusunan FAQ dari Knowledge Gap</strong>
+                    </div>
+                    <div style="color: #3D524E; line-height: 1.5;">
+                        Pertanyaan di bawah ini telah diisi awal dari kata kunci pencarian mahasiswa: <strong>&ldquo;{{ request()->query('pertanyaan') }}&rdquo;</strong>. Silakan lengkapi atau sesuaikan redaksi pertanyaan dan masukkan jawaban resmi sebelum diajukan ke Validator.
+                    </div>
+                </div>
+            @endif
+
             <!-- 1. Pertanyaan + TF-IDF Real-time Check -->
             <div class="form-group" style="margin-bottom: 22px;">
                 <label class="form-label" for="pertanyaan">
